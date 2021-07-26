@@ -19,6 +19,7 @@ test_run_dir/*
 *.ngr
 *.pad
 *.par
+*.d
 *.prj
 *.ptwx
 *.rbb
