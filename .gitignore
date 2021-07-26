@@ -177,7 +177,7 @@ tramp
 # AUCTeX auto folder
 /auto/
 # Quartus folder
-/fpga/*
+
 !chisel_generated
 !avm_module
 !*.qsys
