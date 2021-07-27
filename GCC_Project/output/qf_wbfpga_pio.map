@@ -2859,7 +2859,7 @@ END GROUP
 LOAD /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtend.o
 LOAD /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtn.o
 
-.text           0x0000000000000000     0x7613
+.text           0x0000000000000000     0x7617
  *(.isr_vector)
  .isr_vector    0x0000000000000000      0x124 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/vectors_CM4F_gcc.o
                 0x0000000000000000                __Vectors
@@ -3895,94 +3895,94 @@ LOAD /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bi
  .rodata.vTask1.str1.1
                 0x000000000000719c        0xd /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/main.o
  .rodata.main.str1.1
-                0x00000000000071a9       0x97 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/main.o
-                                         0x9c (size before relaxing)
+                0x00000000000071a9       0x9c /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/main.o
+                                         0xa1 (size before relaxing)
  .rodata.prvTaskExitError.str1.1
-                0x0000000000007240       0x71 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/port.o
+                0x0000000000007245       0x71 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/port.o
  .rodata.xQueueGenericReset.str1.1
-                0x00000000000072b1       0x4c /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/queue.o
+                0x00000000000072b6       0x4c /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/queue.o
  .rodata.S3x_Clk_Init.str1.1
-                0x00000000000072fd       0x62 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_clock.o
+                0x0000000000007302       0x62 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_clock.o
  .rodata.DFS_StartTimer.str1.1
-                0x000000000000735f       0x63 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_dfs.o
+                0x0000000000007364       0x63 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_dfs.o
  .rodata.S3x_Set_Policy.str1.1
-                0x00000000000073c2       0x17 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_dfs.o
+                0x00000000000073c7       0x17 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_dfs.o
  .rodata.S3x_Lpm_Handler.str1.1
-                0x00000000000073d9       0x82 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_lpm.o
+                0x00000000000073de       0x82 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_lpm.o
  .rodata.s3x_pi_set_active_st.str1.1
-                0x000000000000745b       0x2f /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_pi.o
+                0x0000000000007460       0x2f /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_pi.o
  .rodata.__func__.9047
-                0x000000000000748a       0x15 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_pi.o
+                0x000000000000748f       0x15 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/s3x_pi.o
  .rodata.save_assert_info.str1.1
-                0x000000000000749f       0x1c /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/sec_debug.o
+                0x00000000000074a4       0x1c /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/sec_debug.o
  .rodata.invoke_soft_fault.str1.1
-                0x00000000000074bb        0xc /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/sec_debug.o
- .rodata        0x00000000000074c7        0x8 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/sec_debug.o
+                0x00000000000074c0        0xc /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/sec_debug.o
+ .rodata        0x00000000000074cc        0x8 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/sec_debug.o
  .rodata.prvTaskIsTaskSuspended.str1.1
-                0x00000000000074cf       0x4c /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/tasks.o
+                0x00000000000074d4       0x4c /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/tasks.o
  .rodata.vTaskStartScheduler.str1.1
-                0x000000000000751b        0x5 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/tasks.o
+                0x0000000000007520        0x5 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/tasks.o
  .rodata.prvCheckForValidListAndQueue.str1.1
-                0x0000000000007520        0x5 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/timers.o
+                0x0000000000007525        0x5 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/timers.o
  .rodata.xTimerCreateTimerTask.str1.1
-                0x0000000000007525       0x55 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/timers.o
- *fill*         0x000000000000757a        0x2 
+                0x000000000000752a       0x55 /mnt/c/qorc-sdk/qf_apps/qf_wbfpga_pio/GCC_Project/output/timers.o
+ *fill*         0x000000000000757f        0x1 
  .rodata._global_impure_ptr
-                0x000000000000757c        0x4 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-impure.o)
-                0x000000000000757c                _global_impure_ptr
+                0x0000000000007580        0x4 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-impure.o)
+                0x0000000000007580                _global_impure_ptr
  .rodata.__sf_fake_stderr
-                0x0000000000007580       0x20 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-findfp.o)
-                0x0000000000007580                __sf_fake_stderr
+                0x0000000000007584       0x20 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-findfp.o)
+                0x0000000000007584                __sf_fake_stderr
  .rodata.__sf_fake_stdin
-                0x00000000000075a0       0x20 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-findfp.o)
-                0x00000000000075a0                __sf_fake_stdin
+                0x00000000000075a4       0x20 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-findfp.o)
+                0x00000000000075a4                __sf_fake_stdin
  .rodata.__sf_fake_stdout
-                0x00000000000075c0       0x20 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-findfp.o)
-                0x00000000000075c0                __sf_fake_stdout
+                0x00000000000075c4       0x20 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-findfp.o)
+                0x00000000000075c4                __sf_fake_stdout
  .rodata._svfprintf_r.str1.1
-                0x00000000000075e0       0x11 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-nano-svfprintf.o)
+                0x00000000000075e4       0x11 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-nano-svfprintf.o)
  .rodata._vfprintf_r.str1.1
-                0x00000000000075f1       0x11 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-nano-vfprintf.o)
+                0x00000000000075f5       0x11 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-nano-vfprintf.o)
  .rodata._printf_i.str1.1
-                0x00000000000075f1       0x22 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-nano-vfprintf_i.o)
+                0x00000000000075f5       0x22 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libg_nano.a(lib_a-nano-vfprintf_i.o)
  *(.eh_fram e*)
 
-.eh_frame       0x0000000000007614        0x0
- .eh_frame      0x0000000000007614        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+.eh_frame       0x0000000000007618        0x0
+ .eh_frame      0x0000000000007618        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
-.glue_7         0x0000000000007614        0x0
- .glue_7        0x0000000000007614        0x0 linker stubs
+.glue_7         0x0000000000007618        0x0
+ .glue_7        0x0000000000007618        0x0 linker stubs
 
-.glue_7t        0x0000000000007614        0x0
- .glue_7t       0x0000000000007614        0x0 linker stubs
+.glue_7t        0x0000000000007618        0x0
+ .glue_7t       0x0000000000007618        0x0 linker stubs
 
-.vfp11_veneer   0x0000000000007614        0x0
- .vfp11_veneer  0x0000000000007614        0x0 linker stubs
+.vfp11_veneer   0x0000000000007618        0x0
+ .vfp11_veneer  0x0000000000007618        0x0 linker stubs
 
-.v4_bx          0x0000000000007614        0x0
- .v4_bx         0x0000000000007614        0x0 linker stubs
+.v4_bx          0x0000000000007618        0x0
+ .v4_bx         0x0000000000007618        0x0 linker stubs
 
-.iplt           0x0000000000007614        0x0
- .iplt          0x0000000000007614        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+.iplt           0x0000000000007618        0x0
+ .iplt          0x0000000000007618        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0000000000007613                __exidx_start = .
+                0x0000000000007617                __exidx_start = .
 
-.ARM.exidx      0x0000000000007614        0x8
+.ARM.exidx      0x0000000000007618        0x8
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
- .ARM.exidx     0x0000000000007614        0x8 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+ .ARM.exidx     0x0000000000007618        0x8 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
                                          0x10 (size before relaxing)
- .ARM.exidx     0x000000000000761c        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/libgcc.a(_udivmoddi4.o)
+ .ARM.exidx     0x0000000000007620        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/libgcc.a(_udivmoddi4.o)
                                           0x8 (size before relaxing)
-                0x000000000000761c                __exidx_end = .
-                0x000000000000761c                __etext = .
-                0x000000000000761c                _sidata = __etext
+                0x0000000000007620                __exidx_end = .
+                0x0000000000007620                __etext = .
+                0x0000000000007620                _sidata = __etext
 
-.rel.dyn        0x000000000000761c        0x0
- .rel.iplt      0x000000000000761c        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+.rel.dyn        0x0000000000007620        0x0
+ .rel.iplt      0x0000000000007620        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
-.data           0x0000000020027000    0x1322c load address 0x000000000000761c
+.data           0x0000000020027000    0x1322c load address 0x0000000000007620
                 0x0000000020027000                __data_start__ = .
                 0x0000000020027000                _sdata = __data_start__
  *(vtable)
@@ -4071,7 +4071,7 @@ LOAD /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bi
                 0x000000002003a22c                __data_end__ = .
                 0x000000002003a22c                _edata = __data_end__
 
-.igot.plt       0x000000002003a22c        0x0 load address 0x000000000001a848
+.igot.plt       0x000000002003a22c        0x0 load address 0x000000000001a84c
  .igot.plt      0x000000002003a22c        0x0 /mnt/c/qorc-sdk/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
 .Hardware       0x0000000020064000        0x0

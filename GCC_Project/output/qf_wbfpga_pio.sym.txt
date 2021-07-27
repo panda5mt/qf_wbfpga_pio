@@ -145,11 +145,11 @@
 00000124 t __do_global_dtors_aux
 2003a228 d __do_global_dtors_aux_fini_array_entry
 2004a590 ? __end__
-0000761c R __etext
-0000761c R __exidx_end
-00007613 T __exidx_start
+00007620 R __etext
+00007620 R __exidx_end
+00007617 T __exidx_start
 2003a224 d __frame_dummy_init_array_entry
-0000748a t __func__.9047
+0000748f t __func__.9047
 20064000 D __hwa_end__
 20064000 D __hwa_start__
 2003a228 d __init_array_end
@@ -178,9 +178,9 @@
 2004a590 ? __rtos_start__
 00006a8e T __sclose
 0000433c W __semihost_call
-00007580 T __sf_fake_stderr
-000075a0 T __sf_fake_stdin
-000075c0 T __sf_fake_stdout
+00007584 T __sf_fake_stderr
+000075a4 T __sf_fake_stdin
+000075c4 T __sf_fake_stdout
 00005d28 T __sflush_r
 00005f00 T __sfmoreglue
 00005fcc T __sfp
@@ -219,7 +219,7 @@
 00006ca4 T _fstat
 00006adc T _fstat_r
 00006058 T _fwalk_reent
-0000757c T _global_impure_ptr
+00007580 T _global_impure_ptr
 2003a1c0 D _impure_ptr
 00006ce4 T _init
 00006cb4 T _isatty
@@ -241,7 +241,7 @@
 20027000 D _sdata
 20027004 D _semihost_handle
 000003f8 T _semihost_write
-0000761c A _sidata
+00007620 A _sidata
 00000164 W _stack_init
 0000016c T _start
 00006234 T _svfiprintf_r
