@@ -63,9 +63,9 @@ static void nvic_init(void);
 void vTask1(void *pvParameters){
     while(1){
         if('u' == CLI_getkey(0)){
-            dbg_str("zz\r\n");            
+            dbg_str("'u' key pressed!!\r\n");            
         }
-        dbg_str("aaaaa\r\n");
+        dbg_str("Task1 loop test..\r\n");
         vTaskDelay(100);
     }
 }
