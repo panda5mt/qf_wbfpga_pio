@@ -59,16 +59,11 @@ const char *SOFTWARE_VERSION_STR;
 
 extern void qf_hardwareSetup();
 static void nvic_init(void);
+xSemaphoreHandle mutex;
 
-void vTask1(void *pvParameters){
-    while(1){
-        if('u' == CLI_getkey(0)){
-            dbg_str("'u' key pressed!!\r\n");            
-        }
-        dbg_str("Task1 loop test..\r\n");
-        vTaskDelay(100);
-    }
-}
+void vTask1(void *pvParameters);
+void vTask2(void *pvParameters);
+
 int main(void)
 {
 
@@ -94,8 +89,9 @@ int main(void)
         
       
     //CLI_start_task( my_main_menu );
+    mutex = xSemaphoreCreateMutex();
     xTaskCreate(vTask1, "Task1", 100, NULL, 1, NULL);  
-
+    xTaskCreate(vTask2, "Task2", 100, NULL, 1, NULL);  
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     dbg_str("\n");
@@ -121,4 +117,20 @@ void SystemInit(void)
 
 }
 
+void vTask1(void *pvParameters){
+    while(1){
+        if('u' == CLI_getkey(0)){
+            dbg_str("'u' key pressed!!\r\n");            
+        }
+        dbg_str("Task1 loop test..\r\n");
+        vTaskDelay(120);
+    }
+}
 
+void vTask2(void *pvParameters){
+    while(1){
+        
+        dbg_str("Task2 loop test..\r\n");
+        vTaskDelay(100);
+    }
+}
