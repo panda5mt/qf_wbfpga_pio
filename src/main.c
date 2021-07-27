@@ -85,7 +85,7 @@ int main(void)
     
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "M4 and FPGA PIO Exam hoge\n");
+    dbg_str( "M4 and FPGA PIO Exam via WB\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
