@@ -149,7 +149,7 @@
 00007628 R __exidx_end
 0000761f T __exidx_start
 2003a224 d __frame_dummy_init_array_entry
-00007497 t __func__.9047
+00007498 t __func__.9047
 20064000 D __hwa_end__
 20064000 D __hwa_start__
 2003a228 d __init_array_end
