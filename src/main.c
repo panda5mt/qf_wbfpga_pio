@@ -42,12 +42,11 @@
 #include "dbg_uart.h"
 #include "eoss3_hal_spi.h"
 #include "cli.h"
-
+//#include "qf_hardwaresetup.h"
 extern const struct cli_cmd_entry my_main_menu[];
 
 #include "fpga_loader.h"        // API for loading FPGA
 #include "AL4S3B_FPGA_top_bit.h"   // FPGA bitstream to load into FPGA
-
 
 const char *SOFTWARE_VERSION_STR;
 
@@ -55,9 +54,7 @@ const char *SOFTWARE_VERSION_STR;
 /*
  * Global variable definition
  */
-
-
-extern void qf_hardwareSetup();
+//extern void qf_hardwareSetup();
 static void nvic_init(void);
 xSemaphoreHandle mutex;
 
@@ -88,10 +85,10 @@ int main(void)
     dbg_str( "##########################\n\n");
         
       
-    //CLI_start_task( my_main_menu );
-    mutex = xSemaphoreCreateMutex();
-    xTaskCreate(vTask1, "Task1", 100, NULL, 1, NULL);  
-    xTaskCreate(vTask2, "Task2", 100, NULL, 1, NULL);  
+    CLI_start_task( my_main_menu );
+    //mutex = xSemaphoreCreateMutex();
+    //xTaskCreate(vTask1, "Task1", 100, NULL, 1, NULL);  
+    //xTaskCreate(vTask2, "Task2", 100, NULL, 1, NULL);  
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     dbg_str("\n");

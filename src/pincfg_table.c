@@ -39,7 +39,6 @@ PadConfig pincfg_table[] =
   },
 
 
-
   { // setup debug input pins Pad 14 - S3_SW_DP_CLK
     .ucMode = PAD_MODE_INPUT_EN,
     .ucCtrl = PAD_CTRL_SRC_OTHER,
@@ -99,14 +98,14 @@ PadConfig pincfg_table[] =
   
   // LEDS controlled by FPGA
    { // setup blue LED
-    .ucPin = PAD_18,
-    .ucFunc = PAD18_FUNC_SEL_FBIO_18,
+    .ucPin = PAD_16,
+    .ucFunc = PAD16_FUNC_SEL_FBIO_16,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
+    .ucPull = PAD_PULLUP,
     .ucDrv = PAD_DRV_STRENGTH_4MA,
     .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
   },
   { // setup green LED
     .ucPin = PAD_21,
