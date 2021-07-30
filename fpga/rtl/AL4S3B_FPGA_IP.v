@@ -136,6 +136,7 @@ input 			spi_miso_i;
 output 			led_r_o;
 output 			led_b_o;
 output 			led_g_o;
+
 output 			boot_o;
 output          Interrupt_o;
 
@@ -199,7 +200,6 @@ wire    [2:0]   color0;
 wire    [2:0]   color1;
 wire    [2:0]   color2;
 wire    [2:0]   color3;
-
 wire            Interrupt_o           ;
 
 
@@ -253,6 +253,7 @@ bipad u_bipad_I1  ( .A( 1'b0 ), .EN( 1'b0 ), .Q( usb_n_rx_int ), .P( usbn_io ) )
 
 
 assign clk_12mhz = WB_CLK;
+
 
 // User IP
 LED_controller u_LED_controller (

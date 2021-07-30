@@ -32,7 +32,8 @@ module LED_controller (
 
     led_r,
     led_g,
-    led_b
+    led_b,
+
 );
 
 input           clk;
@@ -51,6 +52,7 @@ input   [2:0]   color3;
 output          led_r;
 output          led_g;
 output          led_b;
+
 
 parameter   [13:0]   TERMINAL_CNT_1MS = (12000-1);  // assume 12MHz (decimal) clock input
 
@@ -244,7 +246,6 @@ always @(posedge rst or posedge clk)
 assign led_r = LED_color[2];
 assign led_g = LED_color[1];
 assign led_b = LED_color[0];
-
 
 endmodule
 

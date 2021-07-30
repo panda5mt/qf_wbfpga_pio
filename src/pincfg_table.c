@@ -127,7 +127,16 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  
+  { // setup clkout
+    .ucPin = PAD_17,
+    .ucFunc = PAD17_FUNC_SEL_FBIO_17,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGTH_4MA,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
    {
     // Pad6 is the user button
     .ucPin = PAD_6,

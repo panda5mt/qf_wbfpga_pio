@@ -109,12 +109,11 @@ static void nvic_init(void)
  }    
 
 //needed for startup_EOSS3b.s asm file
-void SystemInit(void)
-{
+void SystemInit(void) {
 
 }
 
-void vTask1(void *pvParameters){
+void vTask1(void *pvParameters) {
     while(1){
         if('u' == CLI_getkey(0)){
             dbg_str("'u' key pressed!!\r\n");            

@@ -31,7 +31,8 @@
 module AL4S3B_FPGA_top ( 
 			led_r_o,
 			led_b_o,
-			led_g_o
+			led_g_o,
+            clk24_o
 			
             );
 
@@ -77,7 +78,7 @@ parameter       QL_RESERVED_DEF_REG_VALUE   = 32'hDEF_FAB_AC; // Distinguish acc
 output 			led_r_o;
 output 			led_b_o;
 output 			led_g_o;
-
+output          clk24_o;
 //
 // None at this time
 //
@@ -121,6 +122,8 @@ wire   			usb_pu_cntrl_o;
 
 wire            Interrupt_o;
 
+
+assign  clk24_o = clk_48mhz;
 
 //------Logic Operations---------------
 //
@@ -205,6 +208,7 @@ AL4S3B_FPGA_IP              #(
 	.led_r_o             		( led_r_o       			),
 	.led_b_o             		( led_b_o       			),
 	.led_g_o             		( led_g_o       			),
+
 	.boot_o             		( boot       				),
     .Interrupt_o	            ( Interrupt_o	            ),
 
