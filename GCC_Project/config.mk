@@ -69,7 +69,6 @@ $(info Building on Windows $(BUILD_SYS))
 
 export DIR_SEP=\\
 
-
 #Configuration options for GNU Win32 GCC Toolchain
 export MKDIR=mkdir
 export RM=del /S /Q

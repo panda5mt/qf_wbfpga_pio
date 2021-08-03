@@ -26,6 +26,14 @@
 
 #include <stdint.h>
 
+#if   (__IAR_SYSTEMS_ICC__)
+#define PLACE_IN_SECTION(x) @x
+#elif (__GNUC__)
+#define PLACE_IN_SECTION(x) __attribute__((section(x)))
+#else
+#error "Unknown compiler"
+#endif
+
 #define ENABLE_VOICE_SOLUTION   1
 
 #define FEATURE_CLI_DEBUG_INTERFACE  1
@@ -47,8 +55,8 @@
 #if !defined(S3AI_FIRMWARE_MODE)
      /* allow for commandline define for automated builds on Linux */
 /* There is not enough RAM to do both - collection & recognition, choose 1 */
-#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
-//#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
+//#define S3AI_FIRMWARE_MODE      S3AI_FIRMWARE_MODE_COLLECTION
+#define S3AI_FIRMWARE_MODE   S3AI_FIRMWARE_MODE_RECOGNITION
 // #define S3AI_FIRMWARE_MODE    S3AI_FIRMWARE_MODE_none
 #endif
 
@@ -80,6 +88,7 @@
 
 #define FEATURE_FPGA_UART   0       // FPGA UART not present
 #define FEATURE_USBSERIAL   0       // USBSERIAL port is present
+#define USB_UART_CHECK_FIFO_CONNECT  0    // 1 for USB-serial
 
 // Options for debug output -- use to set DEBUG_UART below
 // #define UART_ID_DISABLED     0   // /dev/null */
@@ -89,8 +98,17 @@
 // #define UART_ID_BUFFER       4   // Write data to buffer
 // #define UART_ID_SEMBUF       5   // Write data to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-#define DEBUG_UART  UART_ID_HW      // the hard UART on the S
-     
+
+#if (FEATURE_USBSERIAL == 1)
+#define DEBUG_UART  UART_ID_HW  // Write data to USB serial port
+#define UART_ID_CONSOLE UART_ID_HW
+#define UART_ID_MQTTSN  UART_ID_USBSERIAL   
+#else
+#define DEBUG_UART       UART_ID_HW          //UART_ID_BUFFER  // Write data to USB serial port
+//#define UART_ID_CONSOLE  UART_ID_HW     //UART_ID_DISABLED
+#define UART_ID_MQTTSN   UART_ID_DISABLED     //UART_ID_HW
+#endif
+
 #define USE_SEMIHOSTING     0       // 1 => use semihosting, 0 => use UART_ID_HW
 
 #define SIZEOF_DBGBUFFER    2048    // Number of characters in circular debug buffer
@@ -104,8 +122,22 @@
 extern uint32_t DBG_flags;
 #endif
 
+#define DBG_FLAG_recog_result   (0x00000001)
+#define DBG_FLAG_q_drop         (0x00000002)
+#define DBG_FLAG_ble            (0x00000004)
+#define DBG_FLAG_ble_cmd        (0x00000008)
+#define DBG_FLAG_ble_background (0x00000010)
+#define DBG_FLAG_datasave_debug (0x00000020)
+#define DBG_FLAG_ble_details    (0x00000040)
+#define DBG_FLAG_data_collect   (0x00000080)
+#define DBG_FLAG_sensor_rate    (0x00000100)
+#define DBG_FLAG_ffe            (0x00000100)
+#define DBG_FLAG_adc_task       (0x00000200)
 
 extern const char *SOFTWARE_VERSION_STR;
+
+#define UUID_TOTAL_BYTES     16
+extern uint8_t DeviceClassUUID[UUID_TOTAL_BYTES]; 
 
 extern int FPGA_FFE_LOADED;
 
@@ -134,21 +166,42 @@ extern int FPGA_FFE_LOADED;
 #define	QL_LOG_TEST_150K(X,...)	  printf(X,##__VA_ARGS__)
 
 
-///* enable via sw the FFE or disable it, TODO: Make this real instead of a hack */
-//#define SW_ENABLE_FFE   0
-///* enable via sw the AUDIO or disable it, TODO: Make this real instead of a hack */
-//#define SW_ENABLE_AUDIO 0
-///* enable the FFE or not, see SW_ENABLE_FFE only 1 should exist */
-//#define FFE_DRIVERS	0 // 1
+#define IMU_M4_DRIVERS     1  ///< enable IMU sensors (Accel, Gyro, ...)
+                              ///< using M4 driver to probe and collect data from
+                              ///< the sensors
+
+#define IMU_FFE_DRIVERS    0  ///< option to enable IMU sensor data collection
+                              ///< using onchip FFE (availble on EOS-S3 only)
+
+#define IMU_DRIVERS        (IMU_M4_DRIVERS || IMU_FFE_DRIVERS)
+
+#define USE_IMU_FIFO_MODE   (1)    ///< Use FIFO mode to read from Accelerometer device
+
+/* enable via sw the FFE or disable it, TODO: Make this real instead of a hack */
+#define SW_ENABLE_FFE   1
+/* enable via sw the AUDIO or disable it, TODO: Make this real instead of a hack */
+#define SW_ENABLE_AUDIO 0
+/* enable the FFE or not, see SW_ENABLE_FFE only 1 should exist */
+#define FFE_DRIVERS	(IMU_FFE_DRIVERS) // 1
 //
 ///* do or do not perform dynamic frequency scaling */
-//#define CONST_FREQ (1)
-//
+#define CONST_FREQ (1)
+
+// Enable ADC FPGA Driver
+#define AD7476_FPGA_DRIVER   1
+
+#if (FEATURE_USBSERIAL == 1) && (AD7476_FPGA_DRIVER == 1)
+#error "FEATURE_USBSERIAL and AD7476_FPGA_DRIVER are both enabled, Please select only of these FPGA IP features"
+#endif
+
 ///* enable the LTC1859 driver */
 //#define LTC1859_DRIVER  0 // 1
 //
 ///* enable the AUDIO driver */
-//#define AUDIO_DRIVER    0    // Set 1 to enable audio sampling
+#define AUDIO_DRIVER    1    // Set 1 to enable audio sampling
+
+#define PDM2DEC_FACT    48   // Use 1.5MHz PDM Clock
+
 //
 ///* enable LPSD mode of AUDIO IP*/
 //#define ENABLE_LPSD    0 //Set to 1 enable, 0 to disable LPSD
@@ -158,8 +211,22 @@ extern int FPGA_FFE_LOADED;
 
 #define EOSS3_ASSERT( x )
 
+/* FIXME: Future, make this configurable based on filesystem?
+ * OR - maybe 4K is a really good number and we should stick with 4K
+ */
+#define RIFF_BLOCK_SIZE (4*1024) /* we save data in 4K blocks */
+// The first 0x30 bytes of a data block is the data block header.
+#define RIFF_DATA_BLOCK_PAYLOAD_SIZE  (RIFF_BLOCK_SIZE - 0x30)
+
 /* Define this flag to Enable Internal LDO. If undefined, internal LDO will be disabled.*/
 //#define ENABLE_INTERNAL_LDO   1  // set to 0 for power measurement
+
+/* max frequency is 1600hz, we give a bit more just in case */
+/* report rate is 10mSec, or 100 times per second */
+#define SENSIML_FFE_MAX_DATARATE        1600
+#define SENSIML_FFE_REPORT_RATE          100
+#define SENSIML_FFE_MAX_BATCH_DATA_SZ ((SENSIML_FFE_MAX_DATARATE/ SENSIML_FFE_REPORT_RATE)+2)
+#define SENSIML_FFE_MIN_BATCH_DATA_SZ (6)
 
 /* select one of the following for Audio PDM  block */
 //#define PDM_PAD_28_29 1
@@ -168,13 +235,11 @@ extern int FPGA_FFE_LOADED;
 
 #define SET_LPSD_THRESH 0
 
-/* define one of these */
-#define PDM_MIC_MONO 1
-#define PDM_MIC_STEREO 0
 #define VOICE_CONF_ENABLE_I2S_MIC 0
 
 /* if mono define one of these */
-#define PDM_MIC_LEFT_CH 1
+#define PDM_MIC_CHANNELS 1
+#define PDM_MIC_LEFT_CH  1
 #define PDM_MIC_RIGHT_CH 0
 
 #define EN_STEREO_DUAL_BUF 0
@@ -182,6 +247,23 @@ extern int FPGA_FFE_LOADED;
 //#define AEC_ENABLED 1
 
 //#define AUDIO_LED_TEST 1 //Valid only in Chandalar BSP specific apps
+
+#define MQTTSN_OVER_UART    1 //current implementation is over UART
+//#define MQTTSN_OVER_BLE     (RECOG_VIA_BLE) //currently use BLE once Recogonition
+
+#if (MQTTSN_OVER_UART == 1)
+#define USE_FPGA_UART       0
+//#define FEATURE_FPGA_UART   1
+//#define MQTTSN_UART         UART_ID_FPGA //UART_ID_HW  //Use debug UART for now
+#endif
+
+#define DEFAULT_STORAGE_LOCATION    FREERTOS_NONE_MOUNTED // FREERTOS_SPI_FLASH
+
+#if 1 //sensorTile has only SD card //QAI_CHILKAT
+#define NUM_SUPPORTED_PATHS 1 
+#else
+#define NUM_SUPPORTED_PATHS 2
+#endif //QAI_CHILKAT
 
 /* stringize value */
 #define VALUE2STRING(value)    TOSTRING(value)

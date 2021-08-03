@@ -29,7 +29,7 @@
 #include "cli.h"
 #include <stdbool.h>
 #include "dbg_uart.h"
-#include "fpga_ledctlr.h"
+//#include "qlsh_commands.h"
 
 #if FEATURE_CLI_DEBUG_INTERFACE
 
@@ -143,140 +143,7 @@ static void set_rx_channel(const struct cli_cmd_entry *pEntry)
     return;
 }
 #endif
-//-------------------------------------------------
-//
-//   LED Controller CLI
-//
-//-------------------------------------------------
 
-//------------- Local functions -------------------
-static void set_color0(const struct cli_cmd_entry *pEntry);
-static void set_color1(const struct cli_cmd_entry *pEntry);
-static void set_color2(const struct cli_cmd_entry *pEntry);
-static void set_color3(const struct cli_cmd_entry *pEntry);
-
-static void set_duration0(const struct cli_cmd_entry *pEntry);
-static void set_duration1(const struct cli_cmd_entry *pEntry);
-static void set_duration2(const struct cli_cmd_entry *pEntry);
-static void set_duration3(const struct cli_cmd_entry *pEntry);
-
-const struct cli_cmd_entry qf_ledctlr[] =
-{
-    CLI_CMD_SIMPLE( "color0", set_color0, "set color for time slot 0" ),
-	CLI_CMD_SIMPLE( "color1", set_color1, "set color for time slot 1" ),
-	CLI_CMD_SIMPLE( "color2", set_color2, "set color for time slot 2" ),
-	CLI_CMD_SIMPLE( "color3", set_color3, "set color for time slot 3" ),
-	
-	CLI_CMD_SIMPLE( "duration0", set_duration0, "set duration for time slot 0" ),
-	CLI_CMD_SIMPLE( "duration1", set_duration1, "set duration for time slot 1" ),
-	CLI_CMD_SIMPLE( "duration2", set_duration2, "set duration for time slot 2" ),
-	CLI_CMD_SIMPLE( "duration3", set_duration3, "set duration for time slot 3" ),
-
-    CLI_CMD_TERMINATE()
-};
-
-uint8_t ucColor0 = 0;
-static void set_color0(const struct cli_cmd_entry *pEntry)
-{
-    
-    (void)pEntry;
-        // Add functionality here
-	ucColor0 = fpga_ledctlr_getcolor(0);
-    CLI_uint8_getshow( "color0", &ucColor0 );
-    fpga_ledctlr_setcolor(ucColor0, 0);
-    return;
-}
-
-uint8_t ucColor1 = 0;
-static void set_color1(const struct cli_cmd_entry *pEntry)
-{
-    
-    (void)pEntry;
-        // Add functionality here
-	ucColor1 = fpga_ledctlr_getcolor(1);
-    CLI_uint8_getshow( "color1", &ucColor1 );
-    fpga_ledctlr_setcolor(ucColor1, 1);
-    return;
-}
-
-uint8_t ucColor2 = 0;
-static void set_color2(const struct cli_cmd_entry *pEntry)
-{
-    
-    (void)pEntry;
-        // Add functionality here
-	ucColor2 = fpga_ledctlr_getcolor(2);
-    CLI_uint8_getshow( "color2", &ucColor2 );
-    fpga_ledctlr_setcolor(ucColor2, 2);
-    return;
-}
-
-uint8_t ucColor3 = 0;
-static void set_color3(const struct cli_cmd_entry *pEntry)
-{
-    
-    (void)pEntry;
-        // Add functionality here
-	ucColor3 = fpga_ledctlr_getcolor(3);
-    CLI_uint8_getshow( "color3", &ucColor3 );
-    fpga_ledctlr_setcolor(ucColor3, 3);
-    return;
-}
-
-uint16_t uhDuration0 = 0;
-static void set_duration0(const struct cli_cmd_entry *pEntry)
-{
-    
-    (void)pEntry;
-        // Add functionality here
-	uhDuration0 = fpga_ledctlr_getduration(0);
-    CLI_uint16_getshow( "duration0", &uhDuration0 );
-    fpga_ledctlr_setduration(uhDuration0, 0);
-    return;
-}
-
-uint16_t uhDuration1 = 0;
-static void set_duration1(const struct cli_cmd_entry *pEntry)
-{
-    
-    (void)pEntry;
-        // Add functionality here
-	uhDuration1 = fpga_ledctlr_getduration(1);
-    CLI_uint16_getshow( "duration1", &uhDuration1 );
-    fpga_ledctlr_setduration(uhDuration0, 1);
-    return;
-}
-
-uint16_t uhDuration2 = 0;
-static void set_duration2(const struct cli_cmd_entry *pEntry)
-{
-    
-    (void)pEntry;
-        // Add functionality here
-	uhDuration2 = fpga_ledctlr_getduration(2);
-    CLI_uint16_getshow( "duration2", &uhDuration2 );
-    fpga_ledctlr_setduration(uhDuration2, 2);
-    return;
-}
-
-uint16_t uhDuration3 = 0;
-static void set_duration3(const struct cli_cmd_entry *pEntry)
-{
-    
-    (void)pEntry;
-        // Add functionality here
-	uhDuration3 = fpga_ledctlr_getduration(3);
-    CLI_uint16_getshow( "duration3", &uhDuration3 );
-    fpga_ledctlr_setduration(uhDuration3, 3);
-    return;
-}
-
-
-//-------------------------------------------------
-//
-//   Diagnostic CLI
-//
-//-------------------------------------------------
 static void togglegreenled(const struct cli_cmd_entry *pEntry)
 {
     static bool fLit = false;
@@ -328,7 +195,6 @@ const struct cli_cmd_entry qf_diagnostic[] =
 };
 
 const struct cli_cmd_entry my_main_menu[] = {
-	CLI_CMD_SUBMENU( "ledctlr", qf_ledctlr, "FPGA led controller" ),
     CLI_CMD_SUBMENU( "diag", qf_diagnostic, "QuickFeather diagnostic commands" ),
     CLI_CMD_TERMINATE()
 };
