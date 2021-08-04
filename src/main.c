@@ -42,6 +42,8 @@
 #include "cli.h"
 
 #include "fpga_loader.h"    // API for loading FPGA
+#include "AL4S3B_FPGA_top_bit.h"   // FPGA bitstream to load into FPGA
+
 #include "gateware.h"           // FPGA bitstream to load into FPGA
 #include "sensor_config.h"
 #include "datablk_mgr.h"
@@ -50,6 +52,9 @@
 #include "process_imu.h"
 #include "eoss3_hal_i2c.h"
 #include "mc3635.h"
+
+
+
 extern const struct cli_cmd_entry my_main_menu[];
 
 #if DBG_FLAGS_ENABLE
@@ -334,7 +339,9 @@ int main(void)
     S3x_Clk_Disable(S3X_FB_16_CLK);
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-    load_fpga(axFPGABitStream_length,axFPGABitStream);
+    load_fpga(sizeof(axFPGABitStream),axFPGABitStream);     // Load bitstrem into FPGA
+    fpga_ledctlr_init();
+    
 #if (FEATURE_USBSERIAL == 1)
     // Use 0x6141 as the USB serial product ID (USB PID)
     // HAL_usbserial_init2(false, true, 0x6141);   // Start USB serial not using interrupts, Use 72MHz clock
@@ -351,7 +358,7 @@ int main(void)
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
 
-	  dbg_str( "\n\nunko!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
+	  dbg_str( "\n\ntest test!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
     // Initialize mCube MC3635 Accelerometer sensor device
     //mc3635_init();

@@ -6,7 +6,7 @@ include config.mk
 
 VPATH:=$(OUTPUT_PATH)
 
-all: _makedirs_ gateware external_srcs appdir s3gw_drivers
+all: _makedirs_ external_srcs appfpga appdir s3gw_drivers
 	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
 	-${HIDE}$(MKDIR) $(OUTPUT_PATH)$(DIR_SEP)bin
@@ -24,9 +24,17 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP DatablockProcessor GENERATED \
+external_srcs: Startup HAL FreeRTOS Libraries BSP FPGA DatablockProcessor GENERATED \
                ADC SENSOR_AD7476 SENSOR_AUDIO
 	@echo "External sources built"
+
+.PHONY: appfpga
+appfpga:
+	make -f makefiles/Makefile_appfpga
+clean_appfpga:
+	make -f makefiles/Makefile_appfpga clean
+	
+CLEAN_TARGET += appfpga
 
 .PHONY: appdir
 appdir:
@@ -82,6 +90,14 @@ clean_Libraries:
 	make -f makefiles/Makefile_Libraries clean
 
 CLEAN_TARGET += Libraries
+
+.PHONY:FPGA
+FPGA:
+	make -f makefiles/Makefile_FPGA
+clean_FPGA:
+	make -f makefiles/Makefile_FPGA clean
+
+CLEAN_TARGET += BSP
 
 .PHONY: GENERATED
 GENERATED:

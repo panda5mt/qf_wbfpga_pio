@@ -97,6 +97,16 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 #endif
+   { // Pad 17 -- 12~24MHz clock
+    .ucPin = PAD_17,
+    .ucFunc = PAD17_FUNC_SEL_FBIO_17,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
   // LEDS
    { // setup blue LED
     .ucPin = PAD_18,
@@ -140,7 +150,7 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
 #endif
-  
+
    { // Pad 33 -- Test clock
     .ucPin = PAD_33,
     .ucFunc = PAD33_FUNC_SEL_FBIO_33,
@@ -148,8 +158,8 @@ PadConfig pincfg_table[] =
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
     .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
   },
   
   // SPI Master
@@ -187,7 +197,7 @@ PadConfig pincfg_table[] =
     .ucPin = PAD_36,
     .ucFunc = PAD36_FUNC_SEL_FBIO_36,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_INPUT_EN,
+    .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
   },
   
