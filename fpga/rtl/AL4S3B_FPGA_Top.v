@@ -33,10 +33,10 @@ module AL4S3B_FPGA_top (
 			led_b_o,
 			led_g_o,
             clk24_o,
-            p0,
-            p1,
-            p2,
-            p3
+            p0_o,
+            p1_o,
+            p2_o,
+            p3_o
 			
             );
 
@@ -83,10 +83,10 @@ output 			led_r_o;
 output 			led_b_o;
 output 			led_g_o;
 output          clk24_o;
-output p0;
-output p1;
-output p2;
-output p3;
+output p0_o;
+output p1_o;
+output p2_o;
+output p3_o;
 //
 // None at this time
 //
@@ -216,10 +216,10 @@ AL4S3B_FPGA_IP              #(
 	.led_r_o             		( led_r_o       			),
 	.led_b_o             		( led_b_o       			),
 	.led_g_o             		( led_g_o       			),
-    .p0 (p0),
-    .p1 (p1),
-    .p2 (p2),
-    .p3 (p3),
+    .p0_o (p0_o),
+    .p1_o (p1_o),
+    .p2_o (p2_o),
+    .p3_o (p3_o),
 	.boot_o             		( boot       				),
     .Interrupt_o	            ( Interrupt_o	            ),
 

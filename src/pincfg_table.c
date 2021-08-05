@@ -97,6 +97,16 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 #endif
+ { // Pad 16 -- 
+    .ucPin = PAD_16,
+    .ucFunc = PAD16_FUNC_SEL_FBIO_16,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
    { // Pad 17 -- 12~24MHz clock
     .ucPin = PAD_17,
     .ucFunc = PAD17_FUNC_SEL_FBIO_17,

@@ -314,6 +314,9 @@ void setup_sensors_data_block_processor(void)
 #endif
 }
 
+void vTask1(void *pvParameters);
+void vTask2(void *pvParameters);
+
 #if 1
 static I2C_Config i2c0config =
 {
@@ -368,30 +371,56 @@ int main(void)
     uint8_t i2c_write_data = 0x0;
     uint8_t val = 0;
     HAL_I2C_Init(i2c0config);
+    
     val = 0x01; HAL_I2C_Write(0x25, 0x04, &val, 1);
 
-
-    while(1);
-
-    CLI_start_task( my_main_menu );
-
-    setup_sensors_data_block_processor();
-    sensor_set_virtual_sensor(IMU_V_SENSOR_NO);
-
-    StartRtosTaskMqttsnApp();
-    StartRtosTaskMqttsnMsgHandler();
-#if S3AI_FIRMWARE_IS_RECOGNITION
-    StartRtosTaskRecognition();
-#endif
-    //StartRtosTaskADC();
-    xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
-
-    /* Start the tasks and timer running. */
+    xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
+    xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
     vTaskStartScheduler();
-    dbg_str("\n");
+
+
+  
+
+
+
+//     while(1);
+
+//     //CLI_start_task( my_main_menu );
+
+//     setup_sensors_data_block_processor();
+//     sensor_set_virtual_sensor(IMU_V_SENSOR_NO);
+
+//     StartRtosTaskMqttsnApp();
+//     StartRtosTaskMqttsnMsgHandler();
+// #if S3AI_FIRMWARE_IS_RECOGNITION
+//     StartRtosTaskRecognition();
+// #endif
+//     //StartRtosTaskADC();
+//     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
+
+//     /* Start the tasks and timer running. */
+//     vTaskStartScheduler();
+//     dbg_str("\n");
 
     while(1);
 }
+
+
+void vTask1(void *pvParameters){
+  while(1){
+    fpga_ledctlr_setcolor(0x00, 0);
+    vTaskDelay(100);
+    fpga_ledctlr_setcolor(0x07, 0);
+    vTaskDelay(100);
+  }
+}
+void vTask2(void *pvParameters){
+  while(1){
+    vTaskDelay(1000);
+    dbg_str("LED Blink Test!\r\n");
+  }
+}
+
 
 static void nvic_init(void)
  {

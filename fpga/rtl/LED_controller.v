@@ -84,7 +84,7 @@ localparam  [4:0]   SEQ_SLOT3 = 5'h08;
 
 reg     [2:0]   LED_color;
 
-
+/*
 // decode duration = 0 to simplify other logic
 always @(posedge rst or posedge clk)
     if (rst) begin
@@ -98,7 +98,7 @@ always @(posedge rst or posedge clk)
         duration2is0 <= (duration2 == 0);
         duration3is0 <= (duration3 == 0);
     end
-/*
+
 // 1ms timer
 always @(posedge rst or posedge clk)
     if (rst) begin
@@ -256,18 +256,18 @@ assign led_r = LED_color[2];
 assign led_g = LED_color[1];
 assign led_b = LED_color[0];
 
-reg [3:0] port;
-always @(posedge rst or posedge clk)
-    if (rst) begin
-        port <= 4'b0;
-    end else begin
-        port <= color0;
-    end
+reg [3:0] port_l;
 
-assign p0 = port[0];
-assign p1 = port[1];
-assign p2 = port[2];
-assign p3 = port[3];
+always @(posedge rst or posedge clk)
+    if (rst)begin
+        port_l <= 4'h0;
+    end else begin
+        port_l <= color0;
+    end
+assign p0 = port_l[0];
+assign p1 = port_l[1];
+assign p2 = port_l[2];
+assign p3 = port_l[3];
 
 
 endmodule

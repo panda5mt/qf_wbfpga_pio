@@ -57,10 +57,10 @@ module AL4S3B_FPGA_IP (
 				led_r_o,
 				led_b_o,
 				led_g_o,
-                p0,
-                p1,
-                p2,
-                p3,
+                p0_o,
+                p1_o,
+                p2_o,
+                p3_o,
 				boot_o,
 			    Interrupt_o,
 
@@ -141,10 +141,10 @@ output 			led_r_o;
 output 			led_b_o;
 output 			led_g_o;
 
-output  p0;
-output  p1;
-output  p2;
-output  p3;
+output  p0_o;
+output  p1_o;
+output  p2_o;
+output  p3_o;
 
 output 			boot_o;
 output          Interrupt_o;
@@ -205,7 +205,7 @@ wire    [11:0]  duration1;
 wire    [11:0]  duration2;
 wire    [11:0]  duration3;
 
-wire    [2:0]   color0;
+wire    [3:0]   color0;
 wire    [2:0]   color1;
 wire    [2:0]   color2;
 wire    [2:0]   color3;
@@ -281,7 +281,12 @@ LED_controller u_LED_controller (
 
     .led_r      ( led_r_o       ),
     .led_g      ( led_g_o       ),
-    .led_b      ( led_b_o       )
+    .led_b      ( led_b_o       ),
+
+    .p0 (p0_o),
+    .p1 (p1_o),
+    .p2 (p2_o),
+    .p3 (p3_o)
 );
 
 
