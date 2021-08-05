@@ -345,11 +345,7 @@ int main(void)
     load_fpga(sizeof(axFPGABitStream),axFPGABitStream);     // Load bitstrem into FPGA
     fpga_ledctlr_init();
     
-#if (FEATURE_USBSERIAL == 1)
-    // Use 0x6141 as the USB serial product ID (USB PID)
-    // HAL_usbserial_init2(false, true, 0x6141);   // Start USB serial not using interrupts, Use 72MHz clock
-#endif
-    //for (int i = 0; i != 4000000; i++) ;   // Give it time to enumerate
+
     HAL_Delay_Init();
 
     dbg_str("\n\n");
