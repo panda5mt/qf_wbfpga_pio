@@ -178,7 +178,7 @@ begin
     begin
 		Scratch_reg <=  16'h0 ; 
         WBs_ACK_o   <=  1'b0  ;
-        color0      <=  3'b0    ;
+        color0      <=  4'b0    ;
         color1      <=  3'b0    ;
         color2      <=  3'b0    ;
         color3      <=  3'b0    ;
@@ -197,7 +197,7 @@ begin
 			Scratch_reg[15:8]  <= WBs_DAT_i[15:8] ;
 
         if (FB_COLORS_REG_Wr_Dcd) begin
-            color0 <= WBs_BYTE_STB_i[0] ? WBs_DAT_i[2:0]    : color0;
+            color0 <= WBs_BYTE_STB_i[0] ? WBs_DAT_i[3:0]    : color0;
             color1 <= WBs_BYTE_STB_i[1] ? WBs_DAT_i[10:8]   : color1;
             color2 <= WBs_BYTE_STB_i[2] ? WBs_DAT_i[18:16]  : color2;
             color3 <= WBs_BYTE_STB_i[3] ? WBs_DAT_i[26:24]  : color3;
@@ -245,7 +245,7 @@ always @(
     FPGA_REG_ID_VALUE_ADR    : WBs_DAT_o <= Device_ID_o;
     FPGA_REV_NUM_ADR         : WBs_DAT_o <= Rev_Num;  
     FPGA_SCRATCH_REG_ADR     : WBs_DAT_o <= { 16'h0, Scratch_reg }; 
-    FPGA_COLORS_ADR          : WBs_DAT_o <= { 5'b0, color3, 5'b0, color2, 5'b0, color1, 5'b0, color0};
+    FPGA_COLORS_ADR          : WBs_DAT_o <= { 5'b0, color3, 5'b0, color2, 5'b0, color1, 4'b0, color0};
     FPGA_DURATION0_ADR       : WBs_DAT_o <= { 20'b0, duration0};
     FPGA_DURATION1_ADR       : WBs_DAT_o <= { 20'b0, duration1};
     FPGA_DURATION2_ADR       : WBs_DAT_o <= { 20'b0, duration2};

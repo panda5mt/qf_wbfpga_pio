@@ -57,6 +57,10 @@ module AL4S3B_FPGA_IP (
 				led_r_o,
 				led_b_o,
 				led_g_o,
+                p0,
+                p1,
+                p2,
+                p3,
 				boot_o,
 			    Interrupt_o,
 
@@ -136,6 +140,11 @@ input 			spi_miso_i;
 output 			led_r_o;
 output 			led_b_o;
 output 			led_g_o;
+
+output  p0;
+output  p1;
+output  p2;
+output  p3;
 
 output 			boot_o;
 output          Interrupt_o;

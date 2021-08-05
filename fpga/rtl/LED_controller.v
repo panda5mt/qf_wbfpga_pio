@@ -34,6 +34,11 @@ module LED_controller (
     led_g,
     led_b,
 
+    p0,
+    p1,
+    p2,
+    p3
+
 );
 
 input           clk;
@@ -44,7 +49,7 @@ input   [11:0]  duration1;
 input   [11:0]  duration2;
 input   [11:0]  duration3;
 
-input   [2:0]   color0;
+input   [3:0]   color0;
 input   [2:0]   color1;
 input   [2:0]   color2;
 input   [2:0]   color3;
@@ -52,6 +57,10 @@ input   [2:0]   color3;
 output          led_r;
 output          led_g;
 output          led_b;
+output          p0;
+output          p1;
+output          p2;
+output          p3;
 
 
 parameter   [13:0]   TERMINAL_CNT_1MS = (12000-1);  // assume 12MHz (decimal) clock input
@@ -89,7 +98,7 @@ always @(posedge rst or posedge clk)
         duration2is0 <= (duration2 == 0);
         duration3is0 <= (duration3 == 0);
     end
-
+/*
 // 1ms timer
 always @(posedge rst or posedge clk)
     if (rst) begin
@@ -242,10 +251,24 @@ always @(posedge rst or posedge clk)
         endcase
 
 
-
+*/
 assign led_r = LED_color[2];
 assign led_g = LED_color[1];
 assign led_b = LED_color[0];
+
+reg [3:0] port;
+always @(posedge rst or posedge clk)
+    if (rst) begin
+        port <= 4'b0;
+    end else begin
+        port <= color0;
+    end
+
+assign p0 = port[0];
+assign p1 = port[1];
+assign p2 = port[2];
+assign p3 = port[3];
+
 
 endmodule
 
