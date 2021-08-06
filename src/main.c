@@ -374,18 +374,9 @@ int main(void)
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
     vTaskStartScheduler();
 
-
-  
-
-
-
-//     while(1);
-
 //     //CLI_start_task( my_main_menu );
-
 //     setup_sensors_data_block_processor();
 //     sensor_set_virtual_sensor(IMU_V_SENSOR_NO);
-
 //     StartRtosTaskMqttsnApp();
 //     StartRtosTaskMqttsnMsgHandler();
 // #if S3AI_FIRMWARE_IS_RECOGNITION
@@ -393,21 +384,19 @@ int main(void)
 // #endif
 //     //StartRtosTaskADC();
 //     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
-
 //     /* Start the tasks and timer running. */
 //     vTaskStartScheduler();
 //     dbg_str("\n");
-
     while(1);
 }
 
 
 void vTask1(void *pvParameters){
   while(1){
-    fpga_ledctlr_setcolor(0x00, 0);
-    vTaskDelay(100);
-    fpga_ledctlr_setcolor(0x07, 0);
-    vTaskDelay(100);
+    fpga_ledctlr_setcolor(0x05, 0);
+    vTaskDelay(500);
+    fpga_ledctlr_setcolor(0x0a, 0);
+    vTaskDelay(500);
   }
 }
 void vTask2(void *pvParameters){

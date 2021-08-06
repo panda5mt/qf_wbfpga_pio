@@ -2,4 +2,6 @@
 set_io led_r_o	34
 set_io led_g_o	39
 set_io p0_o	    40
-set_io clk24_o  42
+set_io p1_o     42
+set_io p2_o	    37
+set_io p3_o     28

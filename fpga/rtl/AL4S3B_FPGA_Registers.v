@@ -97,7 +97,7 @@ input                    WBs_RST_i     ;  // FPGA Reset               to   FPGA
 output  [DATAWIDTH-1:0]  WBs_DAT_o     ;  // Read Data Bus              from FPGA
 output                   WBs_ACK_o     ;  // Transfer Cycle Acknowledge from FPGA
 
-output reg  [2:0]   color0;
+output reg  [3:0]   color0;
 output reg  [2:0]   color1;
 output reg  [2:0]   color2;
 output reg  [2:0]   color3;

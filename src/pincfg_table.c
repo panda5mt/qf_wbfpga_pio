@@ -97,7 +97,7 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 #endif
- { // Pad 16 -- 
+ { // Pad 16 -- GPIO
     .ucPin = PAD_16,
     .ucFunc = PAD16_FUNC_SEL_FBIO_16,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
@@ -107,9 +107,19 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucSmtTrg = PAD_SMT_TRIG_EN,
   },
-   { // Pad 17 -- 12~24MHz clock
+   { // Pad 17 -- GPIO
     .ucPin = PAD_17,
     .ucFunc = PAD17_FUNC_SEL_FBIO_17,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_4MA,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
+  },
+     { // Pad 20 -- GPIO
+    .ucPin = PAD_20,
+    .ucFunc = PAD20_FUNC_SEL_FBIO_20,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -161,55 +171,55 @@ PadConfig pincfg_table[] =
   },
 #endif
 
-   { // Pad 33 -- Test clock
-    .ucPin = PAD_33,
-    .ucFunc = PAD33_FUNC_SEL_FBIO_33,
+   { // Pad 27 -- GPIO
+    .ucPin = PAD_27,
+    .ucFunc = PAD27_FUNC_SEL_FBIO_27,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
     .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_FAST,
-    .ucSmtTrg = PAD_SMT_TRIG_EN,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
   
-  // SPI Master
-   { // Pad 34 -- SPI Master CLK
-    .ucPin = PAD_34,
-    .ucFunc = PAD34_FUNC_SEL_FBIO_34,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-  { // Pad 38 -- SPI Master MOSI
-    .ucPin = PAD_38,
-    .ucFunc = PAD38_FUNC_SEL_FBIO_38,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-  { // Pad 39 -- SPI Master SSn1
-    .ucPin = PAD_39,
-    .ucFunc = PAD39_FUNC_SEL_FBIO_39,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-   { // Pad 36 -- SPI Master MISO
-    .ucPin = PAD_36,
-    .ucFunc = PAD36_FUNC_SEL_FBIO_36,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-  },
+  // // SPI Master
+  //  { // Pad 34 -- SPI Master CLK
+  //   .ucPin = PAD_34,
+  //   .ucFunc = PAD34_FUNC_SEL_FBIO_34,
+  //   .ucCtrl = PAD_CTRL_SRC_FPGA,
+  //   .ucMode = PAD_MODE_OUTPUT_EN,
+  //   .ucPull = PAD_NOPULL,
+  //   .ucDrv = PAD_DRV_STRENGHT_4MA,
+  //   .ucSpeed = PAD_SLEW_RATE_SLOW,
+  //   .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  // },
+  // { // Pad 38 -- SPI Master MOSI
+  //   .ucPin = PAD_38,
+  //   .ucFunc = PAD38_FUNC_SEL_FBIO_38,
+  //   .ucCtrl = PAD_CTRL_SRC_FPGA,
+  //   .ucMode = PAD_MODE_OUTPUT_EN,
+  //   .ucPull = PAD_NOPULL,
+  //   .ucDrv = PAD_DRV_STRENGHT_4MA,
+  //   .ucSpeed = PAD_SLEW_RATE_SLOW,
+  //   .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  // },
+  // { // Pad 39 -- SPI Master SSn1
+  //   .ucPin = PAD_39,
+  //   .ucFunc = PAD39_FUNC_SEL_FBIO_39,
+  //   .ucCtrl = PAD_CTRL_SRC_FPGA,
+  //   .ucMode = PAD_MODE_OUTPUT_EN,
+  //   .ucPull = PAD_NOPULL,
+  //   .ucDrv = PAD_DRV_STRENGHT_4MA,
+  //   .ucSpeed = PAD_SLEW_RATE_SLOW,
+  //   .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  // },
+  //  { // Pad 36 -- SPI Master MISO
+  //   .ucPin = PAD_36,
+  //   .ucFunc = PAD36_FUNC_SEL_FBIO_36,
+  //   .ucCtrl = PAD_CTRL_SRC_FPGA,
+  //   .ucMode = PAD_MODE_OUTPUT_EN,
+  //   .ucPull = PAD_NOPULL,
+  // },
   
   //------------- USB ---------------//
    { // Pad 37 -- USB Pullup control
@@ -243,49 +253,7 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
 
-  // setup FPGA ADC pins
-#if (AD7476_FPGA_DRIVER == 1)
-  { // Pad 7 -- FPGA SPI CLK
-    .ucPin = PAD_7,
-    .ucFunc = PAD7_FUNC_SEL_FBIO_7,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_EN,
-  },
-  { // Pad 31 -- FPGA READ/SS
-    .ucPin = PAD_31,
-    .ucFunc = PAD31_FUNC_SEL_FBIO_31,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_EN,
-  },
-  { // Pad 5 -- FPGA SPI MISO
-    .ucPin = PAD_5,
-    .ucFunc = PAD5_FUNC_SEL_FBIO_5,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_EN,
-  },
-  { // Pad 10 -- FPGA READ/SS
-    .ucPin = PAD_10,
-    .ucFunc = PAD10_FUNC_SEL_FBIO_10,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_EN,
-  },
-#endif
+
   { // Pad 12 -- FPGA MOSI
     .ucPin = PAD_12,
     .ucFunc = PAD12_FUNC_SEL_FBIO_12,
@@ -295,25 +263,8 @@ PadConfig pincfg_table[] =
     .ucDrv = PAD_DRV_STRENGHT_4MA,
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_EN,
-  },
-#if (AUDIO_DRIVER == 1)
-  { // Pad 28 -- PDM DATA
-    .ucPin = PAD_28,
-    .ucFunc = PAD28_FUNC_SEL_PDM_DIN,
-    .ucCtrl = PAD_CTRL_SRC_A0,
-    .ucMode = PAD_MODE_INPUT_EN,
-  },
-  { // Pad 29 -- PDM CLK
-    .ucPin = PAD_29,
-    .ucFunc = PAD29_FUNC_SEL_PDM_CKO,
-    .ucCtrl = PAD_CTRL_SRC_A0,
-    .ucMode = PAD_MODE_OUTPUT_EN,
-    .ucPull = PAD_NOPULL,
-    .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
-    .ucSmtTrg = PAD_SMT_TRIG_DIS,
-  },
-#endif
+  }
+
 };
 
 GPIOCfgTypeDef  gpiocfg_table[] =
