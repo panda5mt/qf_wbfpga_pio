@@ -393,16 +393,18 @@ int main(void)
 
 void vTask1(void *pvParameters){
   while(1){
-    for(uint16_t i=0; i<16; i++){
-      fpga_ledctlr_setcolor(i, 0);
+      fpga_ledctlr_setcolor(0x05, 0);
       vTaskDelay(200);
-    }
+      fpga_ledctlr_setcolor(0x0a, 0);
+      vTaskDelay(200);
+    
   }
 }
 void vTask2(void *pvParameters){
   while(1){
     vTaskDelay(1000);
-    dbg_str("LED Blink Test!\r\n");
+    dbg_str("\r\nLED Blink Test!\r\nRead data from FPGA=");
+    dbg_hex32(fpga_ledctlr_getcolors());
   }
 }
 
