@@ -403,7 +403,7 @@ void vTask1(void *pvParameters){
 void vTask2(void *pvParameters){
   while(1){
     vTaskDelay(1000);
-    dbg_str("\r\nLED Blink Test!\r\nRead data from FPGA=");
+    dbg_str("\r\n\r\nLED Blink Test!\r\nRead data from FPGA=");
     dbg_hex32(fpga_ledctlr_getcolors());
   }
 }

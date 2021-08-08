@@ -26,7 +26,6 @@
 #include <eoss3_hal_def.h>
 #include "s3x_clock.h"
 
-
 #define FPGA_LEDCTLR_ID_VALUE         0xA5BD
 #define FPGA_LEDCTLR_REV_NUM          0x0100
 
