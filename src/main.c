@@ -342,7 +342,7 @@ int main(void)
     S3x_Clk_Disable(S3X_FB_16_CLK);
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-    load_fpga(sizeof(axFPGABitStream),axFPGABitStream);     // Load bitstrem into FPGA
+    load_fpga(sizeof(axFPGABitStream), axFPGABitStream);     // Load bitstrem into FPGA
     fpga_ledctlr_init();
     
 
@@ -359,13 +359,9 @@ int main(void)
 
 	  dbg_str( "\n\ntest test!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
-    // Initialize mCube MC3635 Accelerometer sensor device
-    //mc3635_init();
-
-
+    // init ov5642
     sccb_init();
     
-
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
     vTaskStartScheduler();
