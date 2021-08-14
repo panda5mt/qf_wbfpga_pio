@@ -727,157 +727,77 @@ void sccb_init(void) {
   sccb_dat[0]=0x35; sccb_dat[1]=0x02 ; sccb_dat[2]=0x00 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
 
-  
-
-
-
-
-  sccb_dat[0]=0x38; sccb_dat[1]=0x02 ; sccb_dat[2]=0x00 ; //hs
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x03 ; sccb_dat[2]=0x08 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x04 ; sccb_dat[2]=0x05 ;//vh
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x05 ; sccb_dat[2]=0x00 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x56; sccb_dat[1]=0x82 ; sccb_dat[2]=0x05 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x56; sccb_dat[1]=0x83 ; sccb_dat[2]=0x00 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x06 ; sccb_dat[2]=0x03 ;  //hh
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x07 ; sccb_dat[2]=0xc0 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x56; sccb_dat[1]=0x86 ; sccb_dat[2]=0x03 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x56; sccb_dat[1]=0x87 ; sccb_dat[2]=0xc0 ;
-
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x08 ; sccb_dat[2]=0x01 ;//320
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x09 ; sccb_dat[2]=0x40 ;
-
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x0a ; sccb_dat[2]=0x00 ; //240
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x0b ; sccb_dat[2]=0xf0 ; 
-
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x0c ; sccb_dat[2]=0x07 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x0d ; sccb_dat[2]=0x80 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x0e ; sccb_dat[2]=0x03 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x0f ; sccb_dat[2]=0xe8 ;
-
-
-  ///画面方向回転
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x38; sccb_dat[1]=0x18; sccb_dat[2]=0x81;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x36; sccb_dat[1]=0x21; sccb_dat[2]=0xe7;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3A; sccb_dat[1]=0x17; sccb_dat[2]=0x8F;  //AGC
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x37; sccb_dat[1]=0x0D ; sccb_dat[2]=0x45 ; // 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x00 ; sccb_dat[2]=0x78 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1a ; sccb_dat[2]=0x04 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x13 ; sccb_dat[2]=0x30 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x18 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x19 ; sccb_dat[2]=0x7c ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x08 ; sccb_dat[2]=0x12 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x09 ; sccb_dat[2]=0xc0 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x0a ; sccb_dat[2]=0x0f ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x0b ; sccb_dat[2]=0xa0 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x30; sccb_dat[1]=0x04 ; sccb_dat[2]=0xff ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x35; sccb_dat[1]=0x0c ; sccb_dat[2]=0x07 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x35; sccb_dat[1]=0x0d ; sccb_dat[2]=0xd0 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x35; sccb_dat[1]=0x00 ; sccb_dat[2]=0x00 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x35; sccb_dat[1]=0x01 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x35; sccb_dat[1]=0x02 ; sccb_dat[2]=0x00 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x35; sccb_dat[1]=0x0a ; sccb_dat[2]=0x00 ;
+  // #117: AGC/AEC Settings
+  sccb_dat[0]=0x35; sccb_dat[1]=0x0a ; sccb_dat[2]=0x00 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x35; sccb_dat[1]=0x0b ; sccb_dat[2]=0x00 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x35; sccb_dat[1]=0x03 ; sccb_dat[2]=0x20 ;//AEC AGC 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  sccb_dat[0]=0x35; sccb_dat[1]=0x03 ; sccb_dat[2]=0x00 ; 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #120: De-Noise Settings
   sccb_dat[0]=0x52; sccb_dat[1]=0x8a ; sccb_dat[2]=0x02 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x8b ; sccb_dat[2]=0x04 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x8c ; sccb_dat[2]=0x08 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x8d ; sccb_dat[2]=0x08 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x8e ; sccb_dat[2]=0x08 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x8f ; sccb_dat[2]=0x10 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x90 ; sccb_dat[2]=0x10 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x92 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x93 ; sccb_dat[2]=0x02 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x94 ; sccb_dat[2]=0x00 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+  sccb_dat[0]=0x52; sccb_dat[1]=0x94 ; sccb_dat[2]=0x00 ; 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x95 ; sccb_dat[2]=0x02 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x96 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x97 ; sccb_dat[2]=0x02 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x98 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x99 ; sccb_dat[2]=0x02 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x9a ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x9b ; sccb_dat[2]=0x02 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x9c ; sccb_dat[2]=0x00 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+  sccb_dat[0]=0x52; sccb_dat[1]=0x9c ; sccb_dat[2]=0x00 ; 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x9d ; sccb_dat[2]=0x02 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x9e ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x52; sccb_dat[1]=0x9f ; sccb_dat[2]=0x02 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #141: AEC Settings
   sccb_dat[0]=0x3a; sccb_dat[1]=0x0f ; sccb_dat[2]=0x3c ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x3a; sccb_dat[1]=0x10 ; sccb_dat[2]=0x30 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1b ; sccb_dat[2]=0x3c ; 
+  sccb_dat[0]=0x3a; sccb_dat[1]=0x1b ; sccb_dat[2]=0x3c ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1e ; sccb_dat[2]=0x30 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  sccb_dat[0]=0x3a; sccb_dat[1]=0x1e ; sccb_dat[2]=0x30 ;
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x3a; sccb_dat[1]=0x11 ; sccb_dat[2]=0x70 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x3a; sccb_dat[1]=0x1f ; sccb_dat[2]=0x10 ; 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #147: system settings 
+  sccb_dat[0]=0x30; sccb_dat[1]=0x30 ; sccb_dat[2]=0x0b ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x30; sccb_dat[1]=0x30 ; sccb_dat[2]=0x0b ; //内部1.5Vをクローズ
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+
+  // #148: AEC Settings
   sccb_dat[0]=0x3a; sccb_dat[1]=0x02 ; sccb_dat[2]=0x00 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x3a; sccb_dat[1]=0x03 ; sccb_dat[2]=0x7d ; 
@@ -892,74 +812,86 @@ void sccb_init(void) {
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x3a; sccb_dat[1]=0x00 ; sccb_dat[2]=0x7c ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+
+  // #155: flicker-less settings
   sccb_dat[0]=0x3a; sccb_dat[1]=0x08 ; sccb_dat[2]=0x09 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x3a; sccb_dat[1]=0x09 ; sccb_dat[2]=0x60 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x3a; sccb_dat[1]=0x0a ; sccb_dat[2]=0x07 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x3a; sccb_dat[1]=0x0b ; sccb_dat[2]=0xd0 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x3a; sccb_dat[1]=0x0d ; sccb_dat[2]=0x08 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x3a; sccb_dat[1]=0x0e ; sccb_dat[2]=0x06 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #161: AWB settings
   sccb_dat[0]=0x51; sccb_dat[1]=0x93 ; sccb_dat[2]=0x70 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #162: analog settings
   sccb_dat[0]=0x36; sccb_dat[1]=0x20 ; sccb_dat[2]=0x57 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
   sccb_dat[0]=0x37; sccb_dat[1]=0x03 ; sccb_dat[2]=0x98 ; 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+  sccb_dat[0]=0x37; sccb_dat[1]=0x04 ; sccb_dat[2]=0x1c ; 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #165: unknown settings
+  sccb_dat[0]=0x58; sccb_dat[1]=0x9b ; sccb_dat[2]=0x04 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x37; sccb_dat[1]=0x04 ; sccb_dat[2]=0x1c ;
+  sccb_dat[0]=0x58; sccb_dat[1]=0x9a ; sccb_dat[2]=0xc5 ;
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #167: De-Noise Settings
+  sccb_dat[0]=0x52; sccb_dat[1]=0x8a ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x58; sccb_dat[1]=0x9b ; sccb_dat[2]=0x04 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x8b ; sccb_dat[2]=0x02 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x58; sccb_dat[1]=0x9a ; sccb_dat[2]=0xc5 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x8c ; sccb_dat[2]=0x08 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x8a ; sccb_dat[2]=0x00 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x8d ; sccb_dat[2]=0x10 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x8b ; sccb_dat[2]=0x02 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x8e ; sccb_dat[2]=0x20 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x8c ; sccb_dat[2]=0x08 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x8f ; sccb_dat[2]=0x28 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x8d ; sccb_dat[2]=0x10 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x90 ; sccb_dat[2]=0x30 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x8e ; sccb_dat[2]=0x20 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x92 ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x8f ; sccb_dat[2]=0x28 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x93 ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x90 ; sccb_dat[2]=0x30 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x92 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x93 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x94 ; sccb_dat[2]=0x00 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x94 ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x52; sccb_dat[1]=0x95 ; sccb_dat[2]=0x02 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x96 ; sccb_dat[2]=0x00 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x96 ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x97 ; sccb_dat[2]=0x08 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x97 ; sccb_dat[2]=0x08 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x98 ; sccb_dat[2]=0x00 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x98 ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x99 ; sccb_dat[2]=0x10 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x99 ; sccb_dat[2]=0x10 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x9a ; sccb_dat[2]=0x00 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x9a ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x9b ; sccb_dat[2]=0x20 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x9b ; sccb_dat[2]=0x20 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x9c ; sccb_dat[2]=0x00 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x9c ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x9d ; sccb_dat[2]=0x28 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x9d ; sccb_dat[2]=0x28 ;
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+  sccb_dat[0]=0x52; sccb_dat[1]=0x9e ; sccb_dat[2]=0x00 ;
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);  
+  sccb_dat[0]=0x52; sccb_dat[1]=0x9f ; sccb_dat[2]=0x30 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x9e ; sccb_dat[2]=0x00 ; 
+  sccb_dat[0]=0x52; sccb_dat[1]=0x82 ; sccb_dat[2]=0x00 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x9f ; sccb_dat[2]=0x30 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x52; sccb_dat[1]=0x82 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+
+  // #189: CIP
   sccb_dat[0]=0x53; sccb_dat[1]=0x00 ; sccb_dat[2]=0x00 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x53; sccb_dat[1]=0x01 ; sccb_dat[2]=0x20 ; 
@@ -1004,6 +936,8 @@ void sccb_init(void) {
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x53; sccb_dat[1]=0x18 ; sccb_dat[2]=0x02 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+
+  // #211: Color Matrix Settings
   sccb_dat[0]=0x53; sccb_dat[1]=0x80 ; sccb_dat[2]=0x01 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x53; sccb_dat[1]=0x81 ; sccb_dat[2]=0x00 ; 
@@ -1045,7 +979,9 @@ void sccb_init(void) {
   sccb_dat[0]=0x53; sccb_dat[1]=0x93 ; sccb_dat[2]=0xa2 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x53; sccb_dat[1]=0x94 ; sccb_dat[2]=0x08 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #232: Gamma Setings 
   sccb_dat[0]=0x54; sccb_dat[1]=0x80 ; sccb_dat[2]=0x14 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x54; sccb_dat[1]=0x81 ; sccb_dat[2]=0x21 ; 
@@ -1141,38 +1077,26 @@ void sccb_init(void) {
   sccb_dat[0]=0x54; sccb_dat[1]=0xae ; sccb_dat[2]=0x00 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x54; sccb_dat[1]=0xaf ; sccb_dat[2]=0x16 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #280: AWB Settings 
   sccb_dat[0]=0x34; sccb_dat[1]=0x06 ; sccb_dat[2]=0x00 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x92 ; sccb_dat[2]=0x04 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x91 ; sccb_dat[2]=0xf8 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x93 ; sccb_dat[2]=0xf0 ; //R
+  sccb_dat[0]=0x51; sccb_dat[1]=0x93 ; sccb_dat[2]=0x70 ; //R
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x94 ; sccb_dat[2]=0x40 ; //G
+  sccb_dat[0]=0x51; sccb_dat[1]=0x94 ; sccb_dat[2]=0xf0 ; //G
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x95 ; sccb_dat[2]=0xF0 ; //B
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x34; sccb_dat[1]=0x00 ; sccb_dat[2]=0x07 ; //r
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x34; sccb_dat[1]=0x01 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x34; sccb_dat[1]=0x02 ; sccb_dat[2]=0x04 ; //g
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x34; sccb_dat[1]=0x03 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x34; sccb_dat[1]=0x04 ; sccb_dat[2]=0x07 ;// b
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x34; sccb_dat[1]=0x05 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x34; sccb_dat[1]=0x06 ; sccb_dat[2]=0x00 ; /////////////
+  sccb_dat[0]=0x51; sccb_dat[1]=0x95 ; sccb_dat[2]=0xf0 ; //B
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x8d ; sccb_dat[2]=0x3d ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x8f ; sccb_dat[2]=0x54 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x8e ; sccb_dat[2]=0x3d ;
+  sccb_dat[0]=0x51; sccb_dat[1]=0x8e ; sccb_dat[2]=0x3d ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x90 ; sccb_dat[2]=0x54 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
@@ -1192,18 +1116,24 @@ void sccb_init(void) {
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x81 ; sccb_dat[2]=0x50 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x84 ; sccb_dat[2]=0x25 ;
+
+  // #298: AWB Settings
+  sccb_dat[0]=0x51; sccb_dat[1]=0x84 ; sccb_dat[2]=0x25 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x82 ; sccb_dat[2]=0x11 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x83 ; sccb_dat[2]=0x14 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x84 ; sccb_dat[2]=0x25 ;
+  sccb_dat[0]=0x51; sccb_dat[1]=0x84 ; sccb_dat[2]=0x25 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x85 ; sccb_dat[2]=0x24 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x25 ; sccb_dat[2]=0x82 ;
+
+  // ISP Settings
+  sccb_dat[0]=0x50; sccb_dat[1]=0x25 ; sccb_dat[2]=0x82 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+
+  // #304: AEC Settings
   sccb_dat[0]=0x3a; sccb_dat[1]=0x0f ; sccb_dat[2]=0x7e ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x3a; sccb_dat[1]=0x10 ; sccb_dat[2]=0x72 ;
@@ -1215,13 +1145,17 @@ void sccb_init(void) {
   sccb_dat[0]=0x3a; sccb_dat[1]=0x11 ; sccb_dat[2]=0xd0 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x3a; sccb_dat[1]=0x1f ; sccb_dat[2]=0x40 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+  
+  // #310: Digital effect 
   sccb_dat[0]=0x55; sccb_dat[1]=0x83 ; sccb_dat[2]=0x40 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x55; sccb_dat[1]=0x84 ; sccb_dat[2]=0x40 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x80 ; sccb_dat[2]=0x07 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  sccb_dat[0]=0x55; sccb_dat[1]=0x80 ; sccb_dat[2]=0x02 ; 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #313: Analog settings register
   sccb_dat[0]=0x36; sccb_dat[1]=0x33 ; sccb_dat[2]=0x07 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x37; sccb_dat[1]=0x02 ; sccb_dat[2]=0x10 ; 
@@ -1231,190 +1165,20 @@ void sccb_init(void) {
   sccb_dat[0]=0x37; sccb_dat[1]=0x04 ; sccb_dat[2]=0x18 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x37; sccb_dat[1]=0x0b ; sccb_dat[2]=0x40 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // array control 
   sccb_dat[0]=0x37; sccb_dat[1]=0x0d ; sccb_dat[2]=0x02 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  // #319: analog settings register 
   sccb_dat[0]=0x36; sccb_dat[1]=0x20 ; sccb_dat[2]=0x52 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x47; sccb_dat[1]=0x40 ; sccb_dat[2]=0x21 ;//VSYNC F
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x00 ; sccb_dat[2]=0x78 ;
 
+  // sccb_dat[0]=0x47; sccb_dat[1]=0x40 ; sccb_dat[2]=0x21 ;//VSYNC F
+  // HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
+  // sccb_dat[0]=0x3a; sccb_dat[1]=0x00 ; sccb_dat[2]=0x78 ;
 
-  //Contrast +1 
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x01 ; sccb_dat[2]=0xff ;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x80 ; sccb_dat[2]=0x07 ;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x87 ; sccb_dat[2]=0x25 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x88 ; sccb_dat[2]=0x25 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x8a ; sccb_dat[2]=0x00 ;  
-  ///Saturation 0 ; sccb_dat[1]=0x
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x01 ; sccb_dat[2]=0xff ;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x83 ; sccb_dat[2]=0x50 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x84 ; sccb_dat[2]=0x50 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x80 ; sccb_dat[2]=0x07 ;  
-  //Brightness +1 ; sccb_dat[1]=0x
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x01 ; sccb_dat[2]=0xff ;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x89 ; sccb_dat[2]=0x0a ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x80 ; sccb_dat[2]=0x0a ;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x8a ; sccb_dat[2]=0x00 ; 
-  //Advanced AWB  ; sccb_dat[1]=0x
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x34; sccb_dat[1]=0x06 ; sccb_dat[2]=0x0  ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x92 ; sccb_dat[2]=0x04 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x91 ; sccb_dat[2]=0xf8 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x8d ; sccb_dat[2]=0x26 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x8f ; sccb_dat[2]=0x42 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x8e ; sccb_dat[2]=0x5b ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x90 ; sccb_dat[2]=0x42 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x8b ; sccb_dat[2]=0xd0 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x8c ; sccb_dat[2]=0xbd ;                            
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x87 ; sccb_dat[2]=0x18 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x88 ; sccb_dat[2]=0x18 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x89 ; sccb_dat[2]=0x56 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x8a ; sccb_dat[2]=0x5c ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x86 ; sccb_dat[2]=0x1c ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x81 ; sccb_dat[2]=0x50 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x84 ; sccb_dat[2]=0x20 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x82 ; sccb_dat[2]=0x11 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x83 ; sccb_dat[2]=0x0  ;
-
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x98 ; sccb_dat[2]=0xf  ;//
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x99 ; sccb_dat[2]=0x0  ;
-
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x9a ; sccb_dat[2]=0x0  ;//
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x9b ; sccb_dat[2]=0x0  ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x9c ; sccb_dat[2]=0xf  ;//
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x9d ; sccb_dat[2]=0x0  ;  
-  ///////////////////////////; sccb_dat[1]=0x
-
-  //ev1.3; sccb_dat[1]=0x
-
-  /* HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1
-  ); sccb_dat[0]=0; sccb_dat[1]=0xx3a0f ; sccb_dat[2]=0 58); 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x10 ; sccb_dat[2]=0x50 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x11 ; sccb_dat[2]=0x91 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1b ; sccb_dat[2]=0x58  ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1e ; sccb_dat[2]=0x50 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1f ; sccb_dat[2]=0x20 ;*/ 
-  //ev1.7 
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x0f ; sccb_dat[2]=0x70 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x10 ; sccb_dat[2]=0x5a ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x11 ; sccb_dat[2]=0xa0 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1b ; sccb_dat[2]=0x60 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1e ; sccb_dat[2]=0x58 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x3a; sccb_dat[1]=0x1f ; sccb_dat[2]=0x20 ; 
-
-
-  //hue +0 degree      ; sccb_dat[1]=0x
-
-  /* HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1
-  ); sccb_dat[0]=0; sccb_dat[1]=0xx5580 ; sccb_dat[2]=0 01); 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x81 ; sccb_dat[2]=0x6f ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x82 ; sccb_dat[2]=0x20 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x8a ; sccb_dat[2]=0x01 ;*/
-  //hue 0
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x01 ; sccb_dat[2]=0xff ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x80 ; sccb_dat[2]=0x07 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x81 ; sccb_dat[2]=0x80 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x82 ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x8a ; sccb_dat[2]=0x01 ; 
-  ////RGB565
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x1e ; sccb_dat[2]=0x2a ;//
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x02 ; sccb_dat[2]=0xf8 ; ///////
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x1f ; sccb_dat[2]=0x01 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x43; sccb_dat[1]=0x00 ; sccb_dat[2]=0x61 ;//, ///61rgb565//////////// 
-  //qvga 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x01 ; sccb_dat[2]=0xff ;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x89 ; sccb_dat[2]=0x06 ;  
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x80 ; sccb_dat[2]=0x06 ; //3f黒白
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x8a ; sccb_dat[2]=0x00  ;
-  //鋭さ
-
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x53; sccb_dat[1]=0x0a ; sccb_dat[2]=0x00 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x53; sccb_dat[1]=0x0c ; sccb_dat[2]=0x08 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x53; sccb_dat[1]=0x0d ; sccb_dat[2]=0x30 ;
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x53; sccb_dat[1]=0x12 ; sccb_dat[2]=0x10 ;   
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x83 ; sccb_dat[2]=0x50 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x55; sccb_dat[1]=0x84 ; sccb_dat[2]=0x50 ; 
-  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
 }
 
 void vTask1(void *pvParameters){
