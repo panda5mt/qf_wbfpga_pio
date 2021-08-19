@@ -25,7 +25,8 @@ _makedirs_:
 
 .PHONY: external_srcs
 external_srcs: Startup HAL FreeRTOS Libraries BSP FPGA DatablockProcessor GENERATED \
-               ADC SENSOR_AD7476 SENSOR_AUDIO
+               ADC SENSOR_AUDIO
+			   # SENSOR_AD7476 
 	@echo "External sources built"
 
 .PHONY: appfpga

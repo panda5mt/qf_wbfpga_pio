@@ -34,7 +34,7 @@
 #include "Mqttsn_Topics.h"
 #include "sensor_config.h"
 
-#include "sensor_ad7476_config.h"
+//#include "sensor_ad7476_config.h"
 
 extern void sensor_imu_startstop( int is_start );
 
