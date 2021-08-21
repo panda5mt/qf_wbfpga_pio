@@ -380,6 +380,7 @@ int main(void)
 //     /* Start the tasks and timer running. */
 //     vTaskStartScheduler();
 //     dbg_str("\n");
+
     while(1) ;
 }
 
