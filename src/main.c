@@ -361,7 +361,8 @@ int main(void)
 
     // init ov5642
     sccb_init();
-    
+
+
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
     vTaskStartScheduler();
@@ -379,9 +380,10 @@ int main(void)
 //     /* Start the tasks and timer running. */
 //     vTaskStartScheduler();
 //     dbg_str("\n");
-    while(1);
+    while(1) ;
 }
 
+// camera init
 void sccb_init(void) {
 
   uint8_t i2c_read_data = 0x0;
