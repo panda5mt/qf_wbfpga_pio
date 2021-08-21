@@ -357,7 +357,7 @@ int main(void)
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
 
-	  dbg_str( "\n\ntest!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
+	  dbg_str( "\n\nfpga test start!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
     // init ov5642
     sccb_init();
