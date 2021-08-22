@@ -36,7 +36,8 @@ module AL4S3B_FPGA_top (
             p0_o,
             p1_o,
             p2_o,
-            p3_o
+            p3_o, 
+            port_i
 			
             );
 
@@ -87,6 +88,7 @@ output p0_o;
 output p1_o;
 output p2_o;
 output p3_o;
+input [7:0] port_i;
 //
 // None at this time
 //
@@ -220,6 +222,7 @@ AL4S3B_FPGA_IP              #(
     .p1_o (p1_o),
     .p2_o (p2_o),
     .p3_o (p3_o),
+    .port_i (port_i),
 	.boot_o             		( boot       				),
     .Interrupt_o	            ( Interrupt_o	            ),
 
