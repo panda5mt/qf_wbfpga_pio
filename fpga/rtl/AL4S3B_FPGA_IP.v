@@ -61,6 +61,10 @@ module AL4S3B_FPGA_IP (
                 p1_o,
                 p2_o,
                 p3_o,
+                
+                port_i,
+
+
 				boot_o,
 			    Interrupt_o,
 
@@ -145,6 +149,7 @@ output  p0_o;
 output  p1_o;
 output  p2_o;
 output  p3_o;
+input [7:0] port_i;
 
 output 			boot_o;
 output          Interrupt_o;
@@ -334,7 +339,8 @@ AL4S3B_FPGA_Registers #(
     //
     // Misc
     //
-    .Device_ID_o               ( Device_ID_o                     )
+    .Device_ID_o               ( Device_ID_o                     ),
+    .port_i                    (port_i)
    );
 
 

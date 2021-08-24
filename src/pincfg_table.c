@@ -137,6 +137,14 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucSmtTrg = PAD_SMT_TRIG_EN,
   },
+  
+  { // Pad 29 -- GPIO INPUT
+    .ucPin = PAD_29,
+    .ucFunc = PAD29_FUNC_SEL_FBIO_29,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_PULLUP,
+  },
   // LEDS
    { // setup blue LED
     .ucPin = PAD_18,

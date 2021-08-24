@@ -357,11 +357,12 @@ int main(void)
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
 
-	  dbg_str( "\n\ntest test!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
+	  dbg_str( "\n\nfpga test start!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
     // init ov5642
     sccb_init();
-    
+
+
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
     vTaskStartScheduler();
@@ -378,10 +379,10 @@ int main(void)
 //     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
 //     /* Start the tasks and timer running. */
 //     vTaskStartScheduler();
-//     dbg_str("\n");
-    while(1);
+    while(1) ;
 }
 
+// camera init
 void sccb_init(void) {
 
   uint8_t i2c_read_data = 0x0;

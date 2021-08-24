@@ -58,7 +58,8 @@ module AL4S3B_FPGA_Registers (
                          //
                          // Misc
                          //
-                         Device_ID_o
+                         Device_ID_o,
+                         port_i
                          );
 
 
@@ -112,6 +113,7 @@ output          Interrupt_o;
 // Misc
 //
 output           [31:0]  Device_ID_o   ;
+input   [7:0]       port_i ;
 
 
 
@@ -245,7 +247,7 @@ always @(
     FPGA_REG_ID_VALUE_ADR    : WBs_DAT_o <= Device_ID_o;
     FPGA_REV_NUM_ADR         : WBs_DAT_o <= Rev_Num;  
     FPGA_SCRATCH_REG_ADR     : WBs_DAT_o <= { 16'h0, Scratch_reg }; 
-    FPGA_COLORS_ADR          : WBs_DAT_o <= 32'hDEADBEEF;//{ 5'b0, color3, 5'b0, color2, 5'b0, color1, 4'b0, color0};
+    FPGA_COLORS_ADR          : WBs_DAT_o <= {28'h0, port_i}; //32'hDEADBEEF;
     FPGA_DURATION0_ADR       : WBs_DAT_o <= { 20'b0, duration0};
     FPGA_DURATION1_ADR       : WBs_DAT_o <= { 20'b0, duration1};
     FPGA_DURATION2_ADR       : WBs_DAT_o <= { 20'b0, duration2};
