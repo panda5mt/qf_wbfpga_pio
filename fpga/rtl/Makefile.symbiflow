@@ -2,14 +2,14 @@
  
 current_dir := /qorc-sdk/qf_apps/qf_wbfpga_pio/fpga/rtl
 TOP := AL4S3B_FPGA_top
-VERILOG := ${current_dir}/AL4S3B_FPGA_QL_Reserved.v \
-${current_dir}/f1024x16_1024x16.v \
+VERILOG := ${current_dir}/LED_controller.v \
+${current_dir}/AL4S3B_FPGA_QL_Reserved.v \
 ${current_dir}/af512x32_512x32.v \
 ${current_dir}/AL4S3B_FPGA_Top.v \
 ${current_dir}/AL4S3B_FPGA_Registers.v \
 ${current_dir}/AL4S3B_FPGA_IP.v \
 ${current_dir}/af512x16_512x16.v \
-${current_dir}/LED_controller.v  
+${current_dir}/f1024x16_1024x16.v  
 PARTNAME := PU64
 DEVICE  := ql-eos-s3_wlcsp
 PCF := ${current_dir}/quickfeather.pcf
