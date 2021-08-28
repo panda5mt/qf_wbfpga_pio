@@ -5,8 +5,8 @@
 // file           : AL4S3B_FPGA_IP.v
 // author         : SSG
 // company        : QuickLogic Corp
-// created        : 2016/02/03	
-// last update    : 2016/02/03
+// created        : 2020/05/27	
+// last update    : 2020/05/27
 // platform       : ArcticLink 4 S3B
 // standard       : Verilog 2001
 // -----------------------------------------------------------------------------
@@ -17,8 +17,8 @@
 // copyright (c) 2016
 // -----------------------------------------------------------------------------
 // revisions  :
-// date            version       author             description
-// 2016/02/03      1.0       Rakesh Moolacheri     Initial Release
+// date            version    author         description
+// 2020/05/27      1.0        Rakesh moolacheri     Initial Release
 // -----------------------------------------------------------------------------
 // Comments: This solution is specifically for use with the QuickLogic
 //           AL4S3B device. 
@@ -26,10 +26,15 @@
 //
 
 `timescale 1ns / 10ps
+
+
 module AL4S3B_FPGA_IP ( 
 
                 // AHB-To_FPGA Bridge I/F
                 //
+				CLK_4M_i,
+				RST_fb_i,
+				
                 WBs_ADR,
                 WBs_CYC,
                 WBs_BYTE_STB,
@@ -41,35 +46,17 @@ module AL4S3B_FPGA_IP (
                 WB_RST,
                 WBs_RD_DAT,
                 WBs_ACK,
-				
-                //FPGA IP
-				usbp_io,
-				usbn_io,
-				
-				clk_48mhz_i,
-				reset_i,
-				
-				spi_cs_o,
-				spi_sck_o,
-				spi_mosi_o,
-				spi_miso_i,
-				
-				led_r_o,
-				led_b_o,
-				led_g_o,
-                p0_o,
-                p1_o,
-                p2_o,
-                p3_o,
-                
-                port_i,
 
+                //
+                // GPIO
+                GPIO_PIN,
 
-				boot_o,
-			    Interrupt_o,
-
+                //
                 // Misc
-                Device_ID_o
+				CLK_4M_CNTL_o,
+				CLK_1M_CNTL_o,
+				
+                Device_ID
                 );
 
 
@@ -77,19 +64,32 @@ module AL4S3B_FPGA_IP (
 //
 
 parameter       APERWIDTH                   = 17            ;
-parameter       APERSIZE                    =  9            ;
+parameter       APERSIZE                    = 9            ;
 
 parameter       FPGA_REG_BASE_ADDRESS       = 17'h00000     ; // Assumes 128K Byte FPGA Memory Aperture
 parameter       QL_RESERVED_BASE_ADDRESS    = 17'h00800     ; // Assumes 128K Byte FPGA Memory Aperture
 
-parameter       ADDRWIDTH_FAB_REG           =  7            ;
+parameter       ADDRWIDTH_FAB_REG           =  9            ;
 parameter       DATAWIDTH_FAB_REG           = 32            ;
-	
-parameter       FPGA_REG_ID_VALUE_ADR     	=  7'h0; 
-parameter       FPGA_REV_NUM_ADR          	=  7'h1; 
-parameter       FPGA_SCRATCH_REG_ADR      	=  7'h2; 
+
+parameter       FPGA_REG_ID_VALUE_ADR     =  9'h0; 
+parameter       FPGA_REV_NUM_ADR          =  9'h1; 
+parameter       FPGA_GPIO_IN_REG_ADR      =  9'h2; 
+parameter       FPGA_GPIO_OUT_REG_ADR     =  9'h3;
+parameter       FPGA_GPIO_OE_REG_ADR      =  9'h4; 
+
+parameter       FPGA_FIFO1_ACC_ADR        =  9'h40; 
+parameter       FPGA_FIFO1_FLAG_ADR       =  9'h41; 
+parameter       FPGA_FIFO2_ACC_ADR        =  9'h80; 
+parameter       FPGA_FIFO2_FLAG_ADR       =  9'h81; 
+parameter       FPGA_FIFO3_ACC_ADR        =  9'h100; 
+parameter       FPGA_FIFO3_FLAG_ADR       =  9'h101; 
 
 
+parameter       AL4S3B_DEVICE_ID            = 16'h0;
+parameter       AL4S3B_REV_LEVEL            = 32'h0;
+parameter       AL4S3B_GPIO_REG             = 8'h0;
+parameter       AL4S3B_GPIO_OE_REG          = 8'h0;
 
 parameter       AL4S3B_DEF_REG_VALUE        = 32'hFAB_DEF_AC; // Distinguish access to undefined area
 
@@ -97,7 +97,7 @@ parameter       DEFAULT_READ_VALUE          = 32'hBAD_FAB_AC; // Bad FPGA Access
 parameter       DEFAULT_CNTR_WIDTH          =  3            ;
 parameter       DEFAULT_CNTR_TIMEOUT        =  7            ;
 
-parameter       ADDRWIDTH_QL_RESERVED       =  7            ;
+parameter       ADDRWIDTH_QL_RESERVED       =  9            ;
 parameter       DATAWIDTH_QL_RESERVED       = 32            ;
 
 parameter       QL_RESERVED_CUST_PROD_ADR   =  7'h7E        ;
@@ -128,42 +128,20 @@ input           WB_RST           ;  // FPGA Reset               to   FPGA
 output  [31:0]  WBs_RD_DAT       ;  // Read Data Bus              from FPGA
 output          WBs_ACK          ;  // Transfer Cycle Acknowledge from FPGA
 
-output    [31:0]  Device_ID_o    ;
-
-inout 			usbp_io;
-inout 			usbn_io;
-	
-input 			clk_48mhz_i;
-input 			reset_i;
-	
-output 			spi_cs_o;
-output 			spi_sck_o;
-output 			spi_mosi_o;
-input 			spi_miso_i;
-	
-output 			led_r_o;
-output 			led_b_o;
-output 			led_g_o;
-
-output  p0_o;
-output  p1_o;
-output  p2_o;
-output  p3_o;
-input [7:0] port_i;
-
-output 			boot_o;
-output          Interrupt_o;
+// GPIO
+//
+inout   [7:0]  GPIO_PIN         ;
 
 
-assign boot_o = 0;
-assign spi_cs_o = 0;
-assign spi_sck_o = 0;
-assign spi_mosi_o = 0;
+// Misc
+//
+input           CLK_4M_i		 ; 
+input           RST_fb_i		 ; 
 
+output			CLK_4M_CNTL_o;
+output			CLK_1M_CNTL_o;
 
-// FPGA IP Internal Signals
-
-wire usb_p_rx_int, usb_n_rx_int ;
+output    [31:0]  Device_ID        ;
 
 
 // FPGA Global Signals
@@ -184,9 +162,29 @@ reg     [31:0]  WBs_RD_DAT       ;  // Wishbone Read   Data Bus
 wire    [31:0]  WBs_WR_DAT       ;  // Wishbone Write  Data Bus
 wire            WBs_ACK          ;  // Wishbone Client Acknowledge
 
+// GPIO
+//
+wire    [7:0]  GPIO_PIN         ;
+
+
+
+//------Define Parameters--------------
+//
+
+// Default I/O timeout statemachine
+//
+parameter       DEFAULT_IDLE   =  0  ;
+parameter       DEFAULT_COUNT  =  1  ;
+
 
 //------Internal Signals---------------
 //
+
+// GPIO
+//
+wire    [7:0]  GPIO_In              ;
+wire    [7:0]  GPIO_Out             ;
+wire    [7:0]  GPIO_oe              ;
 
 // Wishbone Bus Signals
 //
@@ -199,41 +197,23 @@ wire            WBs_ACK_QL_Reserved  ;
 wire    [31:0]  WBs_DAT_o_FPGA_Reg ;
 wire    [31:0]  WBs_DAT_o_QL_Reserved;
 
-//
-wire    [31:0]  Device_ID_o    ;
-
-wire 			clk_12mhz;
-
-
-wire    [11:0]  duration0;
-wire    [11:0]  duration1;
-wire    [11:0]  duration2;
-wire    [11:0]  duration3;
-
-wire    [3:0]   color0;
-wire    [2:0]   color1;
-wire    [2:0]   color2;
-wire    [2:0]   color3;
-wire            Interrupt_o           ;
-
-
 
 //------Logic Operations---------------
 //
 
 
-// Define the Chip Select for each interface
+// Define the Chip Select for each interface 
 //
 assign WBs_CYC_FPGA_Reg   = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == FPGA_REG_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2] ) 
                             & (  WBs_CYC                                                                                );
-
+							
 assign WBs_CYC_QL_Reserved  = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == QL_RESERVED_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2] ) 
                             & (  WBs_CYC  																				);
 
 
 // Define the Acknowledge back to the host for everything
 //
-assign WBs_ACK              =    WBs_ACK_FPGA_Reg
+assign WBs_ACK              =    WBs_ACK_FPGA_Reg 
                             |    WBs_ACK_QL_Reserved;
 
 
@@ -241,14 +221,14 @@ assign WBs_ACK              =    WBs_ACK_FPGA_Reg
 //
 always @(
          WBs_ADR               or
-         WBs_DAT_o_FPGA_Reg  or
+         WBs_DAT_o_FPGA_Reg    or
          WBs_DAT_o_QL_Reserved or
          WBs_RD_DAT    
         )
  begin
     case(WBs_ADR[APERWIDTH-1:APERSIZE+2])
-    FPGA_REG_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2]: WBs_RD_DAT    <=          WBs_DAT_o_FPGA_Reg     ;
-    QL_RESERVED_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]: WBs_RD_DAT  <=          WBs_DAT_o_QL_Reserved  ;
+    FPGA_REG_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_DAT_o_FPGA_Reg   	;
+    QL_RESERVED_BASE_ADDRESS [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_DAT_o_QL_Reserved  ;
 	default:                                             WBs_RD_DAT  <=          DEFAULT_READ_VALUE     ;
 	endcase
 end
@@ -261,40 +241,16 @@ end
 //
 // Note: Use the Constraint manager in SpDE to assign these buffers to FBIO pads.
 //
-
-bipad u_bipad_I0  ( .A( 1'b0 ), .EN( 1'b0 ), .Q( usb_p_rx_int ), .P( usbp_io ) );
-bipad u_bipad_I1  ( .A( 1'b0 ), .EN( 1'b0 ), .Q( usb_n_rx_int ), .P( usbn_io ) );
-
-
-assign clk_12mhz = WB_CLK;
-
-
-// User IP
-LED_controller u_LED_controller (
-    .clk        ( clk_12mhz     ),
-    .rst        ( reset_i       ),
-
-    .duration0  ( duration0     ),
-    .duration1  ( duration1     ),
-    .duration2  ( duration2     ),
-    .duration3  ( duration3     ),
-
-    .color0     ( color0        ),
-    .color1     ( color1        ),
-    .color2     ( color2        ),
-    .color3     ( color3        ),
-
-    .led_r      ( led_r_o       ),
-    .led_g      ( led_g_o       ),
-    .led_b      ( led_b_o       ),
-
-    .p0 (p0_o),
-    .p1 (p1_o),
-    .p2 (p2_o),
-    .p3 (p3_o)
-);
-
-
+// GPIO
+//
+bipad u_bipad_I0    ( .A( GPIO_Out[0]   ), .EN( GPIO_oe[0]       ), .Q( GPIO_In[0]    ), .P( GPIO_PIN[0]  ) );
+bipad u_bipad_I1    ( .A( GPIO_Out[1]   ), .EN( GPIO_oe[1]       ), .Q( GPIO_In[1]    ), .P( GPIO_PIN[1]  ) );
+bipad u_bipad_I2    ( .A( GPIO_Out[2]   ), .EN( GPIO_oe[2]       ), .Q( GPIO_In[2]    ), .P( GPIO_PIN[2]  ) );
+bipad u_bipad_I3    ( .A( GPIO_Out[3]   ), .EN( GPIO_oe[3]       ), .Q( GPIO_In[3]    ), .P( GPIO_PIN[3]  ) );
+bipad u_bipad_I4    ( .A( GPIO_Out[4]   ), .EN( GPIO_oe[4]       ), .Q( GPIO_In[4]    ), .P( GPIO_PIN[4]  ) );
+bipad u_bipad_I5    ( .A( GPIO_Out[5]   ), .EN( GPIO_oe[5]       ), .Q( GPIO_In[5]    ), .P( GPIO_PIN[5]  ) );
+bipad u_bipad_I6    ( .A( GPIO_Out[6]   ), .EN( GPIO_oe[6]       ), .Q( GPIO_In[6]    ), .P( GPIO_PIN[6]  ) );
+bipad u_bipad_I7    ( .A( GPIO_Out[7]   ), .EN( GPIO_oe[7]       ), .Q( GPIO_In[7]    ), .P( GPIO_PIN[7]  ) );
 
 // General FPGA Resources 
 //
@@ -305,7 +261,21 @@ AL4S3B_FPGA_Registers #(
 
     .FPGA_REG_ID_VALUE_ADR    	( FPGA_REG_ID_VALUE_ADR       	),
     .FPGA_REV_NUM_ADR         	( FPGA_REV_NUM_ADR            	),     
-    .FPGA_SCRATCH_REG_ADR     	( FPGA_SCRATCH_REG_ADR        	),
+    .FPGA_GPIO_IN_REG_ADR     	( FPGA_GPIO_IN_REG_ADR        	),
+    .FPGA_GPIO_OUT_REG_ADR    	( FPGA_GPIO_OUT_REG_ADR       	),
+    .FPGA_GPIO_OE_REG_ADR     	( FPGA_GPIO_OE_REG_ADR        	), 
+	
+	.FPGA_FIFO1_ACC_ADR     	( FPGA_FIFO1_ACC_ADR        	),
+	.FPGA_FIFO1_FLAG_ADR     	( FPGA_FIFO1_FLAG_ADR        	),
+	.FPGA_FIFO2_ACC_ADR     	( FPGA_FIFO2_ACC_ADR        	),
+	.FPGA_FIFO2_FLAG_ADR     	( FPGA_FIFO2_FLAG_ADR        	),
+	.FPGA_FIFO3_ACC_ADR     	( FPGA_FIFO3_ACC_ADR        	),
+	.FPGA_FIFO3_FLAG_ADR     	( FPGA_FIFO3_FLAG_ADR        	),
+	
+    .AL4S3B_DEVICE_ID           ( AL4S3B_DEVICE_ID              ),
+    .AL4S3B_REV_LEVEL           ( AL4S3B_REV_LEVEL              ),
+    .AL4S3B_GPIO_REG            ( AL4S3B_GPIO_REG               ),
+    .AL4S3B_GPIO_OE_REG         ( AL4S3B_GPIO_OE_REG            ),
 
     .AL4S3B_DEF_REG_VALUE       ( AL4S3B_DEF_REG_VALUE          )
                                                                 )
@@ -315,34 +285,34 @@ AL4S3B_FPGA_Registers #(
     // AHB-To_FPGA Bridge I/F
     //
     .WBs_ADR_i                 ( WBs_ADR[ADDRWIDTH_FAB_REG+1:2] ),
-    .WBs_CYC_i                 ( WBs_CYC_FPGA_Reg             	),
+    .WBs_CYC_i                 ( WBs_CYC_FPGA_Reg             ),
     .WBs_BYTE_STB_i            ( WBs_BYTE_STB                   ),
     .WBs_WE_i                  ( WBs_WE                         ),
+	.WBs_RD_i                  ( WBs_RD                         ),
     .WBs_STB_i                 ( WBs_STB                        ),
     .WBs_DAT_i                 ( WBs_WR_DAT                     ),
     .WBs_CLK_i                 ( WB_CLK                         ),
     .WBs_RST_i                 ( WB_RST                         ),
-    .WBs_DAT_o                 ( WBs_DAT_o_FPGA_Reg           	),
-    .WBs_ACK_o                 ( WBs_ACK_FPGA_Reg             	),
-
-    .color0                    ( color0                         ),
-    .color1                    ( color1                         ),
-    .color2                    ( color2                         ),
-    .color3                    ( color3                         ),
-    .duration0                 ( duration0                      ),
-    .duration1                 ( duration1                      ),
-    .duration2                 ( duration2                      ),
-    .duration3                 ( duration3                      ),
-
-    .Interrupt_o               ( Interrupt_o           ),
+    .WBs_DAT_o                 ( WBs_DAT_o_FPGA_Reg           ),
+    .WBs_ACK_o                 ( WBs_ACK_FPGA_Reg             ),
 
     //
     // Misc
     //
-    .Device_ID_o               ( Device_ID_o                     ),
-    .port_i                    (port_i)
-   );
+	.CLK_4M_CNTL_o             ( CLK_4M_CNTL_o             		),
+	.CLK_1M_CNTL_o             ( CLK_1M_CNTL_o             		),
+	
+    .Device_ID_o               ( Device_ID                      ),
+	//
 
+	// 
+	// GPIO
+	//
+	.GPIO_IN_i                 ( GPIO_In                        ),
+	.GPIO_OUT_o                ( GPIO_Out                       ),
+	.GPIO_OE_o                 ( GPIO_oe                        )
+                                                                );
+																
 
 // Reserved Resources Block
 //
@@ -389,5 +359,11 @@ AL4S3B_FPGA_QL_Reserved     #(
 
 //pragma attribute u_bipad_I0                  preserve_cell true
 //pragma attribute u_bipad_I1                  preserve_cell true 
+//pragma attribute u_bipad_I2                  preserve_cell true
+//pragma attribute u_bipad_I3                  preserve_cell true
+//pragma attribute u_bipad_I4                  preserve_cell true 
+//pragma attribute u_bipad_I5                  preserve_cell true
+//pragma attribute u_bipad_I6                  preserve_cell true
+//pragma attribute u_bipad_I7                  preserve_cell true
 
 endmodule

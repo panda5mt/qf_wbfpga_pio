@@ -5,8 +5,8 @@
 // file           : AL4S3B_FPGA_Registers.v
 // author         : SSG
 // company        : QuickLogic Corp
-// created        : 2016/02/03	
-// last update    : 2016/02/03
+// created        : 2020/05/27	
+// last update    : 2020/05/27
 // platform       : ArcticLink 4 S3B
 // standard       : Verilog 2001
 // -----------------------------------------------------------------------------
@@ -17,8 +17,8 @@
 // copyright (c) 2016
 // -----------------------------------------------------------------------------
 // revisions  :
-// date            version       author              description
-// 2016/02/03      1.0        Rakesh Moolacheri     Initial Release
+// date            version    author                  description
+// 2020/05/27      1.0        Rakesh moolacheri     Initial Release
 //
 // -----------------------------------------------------------------------------
 // Comments: This solution is specifically for use with the QuickLogic
@@ -37,6 +37,7 @@ module AL4S3B_FPGA_Registers (
                          WBs_CYC_i,
                          WBs_BYTE_STB_i,
                          WBs_WE_i,
+                         WBs_RD_i,
                          WBs_STB_i,
                          WBs_DAT_i,
                          WBs_CLK_i,
@@ -44,40 +45,42 @@ module AL4S3B_FPGA_Registers (
                          WBs_DAT_o,
                          WBs_ACK_o,
 
-                        color0,
-                        color1,
-                        color2,
-                        color3,
-                        duration0,
-                        duration1,
-                        duration2,
-                        duration3,
-
-                        Interrupt_o,
-
                          //
                          // Misc
                          //
+                         CLK_4M_CNTL_o,
+                         CLK_1M_CNTL_o,
                          Device_ID_o,
-                         port_i
+						 	 
+                         GPIO_IN_i,
+                         GPIO_OUT_o,
+                         GPIO_OE_o
                          );
 
 
 //------Port Parameters----------------
 //
 
-parameter                ADDRWIDTH                   =   7  ;   // Allow for up to 128 registers in the FPGA
+parameter                ADDRWIDTH                   =   9  ;   // Allow for up to 128 registers in the FPGA
 parameter                DATAWIDTH                   =  32  ;   // Allow for up to 128 registers in the FPGA
 
-parameter                FPGA_REG_ID_VALUE_ADR       =  7'h0; 
-parameter                FPGA_REV_NUM_ADR            =  7'h1; 
-parameter                FPGA_SCRATCH_REG_ADR        =  7'h2;
+parameter                FPGA_REG_ID_VALUE_ADR     =  9'h0; 
+parameter                FPGA_REV_NUM_ADR          =  9'h1; 
+parameter                FPGA_GPIO_IN_REG_ADR      =  9'h2; 
+parameter                FPGA_GPIO_OUT_REG_ADR     =  9'h3; 
+parameter                FPGA_GPIO_OE_REG_ADR      =  9'h4; 
 
-parameter                FPGA_COLORS_ADR            =  7'h04;   // byte offset 0x10
-parameter                FPGA_DURATION0_ADR         =  7'h08;   // byte offset 0x20
-parameter                FPGA_DURATION1_ADR         =  7'h09;   // byte offset 0x24
-parameter                FPGA_DURATION2_ADR         =  7'h0A;   // byte offset 0x28
-parameter                FPGA_DURATION3_ADR         =  7'h0B;   // byte offset 0x2C
+parameter       		 FPGA_FIFO1_ACC_ADR        =  9'h40; 
+parameter       		 FPGA_FIFO1_FLAG_ADR       =  9'h41; 
+parameter       		 FPGA_FIFO2_ACC_ADR        =  9'h80; 
+parameter       		 FPGA_FIFO2_FLAG_ADR       =  9'h81; 
+parameter       		 FPGA_FIFO3_ACC_ADR        =  9'h100; 
+parameter       		 FPGA_FIFO3_FLAG_ADR       =  9'h101; 
+
+parameter                AL4S3B_DEVICE_ID            = 16'h0;
+parameter                AL4S3B_REV_LEVEL            = 32'h0;
+parameter                AL4S3B_GPIO_REG             = 8'h0;
+parameter                AL4S3B_GPIO_OE_REG          = 8'h0;
 
 parameter                AL4S3B_DEF_REG_VALUE        = 32'hFAB_DEF_AC;
 
@@ -91,6 +94,7 @@ input   [ADDRWIDTH-1:0]  WBs_ADR_i     ;  // Address Bus                to   FPG
 input                    WBs_CYC_i     ;  // Cycle Chip Select          to   FPGA
 input             [3:0]  WBs_BYTE_STB_i;  // Byte Select                to   FPGA
 input                    WBs_WE_i      ;  // Write Enable               to   FPGA
+input           		 WBs_RD_i        ;  // Read  Enable               to   FPGA
 input                    WBs_STB_i     ;  // Strobe Signal              to   FPGA
 input   [DATAWIDTH-1:0]  WBs_DAT_i     ;  // Write Data Bus             to   FPGA
 input                    WBs_CLK_i     ;  // FPGA Clock               from FPGA
@@ -98,22 +102,19 @@ input                    WBs_RST_i     ;  // FPGA Reset               to   FPGA
 output  [DATAWIDTH-1:0]  WBs_DAT_o     ;  // Read Data Bus              from FPGA
 output                   WBs_ACK_o     ;  // Transfer Cycle Acknowledge from FPGA
 
-output reg  [3:0]   color0;
-output reg  [2:0]   color1;
-output reg  [2:0]   color2;
-output reg  [2:0]   color3;
-output reg  [11:0]  duration0;
-output reg  [11:0]  duration1;
-output reg  [11:0]  duration2;
-output reg  [11:0]  duration3;
-
-output          Interrupt_o;
-
 //
 // Misc
 //
 output           [31:0]  Device_ID_o   ;
-input   [7:0]       port_i ;
+
+output 					 CLK_4M_CNTL_o;
+output 					 CLK_1M_CNTL_o;
+
+// GPIO
+//
+input            [7:0]  GPIO_IN_i     ;
+output           [7:0]  GPIO_OUT_o    ;
+output           [7:0]  GPIO_OE_o     ;
 
 
 
@@ -127,7 +128,8 @@ wire                     WBs_RST_i     ;  // Wishbone FPGA Reset
 wire    [ADDRWIDTH-1:0]  WBs_ADR_i     ;  // Wishbone Address Bus
 wire                     WBs_CYC_i     ;  // Wishbone Client Cycle  Strobe (i.e. Chip Select)
 wire              [3:0]  WBs_BYTE_STB_i;  // Wishbone Byte   Enables
-wire                     WBs_WE_i      ;  // Wishbone Write  Enable Strobe
+wire                     WBs_WE_i      ;  // Wishbone Write  Enable Strobe 
+wire                     WBs_RD_i      ;  // Wishbone Read  Enable Strobe
 wire                     WBs_STB_i     ;  // Wishbone Transfer      Strobe
 wire    [DATAWIDTH-1:0]  WBs_DAT_i     ;  // Wishbone Write  Data Bus
  
@@ -137,10 +139,33 @@ reg                      WBs_ACK_o     ;  // Wishbone Client Acknowledge
 
 // Misc
 //
-wire              [31:0]  Device_ID_o;
-wire              [31:0]  Rev_Num;
+wire               [31:0]  Device_ID_o   ;
+wire               [15:0]  Rev_No        ;
 
-reg 			  [15:0] Scratch_reg;
+// GPIO
+//
+wire             [7:0]  GPIO_IN_i     ;
+reg              [7:0]  GPIO_OUT_o    ;
+reg              [7:0]  GPIO_OE_o     ;
+
+wire [3:0] PUSH_FLAG1;
+wire [3:0] POP_FLAG1;
+wire [3:0] PUSH_FLAG2;
+wire [3:0] POP_FLAG2;
+wire [3:0] PUSH_FLAG3;
+wire [3:0] POP_FLAG3;
+
+wire       Almost_Full1;
+wire       Almost_Empty1;
+wire       Almost_Full2;
+wire       Almost_Empty2;
+wire       Almost_Full3;
+wire       Almost_Empty3;
+
+wire [15:0] FIFO1_DOUT;
+wire [15:0] FIFO2_DOUT;
+wire [31:0] FIFO3_DOUT;
+
 
 //------Define Parameters--------------
 //
@@ -151,21 +176,52 @@ reg 			  [15:0] Scratch_reg;
 
 //------Internal Signals---------------
 //
-wire					 FB_SCRATCH_REG_Wr_Dcd;
+wire                     FB_GPIO_Reg_Wr_Dcd    ;
+wire                     FB_GPIO_OE_Reg_Wr_Dcd ;
+
+wire                     FB_FIFO1_Wr_Dcd    ;
+wire                     FB_FIFO2_Wr_Dcd    ;
+wire                     FB_FIFO3_Wr_Dcd    ;
 
 wire					 WBs_ACK_o_nxt;
 
+wire					 FB_FIFO1_Rd_Dcd;
+wire					 FB_FIFO2_Rd_Dcd;
+wire					 FB_FIFO3_Rd_Dcd;
+
+reg 					 pop1_r;  
+reg 					 pop1_r1; 
+reg 					 pop1_r2; 
+reg 					 pop2_r;  
+reg 					 pop2_r1; 
+reg 					 pop2_r2;
+reg 					 pop3_r;  
+reg 					 pop3_r1; 
+reg 					 pop3_r2; 
+ 
+wire					 pop1;
+wire					 pop2;
+wire					 pop3;
 
 //------Logic Operations---------------
+//
+assign CLK_4M_CNTL_o = 1'b0 ;
+assign CLK_1M_CNTL_o = 1'b0 ;
+
 
 // Define the FPGA's local register write enables
 //
-assign FB_SCRATCH_REG_Wr_Dcd  = (WBs_ADR_i == FPGA_SCRATCH_REG_ADR) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
-assign FB_COLORS_REG_Wr_Dcd   = (WBs_ADR_i == FPGA_COLORS_ADR) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
-assign FB_DURATION0_REG_Wr_Dcd   = (WBs_ADR_i == FPGA_DURATION0_ADR) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
-assign FB_DURATION1_REG_Wr_Dcd   = (WBs_ADR_i == FPGA_DURATION1_ADR) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
-assign FB_DURATION2_REG_Wr_Dcd   = (WBs_ADR_i == FPGA_DURATION2_ADR) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
-assign FB_DURATION3_REG_Wr_Dcd   = (WBs_ADR_i == FPGA_DURATION3_ADR) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
+assign FB_GPIO_Reg_Wr_Dcd    = ( WBs_ADR_i == FPGA_GPIO_OUT_REG_ADR    ) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
+assign FB_GPIO_OE_Reg_Wr_Dcd = ( WBs_ADR_i == FPGA_GPIO_OE_REG_ADR     ) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
+
+
+assign FB_FIFO1_Wr_Dcd    = ( WBs_ADR_i == FPGA_FIFO1_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
+assign FB_FIFO2_Wr_Dcd    = ( WBs_ADR_i == FPGA_FIFO2_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
+assign FB_FIFO3_Wr_Dcd    = ( WBs_ADR_i == FPGA_FIFO3_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & WBs_WE_i   & (~WBs_ACK_o);
+
+assign FB_FIFO1_Rd_Dcd    = ( WBs_ADR_i == FPGA_FIFO1_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & (~WBs_WE_i) & (~WBs_ACK_o);
+assign FB_FIFO2_Rd_Dcd    = ( WBs_ADR_i == FPGA_FIFO2_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & (~WBs_WE_i) & (~WBs_ACK_o);
+assign FB_FIFO3_Rd_Dcd    = ( WBs_ADR_i == FPGA_FIFO3_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & (~WBs_WE_i) & (~WBs_ACK_o);
 
 // Define the Acknowledge back to the host for registers
 //
@@ -178,84 +234,151 @@ always @( posedge WBs_CLK_i or posedge WBs_RST_i)
 begin
     if (WBs_RST_i)
     begin
-		Scratch_reg <=  16'h0 ; 
-        WBs_ACK_o   <=  1'b0  ;
-        color0      <=  4'b0    ;
-        color1      <=  3'b0    ;
-        color2      <=  3'b0    ;
-        color3      <=  3'b0    ;
-        duration0   <=  12'b0   ;
-        duration1   <=  12'b0   ;
-        duration2   <=  12'b0   ;
-        duration3   <=  12'b0   ;
+        GPIO_OUT_o        <= AL4S3B_GPIO_REG     ;
+        GPIO_OE_o         <= AL4S3B_GPIO_OE_REG  ;
+        WBs_ACK_o         <=  1'b0               ;
+		pop1_r            <=  1'b0               ;
+		pop1_r1           <=  1'b0               ;
+		pop1_r2           <=  1'b0               ;
+		pop2_r            <=  1'b0               ;
+		pop2_r1           <=  1'b0               ;
+		pop2_r2           <=  1'b0               ;
+		pop3_r            <=  1'b0               ;
+		pop3_r1           <=  1'b0               ;
+		pop3_r2           <=  1'b0               ;
     end  
     else
     begin
-	
-		if(FB_SCRATCH_REG_Wr_Dcd && WBs_BYTE_STB_i[0])
-			Scratch_reg[7:0]   <= WBs_DAT_i[7:0]  ;
+        // Define the GPIO Register 
+        //
+        if(FB_GPIO_Reg_Wr_Dcd    && WBs_BYTE_STB_i[0]) 
+			GPIO_OUT_o[7:0]         <= WBs_DAT_i[7:0]  ;
 
-        if(FB_SCRATCH_REG_Wr_Dcd && WBs_BYTE_STB_i[1])
-			Scratch_reg[15:8]  <= WBs_DAT_i[15:8] ;
+        // Define the GPIO Control Register 
+        //
+        if(FB_GPIO_OE_Reg_Wr_Dcd && WBs_BYTE_STB_i[0])
+			GPIO_OE_o[7:0]          <= WBs_DAT_i[7:0]  ;
 
-        if (FB_COLORS_REG_Wr_Dcd) begin
-            color0 <= WBs_BYTE_STB_i[0] ? WBs_DAT_i[3:0]    : color0;
-            color1 <= WBs_BYTE_STB_i[1] ? WBs_DAT_i[10:8]   : color1;
-            color2 <= WBs_BYTE_STB_i[2] ? WBs_DAT_i[18:16]  : color2;
-            color3 <= WBs_BYTE_STB_i[3] ? WBs_DAT_i[26:24]  : color3;
-        end
-
-        if (FB_DURATION0_REG_Wr_Dcd) begin
-            duration0[7:0]   <= WBs_BYTE_STB_i[0] ? WBs_DAT_i[7:0]  : duration0[7:0];
-            duration0[11:8]  <= WBs_BYTE_STB_i[1] ? WBs_DAT_i[11:8] : duration0[11:8];
-        end
-
-        if (FB_DURATION1_REG_Wr_Dcd) begin
-            duration1[7:0]   <= WBs_BYTE_STB_i[0] ? WBs_DAT_i[7:0]  : duration1[7:0];
-            duration1[11:8]  <= WBs_BYTE_STB_i[1] ? WBs_DAT_i[11:8] : duration1[11:8];
-        end
-
-        if (FB_DURATION2_REG_Wr_Dcd) begin
-            duration2[7:0]   <= WBs_BYTE_STB_i[0] ? WBs_DAT_i[7:0]  : duration2[7:0];
-            duration2[11:8]  <= WBs_BYTE_STB_i[1] ? WBs_DAT_i[11:8] : duration2[11:8];
-        end
-
-        if (FB_DURATION3_REG_Wr_Dcd) begin
-            duration3[7:0]   <= WBs_BYTE_STB_i[0] ? WBs_DAT_i[7:0]  : duration3[7:0];
-            duration3[11:8]  <= WBs_BYTE_STB_i[1] ? WBs_DAT_i[11:8] : duration3[11:8];
-        end
-
-        WBs_ACK_o  <=  WBs_ACK_o_nxt  ;
+        WBs_ACK_o                   <=  WBs_ACK_o_nxt  ;
+		
+		pop1_r            <=  FB_FIFO1_Rd_Dcd       ;
+		pop1_r1           <=  pop1_r          		;
+		pop1_r2           <=  pop1_r1         		;
+		
+		pop2_r            <=  FB_FIFO2_Rd_Dcd       ;
+		pop2_r1           <=  pop2_r          		;
+		pop2_r2           <=  pop2_r1         		;
+		
+		pop3_r            <=  FB_FIFO3_Rd_Dcd       ;
+		pop3_r1           <=  pop3_r          		;
+		pop3_r2           <=  pop3_r1         		;
+		
     end  
 end
 
-
-assign Device_ID_o = 32'h0000A5BD;
-assign Rev_Num     = 32'h00000100;
-
 // Define the how to read the local registers and memory
 //
+assign Device_ID_o = 32'hF1F07E57 ;
+assign Rev_No = 16'h100 ;
 always @(
-         //WBs_ADR_i         or
-         //Device_ID_o       or
-         //Rev_Num		   or
-		 //Scratch_reg 
-		 *
+         WBs_ADR_i         or
+         Device_ID_o       or
+         Rev_No  		   or
+         GPIO_IN_i         or
+         GPIO_OUT_o        or
+         GPIO_OE_o         or   
+         FIFO1_DOUT        or
+		 PUSH_FLAG1        or	
+		 POP_FLAG1         or
+		 Almost_Full1      or
+		 Almost_Empty1     or
+         FIFO2_DOUT        or
+		 PUSH_FLAG2        or	
+		 POP_FLAG2         or
+		 Almost_Full2      or
+		 Almost_Empty2     or
+         FIFO3_DOUT        or
+		 PUSH_FLAG3        or	
+		 POP_FLAG3         or
+		 Almost_Full3      or
+		 Almost_Empty3     
  )
  begin
     case(WBs_ADR_i[ADDRWIDTH-1:0])
-    FPGA_REG_ID_VALUE_ADR    : WBs_DAT_o <= Device_ID_o;
-    FPGA_REV_NUM_ADR         : WBs_DAT_o <= Rev_Num;  
-    FPGA_SCRATCH_REG_ADR     : WBs_DAT_o <= { 16'h0, Scratch_reg }; 
-    FPGA_COLORS_ADR          : WBs_DAT_o <= {28'h0, port_i}; //32'hDEADBEEF;
-    FPGA_DURATION0_ADR       : WBs_DAT_o <= { 20'b0, duration0};
-    FPGA_DURATION1_ADR       : WBs_DAT_o <= { 20'b0, duration1};
-    FPGA_DURATION2_ADR       : WBs_DAT_o <= { 20'b0, duration2};
-    FPGA_DURATION3_ADR       : WBs_DAT_o <= { 20'b0, duration3};
-	default                  : WBs_DAT_o <= AL4S3B_DEF_REG_VALUE;
+    FPGA_REG_ID_VALUE_ADR     : WBs_DAT_o <= Device_ID_o;
+    FPGA_REV_NUM_ADR          : WBs_DAT_o <= { 16'h0, Rev_No };  
+    FPGA_GPIO_IN_REG_ADR      : WBs_DAT_o <= { 24'h0, GPIO_IN_i[7:0] };
+    FPGA_GPIO_OUT_REG_ADR     : WBs_DAT_o <= { 24'h0, GPIO_OUT_o[7:0] };
+    FPGA_GPIO_OE_REG_ADR      : WBs_DAT_o <= { 24'h0, GPIO_OE_o[7:0] };  
+	FPGA_FIFO1_ACC_ADR        : WBs_DAT_o <= { 16'h0, FIFO1_DOUT };
+	FPGA_FIFO1_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty1,3'h0,POP_FLAG1,Almost_Full1,3'h0,PUSH_FLAG1 };
+	FPGA_FIFO2_ACC_ADR        : WBs_DAT_o <= { 16'h0, FIFO2_DOUT };
+	FPGA_FIFO2_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty2,3'h0,POP_FLAG2,Almost_Full2,3'h0,PUSH_FLAG2 };
+	FPGA_FIFO3_ACC_ADR        : WBs_DAT_o <= FIFO3_DOUT ;
+	FPGA_FIFO3_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty3,3'h0,POP_FLAG3,Almost_Full3,3'h0,PUSH_FLAG3 };
+	default                   : WBs_DAT_o <= AL4S3B_DEF_REG_VALUE;
 	endcase
 end
 
-assign Interrupt_o = 1'b0;
+assign pop1 = pop1_r1 & (~pop1_r2);
+
+af512x16_512x16 FIFO1_INST (
+                          .DIN(WBs_DAT_i[15:0]),
+                          .PUSH(FB_FIFO1_Wr_Dcd),
+                          .POP(pop1),
+                          .Fifo_Push_Flush(WBs_RST_i),
+                          .Fifo_Pop_Flush(WBs_RST_i),
+                          .Push_Clk(WBs_CLK_i),
+                          .Pop_Clk(WBs_CLK_i),
+                          .PUSH_FLAG(PUSH_FLAG1),
+                          .POP_FLAG(POP_FLAG1),
+                          .Push_Clk_En(1'b1),
+                          .Pop_Clk_En(1'b1),
+                          .Fifo_Dir(1'b0),
+                          .Async_Flush(WBs_RST_i),
+                          .Almost_Full(Almost_Full1),
+                          .Almost_Empty(Almost_Empty1),
+                          .DOUT(FIFO1_DOUT)
+                          );
+
+assign pop2 = pop2_r1 & (~pop2_r2);        
+
+f1024x16_1024x16 FIFO2_INST (
+                            .DIN(WBs_DAT_i[15:0]),
+                            .PUSH(FB_FIFO2_Wr_Dcd),
+                            .POP(pop2),
+                            .Fifo_Push_Flush(WBs_RST_i),
+                            .Fifo_Pop_Flush(WBs_RST_i),
+                            .Clk(WBs_CLK_i),
+                            .PUSH_FLAG(PUSH_FLAG2),
+                            .POP_FLAG(POP_FLAG2),
+                            .Clk_En(1'b1),
+                            .Fifo_Dir(1'b0),
+                            .Async_Flush(WBs_RST_i),
+                            .Almost_Full(Almost_Full2),
+                            .Almost_Empty(Almost_Empty2),
+                            .DOUT(FIFO2_DOUT)
+                            );
+				
+assign pop3 = pop3_r1 & (~pop3_r2);
+
+af512x32_512x32 FIFO3_INST      (
+				.DIN(WBs_DAT_i[31:0]),
+				.PUSH(FB_FIFO3_Wr_Dcd),
+				.POP(pop3),
+				.Fifo_Push_Flush(WBs_RST_i),
+				.Fifo_Pop_Flush(WBs_RST_i),
+				.Push_Clk(WBs_CLK_i),
+				.Pop_Clk(WBs_CLK_i),
+				.PUSH_FLAG(PUSH_FLAG3),
+				.POP_FLAG(POP_FLAG3),
+				.Push_Clk_En(1'b1),
+				.Pop_Clk_En(1'b1),
+				.Fifo_Dir(1'b0),
+				.Async_Flush(WBs_RST_i),
+				.Almost_Full(Almost_Full3),
+				.Almost_Empty(Almost_Empty3),
+				.DOUT(FIFO3_DOUT)
+				);
 
 endmodule

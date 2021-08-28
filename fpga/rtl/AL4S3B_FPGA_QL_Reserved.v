@@ -49,7 +49,7 @@ module AL4S3B_FPGA_QL_Reserved (
 //------Port Parameters----------------
 //
 
-parameter                ADDRWIDTH                   =   7           ;   // Allow for up to 128 registers in the FPGA
+parameter                ADDRWIDTH                   =   9           ;   // Allow for up to 128 registers in the FPGA
 parameter                DATAWIDTH                   =  32           ;   // Allow for up to 128 registers in the FPGA
 
 parameter                QL_RESERVED_CUST_PROD_ADR   =  7'h7E        ;
