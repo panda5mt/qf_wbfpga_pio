@@ -362,7 +362,17 @@ int main(void)
     // init ov5642
     sccb_init();
 
-    fpga_fifoctrl_gpio_setdir(0xff);
+    fpga_gpio_setdir(0xff);
+    for(uint32_t i=0; i<512; i++) {
+      fpga_setfifo(i);
+    }
+    for(uint32_t i=0; i<512; i++) {
+      dbg_str("\r\nfvalue = 0x");
+      dbg_hex32(fpga_getfifo());
+      dbg_str("....sta = 0x");
+      dbg_hex32(fpga_getflag());
+    }
+
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
     vTaskStartScheduler();
@@ -1180,9 +1190,9 @@ void sccb_init(void) {
 
 void vTask1(void *pvParameters){
   while(1){
-      fpga_fifoctrl_setgpio(0x05);
+      fpga_setgpio(0x05);
       vTaskDelay(400);
-      fpga_fifoctrl_setgpio(0x0a);
+      fpga_setgpio(0x0a);
       vTaskDelay(400);
     
   }
@@ -1191,7 +1201,7 @@ void vTask2(void *pvParameters){
   while(1){
     vTaskDelay(500);
     dbg_str("\r\n\r\nLED Blink Test!\r\nRead data from FPGA=0x");
-    dbg_hex32(fpga_fifoctrl_getgpio());
+    dbg_hex32(fpga_getgpio());
   }
 }
 

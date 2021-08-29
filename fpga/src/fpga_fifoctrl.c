@@ -21,10 +21,8 @@
 #include "fpga_fifoctrl.h"
 
 //------------- Pointer to registers ---------------------//
-fpga_ledctlr_regs_t* pledctlr_regs = (fpga_ledctlr_regs_t*)(FPGA_PERIPH_BASE);
-fpga_ledctlr_regs2_t* pledctlr_regs2 = (fpga_ledctlr_regs2_t*)(FPGA_PERIPH_BASE);
-
 fpga_fifoctrl_t* fifoctrl_regs = (fpga_fifoctrl_t*)(FPGA_PERIPH_BASE);
+
 //------------- Local functions -------------------------//
 
 
@@ -32,8 +30,8 @@ fpga_fifoctrl_t* fifoctrl_regs = (fpga_fifoctrl_t*)(FPGA_PERIPH_BASE);
 
 void fpga_fifoctrl_init(void) {
     // Setup FPGA clocks
-    S3x_Clk_Set_Rate(S3X_FB_21_CLK, 24000*1000);
-    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 24000*1000);
+    S3x_Clk_Set_Rate(S3X_FB_21_CLK, 12000*1000);
+    S3x_Clk_Set_Rate(S3X_FB_16_CLK, 12000*1000);
     S3x_Clk_Enable(S3X_FB_21_CLK);
 	S3x_Clk_Enable(S3X_FB_16_CLK);
     
@@ -41,104 +39,28 @@ void fpga_fifoctrl_init(void) {
 	configASSERT(fifoctrl_regs->device_id == 0xF1F07E57);
 }
 
-void fpga_fifoctrl_setgpio(uint32_t value) {
+void fpga_setgpio(uint32_t value) {
 	fifoctrl_regs->gpio_out = value;
 }
 
-uint32_t fpga_fifoctrl_getgpio(void) {
+uint32_t fpga_getgpio(void) {
 	return fifoctrl_regs->gpio_in;
 }
 
-void fpga_fifoctrl_gpio_setdir(uint32_t value) {
+void fpga_gpio_setdir(uint32_t value) {
 	fifoctrl_regs->gpio_oe = value;
 }
 
-
-void    fpga_ledctlr_setcolor(uint8_t ucColorValue, uint8_t ucTimerIndex) {
-	switch(ucTimerIndex) {
-		case 0:
-			pledctlr_regs->color0 = ucColorValue;
-			break;
-		case 1:
-			pledctlr_regs->color1 = ucColorValue;
-			break;
-		case 2:
-			pledctlr_regs->color2 = ucColorValue;
-			break;
-		case 3:
-			pledctlr_regs->color3 = ucColorValue;
-			break;
-		default:
-		configASSERT(false);
-		break;
-	}
+void fpga_setfifo(uint32_t value) {
+	fifoctrl_regs->fifo1_acc = value;
 }
 
-uint32_t fpga_ledctlr_getcolors(void) {
-	return pledctlr_regs2->colors;
-	
+uint32_t fpga_getfifo(void) {
+	return fifoctrl_regs->fifo1_acc;
 }
 
-uint8_t	fpga_ledctlr_getcolor(uint8_t ucTimerIndex) {
-	uint8_t	ucColorValue;
-	switch(ucTimerIndex) {
-		case 0:
-			ucColorValue = pledctlr_regs->color0;
-			break;
-		case 1:
-			ucColorValue = pledctlr_regs->color1;
-			break;
-		case 2:
-			ucColorValue = pledctlr_regs->color2;
-			break;
-		case 3:
-			ucColorValue = pledctlr_regs->color3;
-			break;
-		default:
-		configASSERT(false);
-		break;
-	}
-	return (ucColorValue);
+uint32_t fpga_getflag(void) {
+	return fifoctrl_regs->fifo1_flags;
 }
 
-void    fpga_ledctlr_setduration(uint16_t uhDuration, uint8_t ucTimerIndex) {
-	switch(ucTimerIndex) {
-		case 0:
-			pledctlr_regs->duration0 = uhDuration;
-			break;
-		case 1:
-			pledctlr_regs->duration1 = uhDuration;
-			break;
-		case 2:
-			pledctlr_regs->duration2 = uhDuration;
-			break;
-		case 3:
-			pledctlr_regs->duration3 = uhDuration;
-			break;
-		default:
-		configASSERT(false);
-		break;
-	}
-}
 
-uint16_t	fpga_ledctlr_getduration(uint8_t ucTimerIndex) {
-	uint16_t	uhDuration;
-	switch(ucTimerIndex) {
-		case 0:
-			uhDuration = pledctlr_regs->duration0;
-			break;
-		case 1:
-			uhDuration = pledctlr_regs->duration1;
-			break;
-		case 2:
-			uhDuration = pledctlr_regs->duration2;
-			break;
-		case 3:
-			uhDuration = pledctlr_regs->duration3;
-			break;
-		default:
-		configASSERT(false);
-		break;
-	}
-	return (uhDuration);
-}
