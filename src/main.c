@@ -377,18 +377,6 @@ int main(void)
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
     vTaskStartScheduler();
 
-//     //CLI_start_task( my_main_menu );
-//     setup_sensors_data_block_processor();
-//     sensor_set_virtual_sensor(IMU_V_SENSOR_NO);
-//     StartRtosTaskMqttsnApp();
-//     StartRtosTaskMqttsnMsgHandler();
-// #if S3AI_FIRMWARE_IS_RECOGNITION
-//     StartRtosTaskRecognition();
-// #endif
-//     //StartRtosTaskADC();
-//     xTaskSet_uSecCount(1546300800ULL * 1000ULL * 1000ULL); // start at 2019-01-01 00:00:00 UTC time
-//     /* Start the tasks and timer running. */
-//     vTaskStartScheduler();
     while(1) ;
 }
 
