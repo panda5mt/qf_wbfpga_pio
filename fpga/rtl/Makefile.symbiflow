@@ -2,8 +2,7 @@
  
 current_dir := /qorc-sdk/qf_apps/qf_wbfpga_pio/fpga/rtl
 TOP := AL4S3B_FPGA_top
-VERILOG := ${current_dir}/LED_controller.v \
-${current_dir}/AL4S3B_FPGA_QL_Reserved.v \
+VERILOG := ${current_dir}/AL4S3B_FPGA_QL_Reserved.v \
 ${current_dir}/af512x32_512x32.v \
 ${current_dir}/AL4S3B_FPGA_Top.v \
 ${current_dir}/AL4S3B_FPGA_Registers.v \
