@@ -24,12 +24,13 @@
 fpga_ledctlr_regs_t* pledctlr_regs = (fpga_ledctlr_regs_t*)(FPGA_PERIPH_BASE);
 fpga_ledctlr_regs2_t* pledctlr_regs2 = (fpga_ledctlr_regs2_t*)(FPGA_PERIPH_BASE);
 
+fpga_fifoctrl_t* fifoctrl_regs = (fpga_fifoctrl_t*)(FPGA_PERIPH_BASE);
 //------------- Local functions -------------------------//
 
 
 //------------- Local variables ------------------------//
 
-void fpga_ledctlr_init(void) {
+void fpga_fifoctrl_init(void) {
     // Setup FPGA clocks
     S3x_Clk_Set_Rate(S3X_FB_21_CLK, 24000*1000);
     S3x_Clk_Set_Rate(S3X_FB_16_CLK, 24000*1000);

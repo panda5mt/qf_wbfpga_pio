@@ -343,7 +343,7 @@ int main(void)
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     load_fpga(sizeof(axFPGABitStream), axFPGABitStream);     // Load bitstrem into FPGA
-    fpga_ledctlr_init();
+    fpga_fifoctrl_init();
     
 
     HAL_Delay_Init();

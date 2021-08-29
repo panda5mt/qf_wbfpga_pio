@@ -60,9 +60,28 @@ typedef struct fpga_ledctlr_regs2 {
 	uint32_t	duration3;			// 0x2C
 } fpga_ledctlr_regs2_t;
 
+
+typedef struct fpga_fifoctrl {
+    uint32_t    device_id;			// 0x00
+    uint32_t    rev_num;			// 0x04
+    uint32_t    gpio_in;			// 0x08
+    uint32_t    gpio_out;		    // 0x0C
+    uint32_t    gpio_oe;			// 0x10
+    uint32_t    reserved1[60];
+    uint32_t    fifo1_acc;          // 0x100
+    uint32_t    fifo1_flags;    	// 0x104
+    uint32_t    reserved2[60];
+    uint32_t    fifo2_acc; 		    // 0x200
+	uint32_t	fifo2_flags;    	// 0x204
+    uint32_t    reserved3[120];
+	uint32_t	fifo3_acc;			// 0x400
+	uint32_t	fifo3_flags;        // 0x404
+
+} fpga_fifoctrl_t;
+
 uint32_t fpga_ledctlr_getcolors(void);
 
-void    	fpga_ledctlr_init(void);
+void    	fpga_fifoctrl_init(void);
 void    	fpga_ledctlr_setcolor(uint8_t ucColorValue, uint8_t ucTimerIndex);
 uint8_t 	fpga_ledctlr_getcolor(uint8_t ucTimerIndex);
 void    	fpga_ledctlr_setduration(uint16_t uhDuration, uint8_t ucTimerIndex);
