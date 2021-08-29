@@ -38,8 +38,21 @@ void fpga_fifoctrl_init(void) {
 	S3x_Clk_Enable(S3X_FB_16_CLK);
     
     // Confirm expected IP is loaded
-    configASSERT(pledctlr_regs->device_id == 0xA5BD);
+	configASSERT(fifoctrl_regs->device_id == 0xF1F07E57);
 }
+
+void fpga_fifoctrl_setgpio(uint32_t value) {
+	fifoctrl_regs->gpio_out = value;
+}
+
+uint32_t fpga_fifoctrl_getgpio(void) {
+	return fifoctrl_regs->gpio_in;
+}
+
+void fpga_fifoctrl_gpio_setdir(uint32_t value) {
+	fifoctrl_regs->gpio_oe = value;
+}
+
 
 void    fpga_ledctlr_setcolor(uint8_t ucColorValue, uint8_t ucTimerIndex) {
 	switch(ucTimerIndex) {

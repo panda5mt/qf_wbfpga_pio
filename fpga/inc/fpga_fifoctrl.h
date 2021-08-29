@@ -26,8 +26,8 @@
 #include <eoss3_hal_def.h>
 #include "s3x_clock.h"
 
-#define FPGA_LEDCTLR_ID_VALUE         0xA5BD
-#define FPGA_LEDCTLR_REV_NUM          0x0100
+//#define FPGA_LEDCTLR_ID_VALUE         0xA5BD
+//#define FPGA_LEDCTLR_REV_NUM          0x0100
 
 typedef struct fpga_ledctlr_regs {
     uint32_t    device_id;			// 0x00
@@ -60,7 +60,6 @@ typedef struct fpga_ledctlr_regs2 {
 	uint32_t	duration3;			// 0x2C
 } fpga_ledctlr_regs2_t;
 
-
 typedef struct fpga_fifoctrl {
     uint32_t    device_id;			// 0x00
     uint32_t    rev_num;			// 0x04
@@ -79,9 +78,13 @@ typedef struct fpga_fifoctrl {
 
 } fpga_fifoctrl_t;
 
-uint32_t fpga_ledctlr_getcolors(void);
-
+uint32_t    fpga_fifoctrl_getgpio(void);
 void    	fpga_fifoctrl_init(void);
+void        fpga_fifoctrl_setgpio(uint32_t value);
+void        fpga_fifoctrl_gpio_setdir(uint32_t value); // 0:tri-state 1:Drive output
+
+
+uint32_t fpga_ledctlr_getcolors(void);
 void    	fpga_ledctlr_setcolor(uint8_t ucColorValue, uint8_t ucTimerIndex);
 uint8_t 	fpga_ledctlr_getcolor(uint8_t ucTimerIndex);
 void    	fpga_ledctlr_setduration(uint16_t uhDuration, uint8_t ucTimerIndex);

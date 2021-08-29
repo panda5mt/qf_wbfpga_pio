@@ -9,9 +9,9 @@
 //set_io clk24_o  2
 set_io GPIO_PIN(7) 34
 set_io GPIO_PIN(6) 39
-set_io GPIO_PIN(5) 40
-set_io GPIO_PIN(4) 37
-set_io GPIO_PIN(3) 42
-set_io GPIO_PIN(1) 2
-set_io GPIO_PIN(2) 28
-set_io GPIO_PIN(0) 26
+set_io GPIO_PIN(5) 26
+set_io GPIO_PIN(4) 2
+set_io GPIO_PIN(3) 28
+set_io GPIO_PIN(1) 37
+set_io GPIO_PIN(2) 42
+set_io GPIO_PIN(0) 40
