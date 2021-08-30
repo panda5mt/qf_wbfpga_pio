@@ -35,10 +35,10 @@ typedef struct fpga_fifoctrl {
     uint32_t    reserved1[60-1];
     uint32_t    fifo1_acc;          // 0x100
     uint32_t    fifo1_flags;    	// 0x104
-    uint32_t    reserved2[60-1];
+    uint32_t    reserved2[63-1];
     uint32_t    fifo2_acc; 		    // 0x200
 	uint32_t	fifo2_flags;    	// 0x204
-    uint32_t    reserved3[120-1];
+    uint32_t    reserved3[127-1];
 	uint32_t	fifo3_acc;			// 0x400
 	uint32_t	fifo3_flags;        // 0x404
 } fpga_fifoctrl_t;

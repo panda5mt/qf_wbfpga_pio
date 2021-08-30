@@ -367,17 +367,22 @@ int main(void)
     // init ov5642
     sccb_init();
 
+    // test each FIFOs(FIFO1~3)
+    for (uint8_t ch=FIFO_CH1 ; ch<=FIFO_CH3 ; ch++) {
+      for(uint32_t i=0 ; i<16 ; i++) {
+        fpga_setfifo(ch,i);
+      }
+      for(uint32_t i=0 ; i<16 ; i++) {
+        dbg_str("\r\nstatus = 0x");
+        dbg_hex32(fpga_getflag(ch));
+        dbg_str("....fifo = 0x");
+        dbg_hex32(fpga_getfifo(ch));
+      }
+    }
+
+    // init GPIO directions (FPGA)
     fpga_gpio_setdir(0xff);
-    for(uint32_t i=0; i<16; i++) {
-      fpga_setfifo(FIFO_CH1,i);
-    }
-    for(uint32_t i=0; i<16; i++) {
-      dbg_str("\r\nsta = 0x");
-      dbg_hex32(fpga_getflag(FIFO_CH1));
-      dbg_str("....fvalue = 0x");
-      dbg_hex32(fpga_getfifo(FIFO_CH1));
-      
-    }
+    
 
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
