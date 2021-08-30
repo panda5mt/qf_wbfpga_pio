@@ -51,16 +51,46 @@ void fpga_gpio_setdir(uint32_t value) {
 	fifoctrl_regs->gpio_oe = value;
 }
 
-void fpga_setfifo(uint32_t value) {
-	fifoctrl_regs->fifo1_acc = value;
+void fpga_setfifo(uint8_t ch, uint32_t value) {
+	switch(ch){
+	case 1:
+		fifoctrl_regs->fifo1_acc = value;
+		break;
+	case 2:
+		fifoctrl_regs->fifo2_acc = value;
+		break;
+	case 3:
+		fifoctrl_regs->fifo3_acc = value;
+		break;
+	default:
+		fifoctrl_regs->fifo1_acc = value;
+	}
 }
 
-uint32_t fpga_getfifo(void) {
-	return fifoctrl_regs->fifo1_acc;
+uint32_t fpga_getfifo(uint8_t ch) {
+	switch(ch) {
+	case 1:
+		return fifoctrl_regs->fifo1_acc;
+	case 2:
+		return fifoctrl_regs->fifo2_acc;
+	case 3:
+		return fifoctrl_regs->fifo3_acc;
+	default:
+		return (0xDEADBEEF);
+	}
 }
 
-uint32_t fpga_getflag(void) {
-	return fifoctrl_regs->fifo1_flags;
+uint32_t fpga_getflag(uint8_t ch) {
+	switch(ch){
+	case 1:
+		return fifoctrl_regs->fifo1_flags;
+	case 2:
+		return fifoctrl_regs->fifo2_flags;
+	case 3:
+		return fifoctrl_regs->fifo3_flags;
+	default:
+		return 0xDEADBEEF;
+	}
 }
 
 

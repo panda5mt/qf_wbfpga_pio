@@ -55,6 +55,11 @@
 
 
 
+#define FIFO_CH1 (1)
+#define FIFO_CH2 (2)
+#define FIFO_CH3 (3)
+
+
 extern const struct cli_cmd_entry my_main_menu[];
 
 #if DBG_FLAGS_ENABLE
@@ -364,13 +369,13 @@ int main(void)
 
     fpga_gpio_setdir(0xff);
     for(uint32_t i=0; i<16; i++) {
-      fpga_setfifo(i);
+      fpga_setfifo(FIFO_CH1,i);
     }
     for(uint32_t i=0; i<16; i++) {
       dbg_str("\r\nsta = 0x");
-      dbg_hex32(fpga_getflag());
+      dbg_hex32(fpga_getflag(FIFO_CH1));
       dbg_str("....fvalue = 0x");
-      dbg_hex32(fpga_getfifo());
+      dbg_hex32(fpga_getfifo(FIFO_CH1));
       
     }
 
