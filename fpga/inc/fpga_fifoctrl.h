@@ -26,10 +26,6 @@
 #include <eoss3_hal_def.h>
 #include "s3x_clock.h"
 
-//#define FPGA_LEDCTLR_ID_VALUE         0xA5BD
-//#define FPGA_LEDCTLR_REV_NUM          0x0100
-
-
 typedef struct fpga_fifoctrl {
     uint32_t    device_id;			// 0x00
     uint32_t    rev_num;			// 0x04
@@ -45,7 +41,6 @@ typedef struct fpga_fifoctrl {
     uint32_t    reserved3[120-1];
 	uint32_t	fifo3_acc;			// 0x400
 	uint32_t	fifo3_flags;        // 0x404
-
 } fpga_fifoctrl_t;
 
 // GPIO APIs
@@ -58,7 +53,5 @@ uint32_t    fpga_getflag(uint8_t ch);
 uint32_t    fpga_getfifo(uint8_t ch); 
 void    	fpga_fifoctrl_init(void);
 void        fpga_setfifo(uint8_t ch, uint32_t value);
-
-
 
 #endif // __FPGA_LEDCTLR_H_

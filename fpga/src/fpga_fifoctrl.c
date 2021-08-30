@@ -89,7 +89,7 @@ uint32_t fpga_getflag(uint8_t ch) {
 	case 3:
 		return fifoctrl_regs->fifo3_flags;
 	default:
-		return 0xDEADBEEF;
+		return (0xDEADBEEF);
 	}
 }
 
