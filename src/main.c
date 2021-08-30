@@ -363,14 +363,15 @@ int main(void)
     sccb_init();
 
     fpga_gpio_setdir(0xff);
-    for(uint32_t i=0; i<512; i++) {
+    for(uint32_t i=0; i<16; i++) {
       fpga_setfifo(i);
     }
-    for(uint32_t i=0; i<512; i++) {
-      dbg_str("\r\nfvalue = 0x");
-      dbg_hex32(fpga_getfifo());
-      dbg_str("....sta = 0x");
+    for(uint32_t i=0; i<16; i++) {
+      dbg_str("\r\nsta = 0x");
       dbg_hex32(fpga_getflag());
+      dbg_str("....fvalue = 0x");
+      dbg_hex32(fpga_getfifo());
+      
     }
 
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
