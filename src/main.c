@@ -385,7 +385,7 @@ int main(void)
     // init GPIO directions (FPGA)
     fpga_gpio_setdir(0xff);
     
-
+    // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
     vTaskStartScheduler();
