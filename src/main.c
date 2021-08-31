@@ -59,7 +59,10 @@
 #define FIFO_CH2 (2)
 #define FIFO_CH3 (3)
 
-
+uint32_t* ramfifo0 = (uint32_t*)(0x40018000);
+uint32_t* ramfifo1 = (uint32_t*)(0x40019000);
+uint32_t* ramfifo2 = (uint32_t*)(0x4001A000);
+uint32_t* ramfifo3 = (uint32_t*)(0x4001B000);
 extern const struct cli_cmd_entry my_main_menu[];
 
 #if DBG_FLAGS_ENABLE
@@ -366,7 +369,7 @@ int main(void)
 
     // init ov5642
     sccb_init();
-
+  
     // test each FIFOs(FIFO1~3)
     for (uint8_t ch=FIFO_CH1 ; ch<=FIFO_CH3 ; ch++) {
       dbg_str("\r\n\r\n------------------ CHANNEL "); dbg_int(ch); dbg_str(" ------------------");
@@ -381,6 +384,7 @@ int main(void)
         dbg_hex32(fpga_getfifo(ch));
       }
     }
+
 
     // init GPIO directions (FPGA)
     fpga_gpio_setdir(0xff);

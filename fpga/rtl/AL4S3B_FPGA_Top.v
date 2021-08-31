@@ -30,7 +30,8 @@
 
 
 module AL4S3B_FPGA_top ( 
-            GPIO_PIN
+            GPIO_PIN,
+            CCLKO
             );
 
 
@@ -91,7 +92,7 @@ parameter       QL_RESERVED_DEF_REG_VALUE   = 32'hDEF_FAB_AC; // Distinguish acc
 // GPIO
 //
 inout  [7:0]   GPIO_PIN       ; 
-
+output         CCLKO;
 // clock pins added /4
 //output 			CLK_4MHZ_OUT;
 //output			CLK_1MHZ_OUT;
@@ -100,7 +101,7 @@ inout  [7:0]   GPIO_PIN       ;
 //GPIO
 //
 wire   [7:0]   GPIO_PIN       ;
-
+assign CCLKO = Sys_Clk1;
 //------Define Parameters--------------
 //
 
