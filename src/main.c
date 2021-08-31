@@ -59,10 +59,6 @@
 #define FIFO_CH2 (2)
 #define FIFO_CH3 (3)
 
-uint32_t* ramfifo0 = (uint32_t*)(0x40018000);
-uint32_t* ramfifo1 = (uint32_t*)(0x40019000);
-uint32_t* ramfifo2 = (uint32_t*)(0x4001A000);
-uint32_t* ramfifo3 = (uint32_t*)(0x4001B000);
 extern const struct cli_cmd_entry my_main_menu[];
 
 #if DBG_FLAGS_ENABLE
