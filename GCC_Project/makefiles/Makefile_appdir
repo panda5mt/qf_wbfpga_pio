@@ -18,7 +18,8 @@ MAIN_SRCS:= $(MAIN_DIR)/ble_app.c \
             $(MAIN_DIR)/sensor_config.c \
             $(MAIN_DIR)/sensor_data_task.c \
             $(MAIN_DIR)/sml_output.c \
-            $(MAIN_DIR)/watchdog.c
+            $(MAIN_DIR)/watchdog.c \
+            $(MAIN_DIR)/sccb_if.c
 
 filters=audio_pipeline_example.c \
 	h2d_protocol.c \
