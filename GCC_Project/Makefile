@@ -24,9 +24,9 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP FPGA DatablockProcessor GENERATED \
+external_srcs: Startup HAL FreeRTOS Libraries BSP FPGA DatablockProcessor \
                ADC SENSOR_AUDIO
-			   # SENSOR_AD7476 
+			   # SENSOR_AD7476 GENERATED
 	@echo "External sources built"
 
 .PHONY: appfpga
@@ -99,14 +99,6 @@ clean_FPGA:
 	make -f makefiles/Makefile_FPGA clean
 
 CLEAN_TARGET += BSP
-
-.PHONY: GENERATED
-GENERATED:
-	make -f makefiles/Makefile_generated
-clean_GENERATED:
-	make -f makefiles/Makefile_generated clean
-
-CLEAN_TARGET += GENERATED
 
 .PHONY:DatablockProcessor
 DatablockProcessor:

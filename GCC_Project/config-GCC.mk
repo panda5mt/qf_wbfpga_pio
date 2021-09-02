@@ -34,7 +34,6 @@ export MACROS=-D__FPU_USED=1 -D__FPU_USED=1 \
         -DGCC_MAKE
 
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
-export LIBSENSIML_DIR=$(APP_DIR)$(DIR_SEP)knowledgepack$(DIR_SEP)sensiml
 export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS$(DIR_SEP)lib$(DIR_SEP)GCC
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
@@ -42,7 +41,6 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/fpga/rtl" \
                  -I"$(APP_DIR)/fpga/inc" \
                  -I"$(APP_DIR)/IOP_MQTTSN/inc" \
-                 -I"$(APP_DIR)/knowledgepack/sensiml/inc" \
                  -I"$(APP_DIR)/knowledgepack/inc" \
                  -I"$(APP_DIR)/sensor_audio/inc" \
                  -I"$(PROJ_ROOT)/s3-gateware" \
@@ -91,7 +89,7 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
 	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
     --specs=nano.specs -u _printf_float --specs=nosys.specs -Wl,--no-wchar-size-warning \
     -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm\
-	-L$(LIBCMSIS_GCC_DIR) -L$(LIBSENSIML_DIR) -lsensiml -lm -larm_cortexM4lf_math
+	-L$(LIBCMSIS_GCC_DIR) -lm -larm_cortexM4lf_math
 
 
 export ELF2BIN_OPTIONS=-O binary
