@@ -40,14 +40,6 @@ CLI:
 QLFS:
 	make -f makefiles/Makefile_qlfs
 
-.PHONY: MQTTSN
-MQTTSN:
-	make -f makefiles/Makefile_MQTTSN
-
-.PHONY: MQTTSN_SML
-MQTTSN_SML:
-	make -f makefiles/Makefile_MQTTSN_SML
-
 .PHONY: FREERTOS_FAT
 FREERTOS_FAT:
 	make -f makefiles/Makefile_FreeRTOS_FAT
@@ -71,8 +63,6 @@ clean:
 	make -f makefiles/Makefile_FPGA clean
 	make -f makefiles/Makefile_cli clean
 	make -f makefiles/Makefile_DatablockManager clean
-	make -f makefiles/Makefile_MQTTSN clean
-	make -f makefiles/Makefile_MQTTSN_SML clean
 	make -f makefiles/Makefile_qlfs clean
 	make -f makefiles/Makefile_FreeRTOS_FAT clean
 	make -f makefiles/Makefile_FreeRTOS_FAT_QL clean
