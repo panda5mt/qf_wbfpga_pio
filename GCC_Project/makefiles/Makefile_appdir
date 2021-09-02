@@ -13,15 +13,8 @@ MAIN_SRCS:= $(MAIN_DIR)/c_lib_retarget.c \
             $(MAIN_DIR)/Sensor_Attributes.c \
             $(MAIN_DIR)/sensor_config.c \
             $(MAIN_DIR)/sensor_data_task.c \
-<<<<<<< HEAD
+            $(MAIN_DIR)/sccb_if.c \
             $(MAIN_DIR)/watchdog.c
-=======
-            $(MAIN_DIR)/sml_output.c \
-            $(MAIN_DIR)/watchdog.c \
-            $(MAIN_DIR)/sccb_if.c
-
-            
->>>>>>> 1f60e4aa6e6e9a9d7bfd751470e10ff59ad643e7
 
 filters=audio_pipeline_example.c \
 	h2d_protocol.c \
