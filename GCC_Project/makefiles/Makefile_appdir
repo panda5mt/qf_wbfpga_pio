@@ -12,7 +12,6 @@ MAIN_SRCS:= $(MAIN_DIR)/c_lib_retarget.c \
             $(MAIN_DIR)/sec_debug.c \
             $(MAIN_DIR)/Sensor_Attributes.c \
             $(MAIN_DIR)/sensor_config.c \
-            $(MAIN_DIR)/sensor_data_task.c \
             $(MAIN_DIR)/sccb_if.c \
             $(MAIN_DIR)/watchdog.c
 
