@@ -321,8 +321,6 @@ void setup_sensors_data_block_processor(void)
 void vTask1(void *pvParameters);
 void vTask2(void *pvParameters);
 
-
-
 int main(void)
 {
     //SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_wbfpga_pio";
@@ -341,7 +339,6 @@ int main(void)
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     load_fpga(sizeof(axFPGABitStream), axFPGABitStream);     // Load bitstrem into FPGA
     fpga_fifoctrl_init();
-    
 
     HAL_Delay_Init();
 
@@ -372,6 +369,10 @@ int main(void)
         dbg_str("....fifo = 0x");
         dbg_hex32(fpga_getfifo(ch));
       }
+      dbg_str("\r\nstatus = 0x");
+      dbg_hex32(fpga_getflag(ch));
+      dbg_str(".\r\n");
+      
     }
 
 
