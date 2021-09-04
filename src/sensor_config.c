@@ -27,7 +27,7 @@
 //#include "FFE_AccelGyro.h"
 #include "DataCollection.h"
 #include "ql_fs.h"
-#include "ql_adcTask.h"
+//#include "ql_adcTask.h"
 #include "ql_time.h"
 //#include "eoss3_hal_rtc.h"
 #include "dbg_uart.h"
