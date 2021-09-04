@@ -44,7 +44,7 @@
 #include "AL4S3B_FPGA_top_bit.h"   // FPGA bitstream to load into FPGA
 
 #include "gateware.h"           // FPGA bitstream to load into FPGA
-#include "sensor_config.h"
+//#include "sensor_config.h"
 #include "datablk_mgr.h"
 #include "process_ids.h"
 #include "datablk_processor.h"
