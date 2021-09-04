@@ -138,4 +138,4 @@ export M4_DIR           = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(
 #endif
 #export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
 #export SENSOR_AD7476_DIR = $(APP_DIR)$(DIR_SEP)ad7476$(DIR_SEP)src
-export SENSOR_AUDIO_DIR = $(APP_DIR)$(DIR_SEP)sensor_audio$(DIR_SEP)src
+#export SENSOR_AUDIO_DIR = $(APP_DIR)$(DIR_SEP)sensor_audio$(DIR_SEP)src
