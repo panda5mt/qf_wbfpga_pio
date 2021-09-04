@@ -40,7 +40,6 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/inc" \
                  -I"$(APP_DIR)/fpga/rtl" \
                  -I"$(APP_DIR)/fpga/inc" \
-                 -I"$(APP_DIR)/IOP_MQTTSN/inc" \
                  -I"$(APP_DIR)/knowledgepack/inc" \
                  -I"$(APP_DIR)/sensor_audio/inc" \
                  -I"$(PROJ_ROOT)/s3-gateware" \
@@ -73,6 +72,8 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  #-I"$(APP_DIR)/ad7476/inc" \
                  #-I"$(PROJ_ROOT)/s3-gateware/adc_ad7476_if/rtl" \
                  #-I"$(PROJ_ROOT)/freertos_gateware/inc" \
+                 #-I"$(APP_DIR)/IOP_MQTTSN/inc" \
+                 
                  
                  
     
