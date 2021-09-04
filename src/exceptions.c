@@ -423,21 +423,7 @@ void FB_ConfigureInterrupt ( UINT32_t fbIrq, UINT8_t type, UINT8_t polarity, UIN
 
 
 
-void accel_reader_wakeup_handler(void);
-void SensorGpio_Handler(void) 
-{
-    int intrCtrl;
-    //spurious_interrupt(__LINE__);
-    NVIC_DisableIRQ(Gpio_IRQn);
-    intrCtrl = INTR_CTRL->GPIO_INTR;
-    if(intrCtrl & (1<<GPIO_0))
-    {
-        accel_reader_wakeup_handler();
-        INTR_CTRL->GPIO_INTR |= (1<<GPIO_0);
-    }
-    NVIC_ClearPendingIRQ(Gpio_IRQn);
-    NVIC_EnableIRQ(Gpio_IRQn);
-}
+
 
 
 uint32_t btn_press_msec = 0;
@@ -485,10 +471,7 @@ extern outQ_processor_t audio_isr_outq_processor ;
 
 void Dmac0BufDone_Handler(void) 
 {
-    if (audio_isr_outq_processor.process_func)
-      audio_isr_outq_processor.process_func();
-    else
-      onDmac0BufferDone();
+ 	spurious_interrupt(__LINE__);
 }
 
 void Dmac1BlkDone_Handler(void) 

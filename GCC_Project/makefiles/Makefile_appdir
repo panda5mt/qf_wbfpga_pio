@@ -1,18 +1,14 @@
 
 #MAIN_SRCS:=$(wildcard $(MAIN_DIR)/*.c)
 MAIN_SRCS:= $(MAIN_DIR)/c_lib_retarget.c \
-            $(MAIN_DIR)/datasave.c \
             $(MAIN_DIR)/exceptions.c \
             $(MAIN_DIR)/main.c \
             $(MAIN_DIR)/main_dbg_cli_menu.c \
             $(MAIN_DIR)/pincfg_table.c \
-            $(MAIN_DIR)/process_imu.c \
             $(MAIN_DIR)/qf_hardwaresetup.c \
             $(MAIN_DIR)/s3x_pwrcfg.c \
             $(MAIN_DIR)/sec_debug.c \
             $(MAIN_DIR)/Sensor_Attributes.c \
-            $(MAIN_DIR)/sensor_config.c \
-            $(MAIN_DIR)/sensor_data_task.c \
             $(MAIN_DIR)/watchdog.c \
             $(MAIN_DIR)/sccb_if.c
 

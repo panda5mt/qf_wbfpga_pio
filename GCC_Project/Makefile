@@ -24,9 +24,8 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP FPGA DatablockProcessor \
-               SENSOR_AUDIO
-			   # SENSOR_AD7476 GENERATED ADC
+external_srcs: Startup HAL FreeRTOS Libraries BSP FPGA DatablockProcessor 
+			   # SENSOR_AD7476 GENERATED ADC SENSOR_AUDIO
 	@echo "External sources built"
 
 .PHONY: appfpga
@@ -131,14 +130,6 @@ clean_SENSOR_AD7476:
 	make -f makefiles/Makefile_sensor_ad7476 clean
 
 CLEAN_TARGET += SENSOR_AD7476
-
-.PHONY:SENSOR_AUDIO
-SENSOR_AUDIO:
-	make -f makefiles/Makefile_sensor_audio
-clean_SENSOR_AUDIO:
-	make -f makefiles/Makefile_sensor_audio clean
-
-CLEAN_TARGET += SENSOR_AUDIO
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

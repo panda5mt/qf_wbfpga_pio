@@ -75,7 +75,6 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  #-I"$(APP_DIR)/IOP_MQTTSN/inc" \
                  
                  
-                 
     
 
 # C compiler flags
