@@ -128,7 +128,7 @@ export FRAMEWORKLIB_DIR = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)lib
 export FFE_DIR          = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)FFE
 export HYBRID_DIR       = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)Hybrid
 export M4_DIR           = $(LIB_DIR)$(DIR_SEP)SensorFramework$(DIR_SEP)drivers$(DIR_SEP)M4$(DIR_SEP)mc3635
-export ADC_DIR          = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)ADC$(DIR_SEP)src
+#export ADC_DIR          = $(PROJ_ROOT)$(DIR_SEP)Tasks$(DIR_SEP)ADC$(DIR_SEP)src
 #ifeq ($(RTL_TOP_MODULE),usb2serial)
 #export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)rtl
 #export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
