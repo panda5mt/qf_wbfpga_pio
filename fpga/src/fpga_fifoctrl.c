@@ -22,12 +22,11 @@
 
 //------------- Pointer to registers ---------------------//
 fpga_fifoctrl_t* fifoctrl_regs = (fpga_fifoctrl_t*)(FPGA_PERIPH_BASE);
-
+fpga_fifoctrl_t* dmactrl_regs = (fpga_fifoctrl_t*)(0x40031000);
 //------------- Local functions -------------------------//
 
 
 //------------- Local variables ------------------------//
-
 void fpga_fifoctrl_init(void) {
     // Setup FPGA clocks
     S3x_Clk_Set_Rate(S3X_FB_21_CLK, 24000*1000);
