@@ -32,5 +32,5 @@ then, build the Projects. execute on your bash terminal.
 $ cd /qorc-sdk/qf_apps/qf_wbfpga_pio
 $ ~/qlogic_build.sh
 ```
-at 1st time, this command take you several munutes, because download and install all tools which QORC-SDK need.  
+at 1st time, this command take you several minutes, because download and install all tools which QORC-SDK need.  
 you can download *.bin compiled-binary which in <code>qf_wbfpga_pio/GCC_Projects/output/bin/qf_wbfpga_pio.bin</code>.
