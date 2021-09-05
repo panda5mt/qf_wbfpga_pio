@@ -17,7 +17,7 @@ make -C GCC_Projects/
 you can download *.bin compiled-binary which in <code>qf_wbfpga_pio/GCC_Projects/output/bin/qf_wbfpga_pio.bin</code>.
 
 ### ii. Use Dockerfile
-Or download Dockerfile<code>[Dockerfile](Dockerfile)</code>and execute below command on your Dockerfile's directory.
+Or download Dockerfile <code>[Dockerfile](Dockerfile)</code> and execute below command on your Dockerfile's directory.
 ```
 $ docker build -t debian-qorc .
 ```
