@@ -19,13 +19,13 @@ you can download *.bin compiled-binary which in <code>qf_wbfpga_pio/GCC_Projects
 ### ii. Use Dockerfile
 Or download <code>[Dockerfile](Dockerfile)</code> and execute below command on your Dockerfile's directory.
 ```
-$ docker build -t debian-qorc .
+$ docker build -t debian-qorc --build-arg CACHEBUST=$(date +%s) .
 ```
 an image name like <code>debian-qorc</code>, you can set any other words you like.<br>
 
 Execute below after built Docker image.
 ```
-$ docker run -it debian-qorc
+$ docker run -it debian-qorc 
 ```
 then, build the Projects. execute on your bash terminal.
 ```
