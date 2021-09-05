@@ -12,7 +12,7 @@ RUN ln -s /usr/bin/ arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/
 #RUN source envsetup.sh
 WORKDIR /root
 RUN echo -e '#!/bin/bash\n\ncd /qorc-sdk\nsource envsetup.sh\ncd -\nmake all -C GCC_Project\n# scp GCC_Project/output/bin/*.bin pi@raspberrypi.local:/home/pi\n' > qlogic_build.sh 
-#RUN echo -e '#!/bin/bash\nqfprog="python3 /home/lynx/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"\n$qfprog --port /dev/ttyUSB0  --m4app GCC_Project/output/bin/*.bin --mode fpga-m4' > qlogic_write.sh
+#RUN echo -e '#!/bin/bash\nqfprog="python3 /qorc-sdk/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"\n$qfprog --port /dev/ttyUSB0  --m4app GCC_Project/output/bin/*.bin --mode fpga-m4' > qlogic_write.sh
 RUN sed -i 's/\r//' *.sh
 RUN chmod +x qlogic_build.sh
 RUN chmod +x add_git.sh
