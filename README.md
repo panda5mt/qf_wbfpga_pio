@@ -23,7 +23,7 @@ $ docker build -t debian-qorc .
 ```
 an image name like <code>debian-qorc</code>, you can set any other words you like.<br>
 
-Run after built Docker image.
+Execute below after built Docker image.
 ```
 $ docker run -it debian-qorc
 ```
