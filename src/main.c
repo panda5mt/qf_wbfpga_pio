@@ -33,6 +33,7 @@
 /*    Include the generic headers required for QORC */
 #include "eoss3_hal_gpio.h"
 #include "eoss3_hal_rtc.h"
+#include "eoss3_hal_sdma.h"
 #include "ql_time.h"
 #include "s3x_clock_hal.h"
 #include "s3x_clock.h"
@@ -117,8 +118,10 @@ int main(void)
 
     // init ov5642
     sccb_init();
-  
+
+    
     // test each FIFOs(FIFO1~3)
+    
     for (uint8_t ch=FIFO_CH1 ; ch<=FIFO_CH3 ; ch++) {
       dbg_str("\r\n\r\n------------------ CHANNEL "); dbg_int(ch); dbg_str(" ------------------");
 
@@ -136,10 +139,6 @@ int main(void)
       dbg_str(".\r\n");
       
     }
-
-
-    // init GPIO directions (FPGA)
-    fpga_gpio_setdir(0xff);
     
     // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);

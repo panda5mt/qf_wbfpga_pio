@@ -22,7 +22,7 @@
 
 //------------- Pointer to registers ---------------------//
 fpga_fifoctrl_t* fifoctrl_regs = (fpga_fifoctrl_t*)(FPGA_PERIPH_BASE);
-fpga_fifoctrl_t* dmactrl_regs = (fpga_fifoctrl_t*)(0x40031000);
+
 //------------- Local functions -------------------------//
 
 
