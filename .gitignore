@@ -34,7 +34,7 @@
 #**/output/
 *.map
 *.elf
-/output/
+/output/*
 !/output/bin
 #/qf_wbfpga_pio/
 
