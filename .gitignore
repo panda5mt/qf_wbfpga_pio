@@ -34,9 +34,9 @@
 #**/output/
 *.map
 *.elf
-output/*
-!output/bin/*
-/qf_wbfpga_pio/
+**/output/
+!**/output/bin/
+#/qf_wbfpga_pio/
 
 # RTL build files
 **/rtl/build/
