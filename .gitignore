@@ -32,8 +32,8 @@
 *.app
 
 #**/output/
-output/
-!**/output/bin/
+output/*
+!/output/bin/
 /qf_wbfpga_pio/
 
 # RTL build files
