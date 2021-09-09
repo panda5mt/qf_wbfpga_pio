@@ -119,9 +119,9 @@ int main(void)
     // init ov5642
     sccb_init();
 
-    
+    // GPIO init
+    fpga_gpio_setdir(0xff);
     // test each FIFOs(FIFO1~3)
-    
     for (uint8_t ch=FIFO_CH1 ; ch<=FIFO_CH3 ; ch++) {
       dbg_str("\r\n\r\n------------------ CHANNEL "); dbg_int(ch); dbg_str(" ------------------");
 
