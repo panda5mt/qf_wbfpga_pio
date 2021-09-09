@@ -14,7 +14,7 @@ cd qf_apps/qf_wbfpga_pio/
 make clean -C GCC_Projects/
 make -C GCC_Projects/
 ```
-you can download *.bin compiled-binary which in <code>[GCC_Projects/output/qf_wbfpga_pio.bin](GCC_Projects/output/qf_wbfpga_pio.bin)</code>.
+you can download *.bin compiled-binary which in <code>[GCC_Project/output/qf_wbfpga_pio.bin](GCC_Project/output/qf_wbfpga_pio.bin)</code>.
 
 ### ii. Use Dockerfile
 Or download <code>[Dockerfile](Dockerfile)</code> and execute below command on your Dockerfile's directory.
@@ -33,4 +33,4 @@ $ cd /qorc-sdk/qf_apps/qf_wbfpga_pio
 $ ~/qlogic_build.sh
 ```
 at 1st time, this command take you several minutes, because download and install all tools which QORC-SDK need.  
-you can download *.bin compiled-binary which in <code>[GCC_Projects/output/qf_wbfpga_pio.bin](GCC_Projects/output/qf_wbfpga_pio.bin)</code>.
+you can download *.bin compiled-binary which in <code>[GCC_Project/output/qf_wbfpga_pio.bin](GCC_Project/output/qf_wbfpga_pio.bin)</code>.
