@@ -163,7 +163,7 @@ wire       Almost_Full3;
 wire       Almost_Empty3;
 
 wire [15:0] FIFO1_DOUT;
-wire [15:0] FIFO2_DOUT;
+wire [31:0] FIFO2_DOUT;
 wire [31:0] FIFO3_DOUT;
 
 
@@ -312,7 +312,7 @@ always @(
     FPGA_GPIO_OE_REG_ADR      : WBs_DAT_o <= { 24'h0, GPIO_OE_o[7:0] };  
 	FPGA_FIFO1_ACC_ADR        : WBs_DAT_o <= { 16'h0, FIFO1_DOUT };
 	FPGA_FIFO1_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty1,3'h0,POP_FLAG1,Almost_Full1,3'h0,PUSH_FLAG1 };
-	FPGA_FIFO2_ACC_ADR        : WBs_DAT_o <= { 16'h0, FIFO2_DOUT };
+	FPGA_FIFO2_ACC_ADR        : WBs_DAT_o <=  FIFO2_DOUT ;
 	FPGA_FIFO2_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty2,3'h0,POP_FLAG2,Almost_Full2,3'h0,PUSH_FLAG2 };
 	FPGA_FIFO3_ACC_ADR        : WBs_DAT_o <= FIFO3_DOUT ;
 	FPGA_FIFO3_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty3,3'h0,POP_FLAG3,Almost_Full3,3'h0,PUSH_FLAG3 };
@@ -343,16 +343,20 @@ af512x16_512x16 FIFO1_INST (
 
 assign pop2 = pop2_r1 & (~pop2_r2);        
 
-f1024x16_1024x16 FIFO2_INST (
-                            .DIN(WBs_DAT_i[15:0]),
+af512x32_512x32 FIFO2_INST (
+                            .DIN(WBs_DAT_i[31:0]),
                             .PUSH(FB_FIFO2_Wr_Dcd),
                             .POP(pop2),
                             .Fifo_Push_Flush(WBs_RST_i),
                             .Fifo_Pop_Flush(WBs_RST_i),
-                            .Clk(WBs_CLK_i),
+                            //.Clk(WBs_CLK_i),
+                            .Push_Clk(WBs_CLK_i),
+				            .Pop_Clk(WBs_CLK_i),
                             .PUSH_FLAG(PUSH_FLAG2),
                             .POP_FLAG(POP_FLAG2),
-                            .Clk_En(1'b1),
+                            //.Clk_En(1'b1),
+                            .Push_Clk_En(1'b1),
+				            .Pop_Clk_En(1'b1),
                             .Fifo_Dir(1'b0),
                             .Async_Flush(WBs_RST_i),
                             .Almost_Full(Almost_Full2),
