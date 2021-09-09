@@ -31,7 +31,8 @@
 *.out
 *.app
 
-**/output/*
+output/*
+output/bin/*
 !output/bin/qf_wbfpga_pio.bin
 
 *.map
