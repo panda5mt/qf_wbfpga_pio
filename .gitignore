@@ -32,9 +32,8 @@
 *.app
 
 output/*
-output/bin/*
 !output/bin/qf_wbfpga_pio.bin
-
+*.sym.txt
 *.map
 *.elf
 
