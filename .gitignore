@@ -31,8 +31,9 @@
 *.out
 *.app
 
-#!**/output/bin/*
 output/
+!output/bin/
+
 *.map
 *.elf
 
