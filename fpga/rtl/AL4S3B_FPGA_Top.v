@@ -31,7 +31,10 @@
 
 module AL4S3B_FPGA_top ( 
             GPIO_PIN,
-            CCLKO
+            CCLKO,
+            PCLKI,
+            VSYNCI,
+            HREFI
             );
 
 
@@ -93,6 +96,11 @@ parameter       QL_RESERVED_DEF_REG_VALUE   = 32'hDEF_FAB_AC; // Distinguish acc
 //
 inout  [7:0]   GPIO_PIN       ; 
 output         CCLKO;
+
+input       PCLKI;
+input       VSYNCI;
+input       HREFI;
+
 // clock pins added /4
 //output 			CLK_4MHZ_OUT;
 //output			CLK_1MHZ_OUT;
@@ -254,6 +262,11 @@ AL4S3B_FPGA_IP              #(
     // GPIO
     //
     .GPIO_PIN                  ( GPIO_PIN                    ),
+
+    // CAMERA
+    .PCLKI                      ( PCLKI                      ),
+    .VSYNCI                     ( VSYNCI                     ),
+    .HREFI                      ( HREFI                      ),
 
     //
     // Misc

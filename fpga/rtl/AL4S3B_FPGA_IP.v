@@ -51,6 +51,11 @@ module AL4S3B_FPGA_IP (
                 // GPIO
                 GPIO_PIN,
 
+                // CAMERA
+                PCLKI,
+                VSYNCI,
+                HREFI,
+
                 //
                 // Misc
 				CLK_4M_CNTL_o,
@@ -132,6 +137,10 @@ output          WBs_ACK          ;  // Transfer Cycle Acknowledge from FPGA
 //
 inout   [7:0]  GPIO_PIN         ;
 
+// CAMERA
+input            PCLKI;
+input            VSYNCI;
+input            HREFI;
 
 // Misc
 //
@@ -310,7 +319,13 @@ AL4S3B_FPGA_Registers #(
 	//
 	.GPIO_IN_i                 ( GPIO_In                        ),
 	.GPIO_OUT_o                ( GPIO_Out                       ),
-	.GPIO_OE_o                 ( GPIO_oe                        )
+	.GPIO_OE_o                 ( GPIO_oe                        ),
+
+
+    // CAMERA
+    .PCLKI                      (PCLKI),
+    .VSYNCI                     (VSYNCI),
+    .HREFI                      (HREFI)
                                                                 );
 																
 

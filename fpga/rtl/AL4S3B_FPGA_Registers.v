@@ -54,8 +54,12 @@ module AL4S3B_FPGA_Registers (
 						 	 
                          GPIO_IN_i,
                          GPIO_OUT_o,
-                         GPIO_OE_o
-                         );
+                         GPIO_OE_o,
+
+                         PCLKI,
+                         VSYNCI,
+                         HREFI
+                        );
 
 
 //------Port Parameters----------------
@@ -116,6 +120,10 @@ input            [7:0]  GPIO_IN_i     ;
 output           [7:0]  GPIO_OUT_o    ;
 output           [7:0]  GPIO_OE_o     ;
 
+// CAMERA
+input            PCLKI;
+input            VSYNCI;
+input            HREFI;
 
 
 // FPGA Global Signals
@@ -147,6 +155,7 @@ wire               [15:0]  Rev_No        ;
 wire             [7:0]  GPIO_IN_i     ;
 reg              [7:0]  GPIO_OUT_o    ;
 reg              [7:0]  GPIO_OE_o     ;
+
 
 wire [3:0] PUSH_FLAG1;
 wire [3:0] POP_FLAG1;

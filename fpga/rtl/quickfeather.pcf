@@ -1,18 +1,14 @@
 // Note: Quickfeather uses the QFN package so the format is: set <signal name> <QFN pin #>
-//set_io led_r_o	34
-//set_io led_g_o	39
-//set_io p0_o	    40
-//set_io p1_o     42
-//set_io p2_o	    37
-//set_io p3_o     28
-//set_io port_i(0) 26
-//set_io clk24_o  2
 set_io GPIO_PIN(7) 34
 set_io GPIO_PIN(6) 39
 set_io GPIO_PIN(5) 26
-//set_io GPIO_PIN(4) 2
-set_io CCLKO        2
+set_io GPIO_PIN(4) 2
 set_io GPIO_PIN(3) 28
 set_io GPIO_PIN(1) 37
 set_io GPIO_PIN(2) 42
 set_io GPIO_PIN(0) 40
+set_io CCLKO       33
+set_io PCLKI     32
+set_io VSYNCI    27
+set_io HREFI     23
+// QFN pin #:27(IO28),33(IO23,clk), 32(IO24,clk), 23(IO31) ,2
