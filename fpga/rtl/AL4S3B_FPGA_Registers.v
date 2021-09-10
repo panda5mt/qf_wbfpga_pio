@@ -394,47 +394,46 @@ end
 assign pop1 = pop1_r1 & (~pop1_r2);
 
 af512x16_512x16 FIFO1_INST (
-                          .DIN(WBs_DAT_i[15:0]),
-                          .PUSH(FB_FIFO1_Wr_Dcd),
-                          .POP(pop1),
-                          .Fifo_Push_Flush(WBs_RST_i),
-                          .Fifo_Pop_Flush(WBs_RST_i),
-                          .Push_Clk(WBs_CLK_i),
-                          .Pop_Clk(WBs_CLK_i),
-                          .PUSH_FLAG(PUSH_FLAG1),
-                          .POP_FLAG(POP_FLAG1),
-                          .Push_Clk_En(1'b1),
-                          .Pop_Clk_En(1'b1),
-                          .Fifo_Dir(1'b0),
-                          .Async_Flush(WBs_RST_i),
-                          .Almost_Full(Almost_Full1),
-                          .Almost_Empty(Almost_Empty1),
-                          .DOUT(FIFO1_DOUT)
-                          );
+                .DIN(WBs_DAT_i[15:0]),
+                .PUSH(FB_FIFO1_Wr_Dcd),
+                .POP(pop1),
+                .Fifo_Push_Flush(WBs_RST_i),
+                .Fifo_Pop_Flush(WBs_RST_i),
+                .Push_Clk(WBs_CLK_i),
+                .Pop_Clk(WBs_CLK_i),
+                .PUSH_FLAG(PUSH_FLAG1),
+                .POP_FLAG(POP_FLAG1),
+                .Push_Clk_En(1'b1),
+                .Pop_Clk_En(1'b1),
+                .Fifo_Dir(1'b0),
+                .Async_Flush(WBs_RST_i),
+                .Almost_Full(Almost_Full1),
+                .Almost_Empty(Almost_Empty1),
+                .DOUT(FIFO1_DOUT)
+                );
 
-assign pop2 = pop2_r1 & (~pop2_r2);        
-assign push2 = push2_r1 & (~push2_r2); 
+assign pop2 = pop2_r1 & (~pop2_r2);
 
 af512x32_512x32 FIFO2_INST (
-                            .DIN(camera_reg2),//.DIN(WBs_DAT_i[31:0]),
-                            .PUSH(reg2_indata & ~pop2),
-                            .POP(pop2),
-                            .Fifo_Push_Flush(WBs_RST_i),
-                            .Fifo_Pop_Flush(WBs_RST_i),
-                            //.Clk(WBs_CLK_i),
-                            .Push_Clk(reg2_indata & ~PCLKI), //.Push_Clk(WBs_CLK_i),
-				            .Pop_Clk(WBs_CLK_i),
-                            .PUSH_FLAG(PUSH_FLAG2),
-                            .POP_FLAG(POP_FLAG2),
-                            //.Clk_En(1'b1),
-                            .Push_Clk_En(1'b1),
-				            .Pop_Clk_En(1'b1),
-                            .Fifo_Dir(1'b0),
-                            .Async_Flush(WBs_RST_i),
-                            .Almost_Full(Almost_Full2),
-                            .Almost_Empty(Almost_Empty2),
-                            .DOUT(FIFO2_DOUT)
-                            );
+                .DIN(camera_reg2),//.DIN(WBs_DAT_i[31:0]),
+                .PUSH(reg2_indata & ~pop2),
+                .POP(pop2),
+                .Fifo_Push_Flush(WBs_RST_i),
+                .Fifo_Pop_Flush(WBs_RST_i),
+                //.Clk(WBs_CLK_i),
+                .Push_Clk(reg2_indata & ~PCLKI), //.Push_Clk(WBs_CLK_i),
+                .Pop_Clk(WBs_CLK_i),
+                .PUSH_FLAG(PUSH_FLAG2),
+                .POP_FLAG(POP_FLAG2),
+                //.Clk_En(1'b1),
+                .Push_Clk_En(1'b1),
+                .Pop_Clk_En(1'b1),
+                .Fifo_Dir(1'b0),
+                .Async_Flush(WBs_RST_i),
+                .Almost_Full(Almost_Full2),
+                .Almost_Empty(Almost_Empty2),
+                .DOUT(FIFO2_DOUT)
+                );
 				
 assign pop3 = pop3_r1 & (~pop3_r2);
 
