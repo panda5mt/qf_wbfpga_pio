@@ -171,7 +171,14 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
-
+ { // Pad 28 -- GPIO(VSYNCI)
+    .ucPin = PAD_27,
+    .ucFunc = PAD27_FUNC_SEL_FBIO_27,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
+    .ucPull = PAD_NOPULL,
+  },
   { // Pad 29 -- GPIO INPUT
     .ucPin = PAD_29,
     .ucFunc = PAD29_FUNC_SEL_FBIO_29,
