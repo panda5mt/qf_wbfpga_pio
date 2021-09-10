@@ -109,7 +109,8 @@ input       HREFI;
 //GPIO
 //
 wire   [7:0]   GPIO_PIN       ;
-assign CCLKO = Sys_Clk1;
+
+assign CCLKO = Sys_Clk0; 
 //------Define Parameters--------------
 //
 

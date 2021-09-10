@@ -125,6 +125,11 @@ input            PCLKI;
 input            VSYNCI;
 input            HREFI;
 
+wire PCLKI;
+wire VSYNCI;
+wire HREFI;
+
+
 
 // FPGA Global Signals
 //
@@ -207,11 +212,15 @@ reg 					 pop2_r2;
 reg 					 pop3_r;  
 reg 					 pop3_r1; 
 reg 					 pop3_r2; 
- 
+
 wire					 pop1;
 wire					 pop2;
 wire					 pop3;
 
+wire                    camera_data_valid;
+reg [31:0] camera_reg1;
+reg [31:0] camera_reg2;     
+wire [31:0] camera_reg2;     
 //------Logic Operations---------------
 //
 assign CLK_4M_CNTL_o = 1'b0 ;
@@ -231,6 +240,59 @@ assign FB_FIFO3_Wr_Dcd    = ( WBs_ADR_i == FPGA_FIFO3_ACC_ADR ) & WBs_CYC_i & WB
 assign FB_FIFO1_Rd_Dcd    = ( WBs_ADR_i == FPGA_FIFO1_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & (~WBs_WE_i) & (~WBs_ACK_o);
 assign FB_FIFO2_Rd_Dcd    = ( WBs_ADR_i == FPGA_FIFO2_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & (~WBs_WE_i) & (~WBs_ACK_o);
 assign FB_FIFO3_Rd_Dcd    = ( WBs_ADR_i == FPGA_FIFO3_ACC_ADR ) & WBs_CYC_i & WBs_STB_i & (~WBs_WE_i) & (~WBs_ACK_o);
+
+
+assign camera_data_valid  = HREFI & VSYNCI;
+
+/* FSM */
+reg[2:0] cam_sta_reg;
+reg     reg2_indata;
+wire    reg2_indata;   
+localparam CRES =3'd0;  // RESET
+localparam CB08 =3'd1;  // Camera buffer 8bit Full 
+localparam CB16 =3'd2;  // Camera buffer 16bit full
+localparam CB24 =3'd3;  // Camera buffer 24bit full
+localparam CB32 =3'd4;
+
+always@(posedge PCLKI or posedge WBs_RST_i)
+begin
+    if(WBs_RST_i)
+    begin
+        camera_reg1 <= 32'h0;
+        camera_reg2 <= 32'h0;
+        cam_sta_reg <= CRES;
+        reg2_indata <= 1'b0;
+    end
+    else
+    case(cam_sta_reg)
+    CRES: begin
+        if(camera_data_valid) begin
+            camera_reg1 <= {camera_reg1[23:0],8'hAA};
+            cam_sta_reg <= cam_sta_reg + 3'd1;
+            if(reg2_indata)begin
+                camera_reg2 <= 32'h0;
+                reg2_indata <= 1'b0;
+            end
+        end
+    end
+
+    CB24: begin
+        if(camera_data_valid) begin
+            camera_reg2 <= {camera_reg1[23:0],8'hCC};
+            camera_reg1 <= 32'h0;
+            reg2_indata <= 1'b1;
+            cam_sta_reg <= CRES;
+        end
+    end
+    
+    default: begin
+        if(camera_data_valid) begin
+            camera_reg1 <= {camera_reg1[23:0],8'hBB};
+            cam_sta_reg <= cam_sta_reg + 3'd1;
+        end
+    end
+    endcase
+end
 
 // Define the Acknowledge back to the host for registers
 //
@@ -277,7 +339,7 @@ begin
 		pop2_r            <=  FB_FIFO2_Rd_Dcd       ;
 		pop2_r1           <=  pop2_r          		;
 		pop2_r2           <=  pop2_r1         		;
-		
+	
 		pop3_r            <=  FB_FIFO3_Rd_Dcd       ;
 		pop3_r1           <=  pop3_r          		;
 		pop3_r2           <=  pop3_r1         		;
@@ -351,15 +413,16 @@ af512x16_512x16 FIFO1_INST (
                           );
 
 assign pop2 = pop2_r1 & (~pop2_r2);        
+assign push2 = push2_r1 & (~push2_r2); 
 
 af512x32_512x32 FIFO2_INST (
-                            .DIN(WBs_DAT_i[31:0]),
-                            .PUSH(FB_FIFO2_Wr_Dcd),
+                            .DIN(camera_reg2),//.DIN(WBs_DAT_i[31:0]),
+                            .PUSH(reg2_indata & ~pop2),
                             .POP(pop2),
                             .Fifo_Push_Flush(WBs_RST_i),
                             .Fifo_Pop_Flush(WBs_RST_i),
                             //.Clk(WBs_CLK_i),
-                            .Push_Clk(WBs_CLK_i),
+                            .Push_Clk(reg2_indata & ~PCLKI), //.Push_Clk(WBs_CLK_i),
 				            .Pop_Clk(WBs_CLK_i),
                             .PUSH_FLAG(PUSH_FLAG2),
                             .POP_FLAG(POP_FLAG2),
