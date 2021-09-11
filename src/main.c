@@ -125,9 +125,10 @@ int main(void)
     for (uint8_t ch=FIFO_CH1 ; ch<=FIFO_CH3 ; ch++) {
       dbg_str("\r\n\r\n------------------ CHANNEL "); dbg_int(ch); dbg_str(" ------------------");
 
-      for(uint32_t i=0 ; i<512 ; i++) {
-        fpga_setfifo(ch,i);
-      }
+      // for(uint32_t i=0 ; i<512 ; i++) {
+      //   fpga_setfifo(ch,i);
+      // }
+      
       for(uint32_t i=0 ; i<512 ; i++) {
         dbg_str("\r\nstatus = 0x");
         dbg_hex32(fpga_getflag(ch));
