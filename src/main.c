@@ -135,7 +135,7 @@ volatile uint32_t flg,lp;
 for(uint32_t zz = 0; zz < 1200; zz++) {
 
     flg = fpga_getflag(1);
-    if(((flg & 0x0f) > 0x02) || ((flg & 0x0f)==0)) {
+    if(((flg & 0x0f) > 0x03) || ((flg & 0x0f)==0)) {
         dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
         for(uint32_t i=0 ; i<512 ;i++) {
             a[i] = *(volatile uint32_t *)fifo1_regs;
@@ -144,7 +144,7 @@ for(uint32_t zz = 0; zz < 1200; zz++) {
     }    
 
     flg = fpga_getflag(2);
-    if(((flg & 0x0f) > 0x02) || ((flg & 0x0f)==0)) {
+    if(((flg & 0x0f) > 0x03) || ((flg & 0x0f)==0)) {
         dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
         for(uint32_t i=0 ; i<512 ; i++) {
             b[i] = *(volatile uint32_t *)fifo2_regs;
@@ -153,7 +153,7 @@ for(uint32_t zz = 0; zz < 1200; zz++) {
     }
 
     flg = fpga_getflag(3);
-    if(((flg & 0x0f) > 0x02) || ((flg & 0x0f)==0)) {
+    if(((flg & 0x0f) > 0x03) || ((flg & 0x0f)==0)) {
         dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
         for(uint32_t i=0 ; i<512 ; i++) {
             c[i] = *(volatile uint32_t *)fifo3_regs;

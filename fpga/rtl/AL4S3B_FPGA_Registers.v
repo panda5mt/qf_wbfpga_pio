@@ -287,7 +287,7 @@ begin
 
     CB24F: begin
         if(cam_data_valid) begin
-            cam_reg_out <= {21'h0,cam_fifo_countr};//{cam_reg1[23:0],8'hCC};
+            cam_reg_out <= {21'h0,(cam_fifo_countr + 11'h1)};//{cam_reg1[23:0],8'hCC};
             cam_reg1 <= 32'h0;
             cam_reg_ready <= 1'b1;
             cam_sta_reg <= CRSET;
@@ -307,7 +307,7 @@ always @( posedge cam_reg_ready or posedge WBs_RST_i)
 begin
     if(WBs_RST_i)
     begin
-        cam_fifo_countr <= FIFO_COUNT_FULL;
+        cam_fifo_countr <= 11'h00;//FIFO_COUNT_FULL;
     end
     else if (cam_fifo_countr == FIFO_COUNT_FULL) begin
         cam_fifo_countr <= 11'h00 ;
