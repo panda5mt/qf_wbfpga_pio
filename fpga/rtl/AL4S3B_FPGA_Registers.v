@@ -176,7 +176,7 @@ wire       Almost_Empty2;
 wire       Almost_Full3;
 wire       Almost_Empty3;
 
-wire [15:0] FIFO1_DOUT;
+wire [31:0] FIFO1_DOUT;
 wire [31:0] FIFO2_DOUT;
 wire [31:0] FIFO3_DOUT;
 
@@ -222,9 +222,9 @@ wire                    camera_push_sig1;
 wire                    camera_push_sig2;
 wire                    camera_push_clk;
 
-reg [31:0] camera_reg1;
-reg [31:0] camera_reg2;     
-wire [31:0] camera_reg2;     
+reg  [31:0]             camera_reg1;
+reg  [31:0]             camera_reg_out;     
+wire [31:0]             camera_reg_out;     
 //------Logic Operations---------------
 //
 assign CLK_4M_CNTL_o = 1'b0 ;
@@ -247,17 +247,12 @@ assign FB_FIFO3_Rd_Dcd    = ( WBs_ADR_i == FPGA_FIFO3_ACC_ADR ) & WBs_CYC_i & WB
 
 
 /* CAMERA - FIFO interface: begin */
-assign camera_data_valid    = HREFI & VSYNCI ;
-assign camera_push_clk      = reg2_indata & ~(PCLKI) ;
-assign camera_push_sig1     = reg2_indata & select_fifo1 & ~(pop2) ;
-assign camera_push_sig2     = reg2_indata & select_fifo2 & ~(pop3) ;
-
-reg         reg2_indata;
-wire        reg2_indata;   
+reg         cam_reg_ready;
+wire        cam_reg_ready;   
 wire        select_fifo1;
 wire        select_fifo2;
-
-reg[9:0]    camera_fifo_countr;
+wire        select_fifo3;
+reg[10:0]   camera_fifo_countr; // 11bit, up to 1536
 
 /* FSM */
 reg[1:0]    cam_sta_reg;
@@ -273,28 +268,27 @@ begin
     if(WBs_RST_i)
     begin
         camera_reg1 <= 32'h0;
-        camera_reg2 <= 32'h0;
+        camera_reg_out <= 32'h0;
         cam_sta_reg <= CRSET;
-        reg2_indata <= 1'b0;
+        cam_reg_ready <= 1'b0;
     end
     else
     case(cam_sta_reg)
     CRSET: begin
+        camera_reg_out <= 32'h0;
+        cam_reg_ready <= 1'b0;
+            
         if(camera_data_valid) begin
             camera_reg1 <= {camera_reg1[23:0],8'hAA};
             cam_sta_reg <= CB08F;
-            if(reg2_indata)begin
-                camera_reg2 <= 32'h0;
-                reg2_indata <= 1'b0;
-            end
         end
     end
 
     CB24F: begin
         if(camera_data_valid) begin
-            camera_reg2 <= {camera_reg1[23:0],8'hCC};
+            camera_reg_out <= {21'h0,camera_fifo_countr};//{camera_reg1[23:0],8'hCC};
             camera_reg1 <= 32'h0;
-            reg2_indata <= 1'b1;
+            cam_reg_ready <= 1'b1;
             cam_sta_reg <= CRSET;
         end
     end
@@ -308,19 +302,26 @@ begin
     endcase
 end
 // Camera FIFO counter
-always @( posedge reg2_indata or posedge WBs_RST_i)
+always @( posedge cam_reg_ready or posedge WBs_RST_i)
 begin
     if(WBs_RST_i)
     begin
-        camera_fifo_countr <= 10'h0;
+        camera_fifo_countr <= 11'h0;
     end
     else
     begin
-        camera_fifo_countr <= camera_fifo_countr + 10'h1;
+        camera_fifo_countr <= (camera_fifo_countr == 11'd1535) ? 11'h0 : camera_fifo_countr + 11'h1;
     end
 end
-assign          select_fifo1 = (camera_fifo_countr < 10'd512);
-assign          select_fifo2 = ~(select_fifo1) ;
+assign select_fifo1         = (camera_fifo_countr < 11'd512) ;
+assign select_fifo2         =  ~(select_fifo1) && (camera_fifo_countr < 11'd1024) ;
+assign select_fifo3         =  ~(select_fifo1) && ~(select_fifo2);  //(camera_fifo_countr < 11'd1536) ;
+
+assign camera_data_valid    = HREFI & VSYNCI ;
+assign camera_push_clk      = cam_reg_ready & ~(PCLKI) ;
+assign camera_push_sig1     = cam_reg_ready & select_fifo1 & ~(pop1) ;
+assign camera_push_sig2     = cam_reg_ready & select_fifo2 & ~(pop2) ;
+assign camera_push_sig3     = cam_reg_ready & select_fifo3 & ~(pop3) ;
 /* CAMERA - FIFO interface: end */
 
 // Define the Acknowledge back to the host for registers
@@ -410,7 +411,7 @@ always @(
     FPGA_GPIO_IN_REG_ADR      : WBs_DAT_o <= { 24'h0, GPIO_IN_i[7:0] };
     FPGA_GPIO_OUT_REG_ADR     : WBs_DAT_o <= { 24'h0, GPIO_OUT_o[7:0] };
     FPGA_GPIO_OE_REG_ADR      : WBs_DAT_o <= { 24'h0, GPIO_OE_o[7:0] };  
-	FPGA_FIFO1_ACC_ADR        : WBs_DAT_o <= { 16'h0, FIFO1_DOUT };
+	FPGA_FIFO1_ACC_ADR        : WBs_DAT_o <=  FIFO1_DOUT ;
 	FPGA_FIFO1_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty1,3'h0,POP_FLAG1,Almost_Full1,3'h0,PUSH_FLAG1 };
 	FPGA_FIFO2_ACC_ADR        : WBs_DAT_o <=  FIFO2_DOUT ;
 	FPGA_FIFO2_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty2,3'h0,POP_FLAG2,Almost_Full2,3'h0,PUSH_FLAG2 };
@@ -422,17 +423,17 @@ end
 
 assign pop1 = pop1_r1 & (~pop1_r2);
 
-af512x16_512x16 FIFO1_INST (
-                .DIN(WBs_DAT_i[15:0]),
-                .PUSH(FB_FIFO1_Wr_Dcd),
+af512x32_512x32 FIFO1_INST (
+                .DIN(camera_reg_out),              //.DIN(WBs_DAT_i),
+                .PUSH(camera_push_sig1),        //.PUSH(FB_FIFO1_Wr_Dcd),
                 .POP(pop1),
                 .Fifo_Push_Flush(WBs_RST_i),
                 .Fifo_Pop_Flush(WBs_RST_i),
-                .Push_Clk(WBs_CLK_i),
+                .Push_Clk(camera_push_clk & select_fifo1),     //.Push_Clk(WBs_CLK_i),
                 .Pop_Clk(WBs_CLK_i),
                 .PUSH_FLAG(PUSH_FLAG1),
                 .POP_FLAG(POP_FLAG1),
-                .Push_Clk_En(1'b1),
+                .Push_Clk_En(select_fifo1),     //.Push_Clk_En(1'b1),
                 .Pop_Clk_En(1'b1),
                 .Fifo_Dir(1'b0),
                 .Async_Flush(WBs_RST_i),
@@ -444,16 +445,16 @@ af512x16_512x16 FIFO1_INST (
 assign pop2 = pop2_r1 & (~pop2_r2);
 
 af512x32_512x32 FIFO2_INST (
-                .DIN(camera_reg2),          //.DIN(WBs_DAT_i[31:0]),
-                .PUSH(camera_push_sig1),    //.PUSH(FB_FIFO2_Wr_Dcd),
+                .DIN(camera_reg_out),          //.DIN(WBs_DAT_i[31:0]),
+                .PUSH(camera_push_sig2),    //.PUSH(FB_FIFO2_Wr_Dcd),
                 .POP(pop2),
                 .Fifo_Push_Flush(WBs_RST_i),
                 .Fifo_Pop_Flush(WBs_RST_i),
-                .Push_Clk(camera_push_clk), //.Push_Clk(WBs_CLK_i),
+                .Push_Clk(camera_push_clk & select_fifo2), //.Push_Clk(WBs_CLK_i),
                 .Pop_Clk(WBs_CLK_i),
                 .PUSH_FLAG(PUSH_FLAG2),
                 .POP_FLAG(POP_FLAG2),
-                .Push_Clk_En(1'b1),
+                .Push_Clk_En(select_fifo2),//.Push_Clk_En(1'b1),
                 .Pop_Clk_En(1'b1),
                 .Fifo_Dir(1'b0),
                 .Async_Flush(WBs_RST_i),
@@ -465,16 +466,16 @@ af512x32_512x32 FIFO2_INST (
 assign pop3 = pop3_r1 & (~pop3_r2);
 
 af512x32_512x32 FIFO3_INST      (
-				.DIN(camera_reg2),          //.DIN(WBs_DAT_i[31:0]),
-				.PUSH(camera_push_sig2),    //.PUSH(FB_FIFO3_Wr_Dcd),
+				.DIN(camera_reg_out),          //.DIN(WBs_DAT_i[31:0]),
+				.PUSH(camera_push_sig3),    //.PUSH(FB_FIFO3_Wr_Dcd),
 				.POP(pop3),
 				.Fifo_Push_Flush(WBs_RST_i),
 				.Fifo_Pop_Flush(WBs_RST_i),
-				.Push_Clk(camera_push_clk), //.Push_Clk(WBs_CLK_i),
+				.Push_Clk(camera_push_clk & select_fifo3), //.Push_Clk(WBs_CLK_i),
 				.Pop_Clk(WBs_CLK_i),
 				.PUSH_FLAG(PUSH_FLAG3),
 				.POP_FLAG(POP_FLAG3),
-				.Push_Clk_En(1'b1),
+				.Push_Clk_En(select_fifo3),//.Push_Clk_En(1'b1),
 				.Pop_Clk_En(1'b1),
 				.Fifo_Dir(1'b0),
 				.Async_Flush(WBs_RST_i),

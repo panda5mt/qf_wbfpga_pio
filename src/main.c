@@ -60,6 +60,11 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
+volatile uint32_t **fifo1_regs = 0x40020100; 
+volatile uint32_t **fifo2_regs = 0x40020200; 
+volatile uint32_t **fifo3_regs = 0x40020400; 
+
+
 #if DBG_FLAGS_ENABLE
 uint32_t DBG_flags = DBG_flags_default;
 #endif
@@ -86,6 +91,7 @@ void vTask2(void *pvParameters);
 
 int main(void)
 {
+  
     //SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_wbfpga_pio";
 #if S3AI_FIRMWARE_IS_COLLECTION
     SOFTWARE_VERSION_STR = "C Jun-2020";
@@ -104,7 +110,6 @@ int main(void)
     fpga_fifoctrl_init();
 
     HAL_Delay_Init();
-
     dbg_str("\n\n");
     dbg_str( "##########################\n");
     dbg_str( "Quicklogic QuickFeather FPGA Example\n");
@@ -116,30 +121,75 @@ int main(void)
 
 	  dbg_str( "\n\nfpga test...\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
-    // init ov5642
-    sccb_init();
+
 
     // GPIO init
     fpga_gpio_setdir(0xff);
-    // test each FIFOs(FIFO1~3)
-    for (uint8_t ch=FIFO_CH1 ; ch<=FIFO_CH3 ; ch++) {
-      dbg_str("\r\n\r\n------------------ CHANNEL "); dbg_int(ch); dbg_str(" ------------------");
+    
+    // init ov5642
+    sccb_init();
+volatile uint32_t a[512];
+for(uint32_t zz = 0; zz < 1200; zz++) {
+    while(((fpga_getflag(1) & 0x0f) < 4)&&(fpga_getflag(1) & 0x0f)!=0);
 
-      // for(uint32_t i=0 ; i<512 ; i++) {
-      //   fpga_setfifo(ch,i);
-      // }
-      
-      for(uint32_t i=0 ; i<512 ; i++) {
-        dbg_str("\r\nstatus = 0x");
-        dbg_hex32(fpga_getflag(ch));
-        dbg_str("....fifo = 0x");
-        dbg_hex32(fpga_getfifo(ch));
-      }
-      dbg_str("\r\nstatus = 0x");
-      dbg_hex32(fpga_getflag(ch));
-      dbg_str(".\r\n");
-      
+    dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(1));dbg_str("\r\n...");
+    for(uint32_t i=0 ; i<256 ; i++) {
+
+        a[2*i] = *(volatile uint32_t *)fifo1_regs;
+        a[2*i+1] = *(volatile uint32_t *)fifo1_regs;
+        
     }
+    dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(1));dbg_str("\r\n...");
+    dbg_hex32(a[256]);dbg_str("\r\n");
+    
+    while(((fpga_getflag(2) & 0x0f) < 4)&&(fpga_getflag(2) & 0x0f)!=0);
+
+    for(uint32_t i=0 ; i<256 ; i++) {
+        a[2*i] = *(volatile uint32_t *)fifo2_regs;
+        a[2*i+1] = *(volatile uint32_t *)fifo2_regs;
+    }
+    dbg_str("\r\nstatus = 0x");
+    dbg_hex32(fpga_getflag(2));
+    dbg_str("\r\n");
+    
+    dbg_hex32(a[256]);
+    dbg_str("\r\n");
+
+
+    while(((fpga_getflag(3) & 0x0f) < 4)&&(fpga_getflag(3) & 0x0f)!=0);
+
+    for(uint32_t i=0 ; i<256 ; i++) {
+        a[2*i] = *(volatile uint32_t *)fifo3_regs;
+        a[2*i+1] = *(volatile uint32_t *)fifo3_regs;
+    }
+    dbg_str("\r\nstatus = 0x");
+    dbg_hex32(fpga_getflag(3));
+    dbg_str("\r\n");
+
+        dbg_hex32(a[256]);
+    dbg_str("\r\n");
+
+}
+
+    // test each FIFOs(FIFO1~3)
+    // for (uint8_t ch=FIFO_CH2 ; ch<=FIFO_CH3 ; ch++) {
+    //   dbg_str("\r\n\r\n------------------ CHANNEL "); dbg_int(ch); dbg_str(" ------------------");
+
+    //   // for(uint32_t i=0 ; i<512 ; i++) {
+    //   //   fpga_setfifo(ch,i);
+    //   // }
+
+    //   for(uint32_t i=0 ; i<512 ; i++) {
+    //     dbg_str("\r\nstatus = 0x");
+    //     dbg_hex32(fpga_getflag(ch));
+    //     dbg_str("....fifo = 0x");
+    //     dbg_hex32(fpga_getfifo(ch));
+    //   }
+    //   dbg_str("\r\nstatus = 0x");
+    //   dbg_hex32(fpga_getflag(ch));
+    //   dbg_str(".\r\n");
+      
+    // }
     
     // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
