@@ -128,8 +128,7 @@ int main(void)
     
     // init ov5642
     sccb_init();
-volatile uint32_t a[512];
-volatile uint32_t b[512];
+volatile uint32_t a[512],b[512],c[512];
 
 for(uint32_t zz = 0; zz < 1200; zz++) {
     while(((fpga_getflag(1) & 0x0f) < 4)&&(fpga_getflag(1) & 0x0f)!=0);
@@ -139,7 +138,6 @@ for(uint32_t zz = 0; zz < 1200; zz++) {
         a[i] = *(volatile uint32_t *)fifo1_regs;
     }
     dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(1));dbg_str("\r\n...");
-    dbg_hex32(a[511]);dbg_str("\r\n");
     
 
     while(((fpga_getflag(2) & 0x0f) < 4)&&(fpga_getflag(2) & 0x0f)!=0);
@@ -148,26 +146,28 @@ for(uint32_t zz = 0; zz < 1200; zz++) {
     }
     dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(2));dbg_str("\r\n");
     
-    dbg_hex32(b[511]);dbg_str("\r\n");
-
 
     while(((fpga_getflag(3) & 0x0f) < 4)&&(fpga_getflag(3) & 0x0f)!=0);
 
     for(uint32_t i=0 ; i<512 ; i++) {
-        a[i] = *(volatile uint32_t *)fifo3_regs;
+        c[i] = *(volatile uint32_t *)fifo3_regs;
     }
     dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(3));dbg_str("\r\n");
 
-    dbg_hex32(a[511]);dbg_str("\r\n");
+    
 
 }
+    dbg_str("\r\n");
+    for(uint32_t i=0 ; i<512 ; i++) {
+        dbg_str("0x");dbg_hex32(a[i]);dbg_str("\r\n");
+    }
     dbg_str("\r\n");
     for(uint32_t i=0 ; i<512 ; i++) {
         dbg_str("0x");dbg_hex32(b[i]);dbg_str("\r\n");
     }
     dbg_str("\r\n");
     for(uint32_t i=0 ; i<512 ; i++) {
-        dbg_str("0x");dbg_hex32(a[i]);dbg_str("\r\n");
+        dbg_str("0x");dbg_hex32(c[i]);dbg_str("\r\n");
     }
     // test each FIFOs(FIFO1~3)
     // for (uint8_t ch=FIFO_CH2 ; ch<=FIFO_CH3 ; ch++) {

@@ -11,8 +11,8 @@ git clone https://github.com/panda5mt/qf_wbfpga_pio.git
 cd ../
 source envsetup.sh
 cd qf_apps/qf_wbfpga_pio/
-make clean -C GCC_Projects/
-make -C GCC_Projects/
+make clean -C GCC_Project/
+make -C GCC_Project/
 ```
 you can download *.bin compiled-binary which in <code>[GCC_Project/output/qf_wbfpga_pio.bin](GCC_Project/output/qf_wbfpga_pio.bin)</code>.
 
