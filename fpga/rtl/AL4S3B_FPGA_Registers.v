@@ -254,6 +254,7 @@ wire        select_fifo2;
 wire        select_fifo3;
 reg[10:0]   camera_fifo_countr; // 11bit, up to 1536
 
+localparam  FIFO_COUNT_FULL = 11'd1535;
 /* FSM */
 reg[1:0]    cam_sta_reg;
 
@@ -306,16 +307,18 @@ always @( posedge cam_reg_ready or posedge WBs_RST_i)
 begin
     if(WBs_RST_i)
     begin
-        camera_fifo_countr <= 11'h0;
+        camera_fifo_countr <= FIFO_COUNT_FULL;
     end
-    else
+    else if (camera_fifo_countr == FIFO_COUNT_FULL) begin
+        camera_fifo_countr <= 11'h0 ;
+    end
     begin
-        camera_fifo_countr <= (camera_fifo_countr == 11'd1535) ? 11'h0 : camera_fifo_countr + 11'h1;
+        camera_fifo_countr <= camera_fifo_countr + 11'h1;
     end
 end
-assign select_fifo1         = (camera_fifo_countr < 11'd512) ;
-assign select_fifo2         =  ~(select_fifo1) && (camera_fifo_countr < 11'd1024) ;
-assign select_fifo3         =  ~(select_fifo1) && ~(select_fifo2);  //(camera_fifo_countr < 11'd1536) ;
+assign select_fifo1         = (camera_fifo_countr[10:9] == 2'b00); // 0 =< camera_fifo_countr < 512 
+assign select_fifo2         = (camera_fifo_countr[10:9] == 2'b01); // 512 =< camera_fifo_countr < 1024 
+assign select_fifo3         = (camera_fifo_countr[10:9] == 2'b10); // 1024 =< camera_fifo_countr < 1536
 
 assign camera_data_valid    = HREFI & VSYNCI ;
 assign camera_push_clk      = cam_reg_ready & ~(PCLKI) ;
