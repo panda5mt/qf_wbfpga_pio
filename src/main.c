@@ -129,31 +129,37 @@ int main(void)
     // init ov5642
     sccb_init();
 volatile uint32_t a[512],b[512],c[512];
+volatile uint32_t flg,lp;
+
 
 for(uint32_t zz = 0; zz < 1200; zz++) {
-    while(((fpga_getflag(1) & 0x0f) < 4)&&(fpga_getflag(1) & 0x0f)!=0);
 
-    dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(1));dbg_str("\r\n...");
-    for(uint32_t i=0 ; i<512 ;i++) {
-        a[i] = *(volatile uint32_t *)fifo1_regs;
+    flg = fpga_getflag(1);
+    if(((flg & 0x0f) > 0x02) || ((flg & 0x0f)==0)) {
+        dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
+        for(uint32_t i=0 ; i<512 ;i++) {
+            a[i] = *(volatile uint32_t *)fifo1_regs;
+        }
+        dbg_str("\r\nfsta = 0x");dbg_hex32(fpga_getflag(1));dbg_str("\r\n...");
+    }    
+
+    flg = fpga_getflag(2);
+    if(((flg & 0x0f) > 0x02) || ((flg & 0x0f)==0)) {
+        dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
+        for(uint32_t i=0 ; i<512 ; i++) {
+            b[i] = *(volatile uint32_t *)fifo2_regs;
+        }
+        dbg_str("\r\nfsta = 0x");dbg_hex32(fpga_getflag(2));dbg_str("\r\n");
     }
-    dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(1));dbg_str("\r\n...");
-    
 
-    while(((fpga_getflag(2) & 0x0f) < 4)&&(fpga_getflag(2) & 0x0f)!=0);
-    for(uint32_t i=0 ; i<512 ; i++) {
-        b[i] = *(volatile uint32_t *)fifo2_regs;
+    flg = fpga_getflag(3);
+    if(((flg & 0x0f) > 0x02) || ((flg & 0x0f)==0)) {
+        dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
+        for(uint32_t i=0 ; i<512 ; i++) {
+            c[i] = *(volatile uint32_t *)fifo3_regs;
+        }
+        dbg_str("\r\nfsta = 0x");dbg_hex32(fpga_getflag(3));dbg_str("\r\n");
     }
-    dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(2));dbg_str("\r\n");
-    
-
-    while(((fpga_getflag(3) & 0x0f) < 4)&&(fpga_getflag(3) & 0x0f)!=0);
-
-    for(uint32_t i=0 ; i<512 ; i++) {
-        c[i] = *(volatile uint32_t *)fifo3_regs;
-    }
-    dbg_str("\r\nstatus = 0x");dbg_hex32(fpga_getflag(3));dbg_str("\r\n");
-
     
 
 }

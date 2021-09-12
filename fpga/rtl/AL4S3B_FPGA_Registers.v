@@ -217,14 +217,14 @@ wire					 pop1;
 wire					 pop2;
 wire					 pop3;
 
-wire                    camera_data_valid;
-wire                    camera_push_sig1;
-wire                    camera_push_sig2;
-wire                    camera_push_clk;
+wire                    cam_data_valid;
+wire                    cam_push_sig1;
+wire                    cam_push_sig2;
+wire                    cam_push_clk;
 
-reg  [31:0]             camera_reg1;
-reg  [31:0]             camera_reg_out;     
-wire [31:0]             camera_reg_out;     
+reg  [31:0]             cam_reg1;
+reg  [31:0]             cam_reg_out;     
+wire [31:0]             cam_reg_out;     
 //------Logic Operations---------------
 //
 assign CLK_4M_CNTL_o = 1'b0 ;
@@ -252,7 +252,7 @@ wire        cam_reg_ready;
 wire        select_fifo1;
 wire        select_fifo2;
 wire        select_fifo3;
-reg[10:0]   camera_fifo_countr; // 11bit, up to 1536
+reg[10:0]   cam_fifo_countr; // 11bit, up to 1536
 
 localparam  FIFO_COUNT_FULL = 11'd1535;
 /* FSM */
@@ -268,35 +268,35 @@ always @( posedge PCLKI or posedge WBs_RST_i )
 begin
     if(WBs_RST_i)
     begin
-        camera_reg1 <= 32'h0;
-        camera_reg_out <= 32'h0;
+        cam_reg1 <= 32'h0;
+        cam_reg_out <= 32'h0;
         cam_sta_reg <= CRSET;
         cam_reg_ready <= 1'b0;
     end
     else
     case(cam_sta_reg)
     CRSET: begin
-        camera_reg_out <= 32'h0;
+        cam_reg_out <= 32'h0;
         cam_reg_ready <= 1'b0;
             
-        if(camera_data_valid) begin
-            camera_reg1 <= {camera_reg1[23:0],8'hAA};
+        if(cam_data_valid) begin
+            cam_reg1 <= {cam_reg1[23:0],8'hAA};
             cam_sta_reg <= CB08F;
         end
     end
 
     CB24F: begin
-        if(camera_data_valid) begin
-            camera_reg_out <= {21'h0,camera_fifo_countr};//{camera_reg1[23:0],8'hCC};
-            camera_reg1 <= 32'h0;
+        if(cam_data_valid) begin
+            cam_reg_out <= {21'h0,cam_fifo_countr};//{cam_reg1[23:0],8'hCC};
+            cam_reg1 <= 32'h0;
             cam_reg_ready <= 1'b1;
             cam_sta_reg <= CRSET;
         end
     end
     
     default: begin
-        if(camera_data_valid) begin
-            camera_reg1 <= {camera_reg1[23:0],8'hBB};
+        if(cam_data_valid) begin
+            cam_reg1 <= {cam_reg1[23:0],8'hBB};
             cam_sta_reg <= cam_sta_reg + 2'd1;
         end
     end
@@ -307,25 +307,25 @@ always @( posedge cam_reg_ready or posedge WBs_RST_i)
 begin
     if(WBs_RST_i)
     begin
-        camera_fifo_countr <= FIFO_COUNT_FULL;
+        cam_fifo_countr <= FIFO_COUNT_FULL;
     end
-    else if (camera_fifo_countr == FIFO_COUNT_FULL) begin
-        camera_fifo_countr <= 11'h00 ;
+    else if (cam_fifo_countr == FIFO_COUNT_FULL) begin
+        cam_fifo_countr <= 11'h00 ;
     end
     else
     begin
-        camera_fifo_countr <= camera_fifo_countr + 11'h01 ;
+        cam_fifo_countr <= cam_fifo_countr + 11'h01 ;
     end
 end
-assign select_fifo1         = (camera_fifo_countr[10:9] == 2'b00); // 0 =< camera_fifo_countr < 512 
-assign select_fifo2         = (camera_fifo_countr[10:9] == 2'b01); // 512 =< camera_fifo_countr < 1024 
-assign select_fifo3         = (camera_fifo_countr[10:9] == 2'b10); // 1024 =< camera_fifo_countr < 1536
+assign select_fifo1         = (cam_fifo_countr[10:9] == 2'b00); // 0 =< cam_fifo_countr < 512 
+assign select_fifo2         = (cam_fifo_countr[10:9] == 2'b01); // 512 =< cam_fifo_countr < 1024 
+assign select_fifo3         = (cam_fifo_countr[10:9] == 2'b10); // 1024 =< cam_fifo_countr < 1536
 
-assign camera_data_valid    = HREFI & VSYNCI ;
-assign camera_push_clk      = cam_reg_ready & ~(PCLKI) ;
-assign camera_push_sig1     = cam_reg_ready & select_fifo1 & ~(pop1) ;
-assign camera_push_sig2     = cam_reg_ready & select_fifo2 & ~(pop2) ;
-assign camera_push_sig3     = cam_reg_ready & select_fifo3 & ~(pop3) ;
+assign cam_data_valid    = HREFI & VSYNCI ;
+assign cam_push_clk      = cam_reg_ready & ~(PCLKI) ;
+assign cam_push_sig1     = cam_reg_ready & select_fifo1;// & ~(pop1) ;
+assign cam_push_sig2     = cam_reg_ready & select_fifo2;// & ~(pop2) ;
+assign cam_push_sig3     = cam_reg_ready & select_fifo3;// & ~(pop3) ;
 /* CAMERA - FIFO interface: end */
 
 // Define the Acknowledge back to the host for registers
@@ -428,12 +428,12 @@ end
 assign pop1 = pop1_r1 & (~pop1_r2);
 
 af512x32_512x32 FIFO1_INST (
-                .DIN(camera_reg_out),              //.DIN(WBs_DAT_i),
-                .PUSH(camera_push_sig1),        //.PUSH(FB_FIFO1_Wr_Dcd),
+                .DIN(cam_reg_out),              //.DIN(WBs_DAT_i),
+                .PUSH(cam_push_sig1),        //.PUSH(FB_FIFO1_Wr_Dcd),
                 .POP(pop1),
                 .Fifo_Push_Flush(WBs_RST_i),
                 .Fifo_Pop_Flush(WBs_RST_i),
-                .Push_Clk(camera_push_clk & select_fifo1),     //.Push_Clk(WBs_CLK_i),
+                .Push_Clk(cam_push_clk),     //.Push_Clk(WBs_CLK_i),
                 .Pop_Clk(WBs_CLK_i),
                 .PUSH_FLAG(PUSH_FLAG1),
                 .POP_FLAG(POP_FLAG1),
@@ -449,12 +449,12 @@ af512x32_512x32 FIFO1_INST (
 assign pop2 = pop2_r1 & (~pop2_r2);
 
 af512x32_512x32 FIFO2_INST (
-                .DIN(camera_reg_out),          //.DIN(WBs_DAT_i[31:0]),
-                .PUSH(camera_push_sig2),    //.PUSH(FB_FIFO2_Wr_Dcd),
+                .DIN(cam_reg_out),          //.DIN(WBs_DAT_i[31:0]),
+                .PUSH(cam_push_sig2),    //.PUSH(FB_FIFO2_Wr_Dcd),
                 .POP(pop2),
                 .Fifo_Push_Flush(WBs_RST_i),
                 .Fifo_Pop_Flush(WBs_RST_i),
-                .Push_Clk(camera_push_clk & select_fifo2), //.Push_Clk(WBs_CLK_i),
+                .Push_Clk(cam_push_clk), //.Push_Clk(WBs_CLK_i),
                 .Pop_Clk(WBs_CLK_i),
                 .PUSH_FLAG(PUSH_FLAG2),
                 .POP_FLAG(POP_FLAG2),
@@ -470,12 +470,12 @@ af512x32_512x32 FIFO2_INST (
 assign pop3 = pop3_r1 & (~pop3_r2);
 
 af512x32_512x32 FIFO3_INST      (
-				.DIN(camera_reg_out),          //.DIN(WBs_DAT_i[31:0]),
-				.PUSH(camera_push_sig3),    //.PUSH(FB_FIFO3_Wr_Dcd),
+				.DIN(cam_reg_out),          //.DIN(WBs_DAT_i[31:0]),
+				.PUSH(cam_push_sig3),    //.PUSH(FB_FIFO3_Wr_Dcd),
 				.POP(pop3),
 				.Fifo_Push_Flush(WBs_RST_i),
 				.Fifo_Pop_Flush(WBs_RST_i),
-				.Push_Clk(camera_push_clk & select_fifo3), //.Push_Clk(WBs_CLK_i),
+				.Push_Clk(cam_push_clk), //.Push_Clk(WBs_CLK_i),
 				.Pop_Clk(WBs_CLK_i),
 				.PUSH_FLAG(PUSH_FLAG3),
 				.POP_FLAG(POP_FLAG3),
