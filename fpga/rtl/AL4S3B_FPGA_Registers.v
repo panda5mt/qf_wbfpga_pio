@@ -310,10 +310,11 @@ begin
         camera_fifo_countr <= FIFO_COUNT_FULL;
     end
     else if (camera_fifo_countr == FIFO_COUNT_FULL) begin
-        camera_fifo_countr <= 11'h0 ;
+        camera_fifo_countr <= 11'h00 ;
     end
+    else
     begin
-        camera_fifo_countr <= camera_fifo_countr + 11'h1;
+        camera_fifo_countr <= camera_fifo_countr + 11'h01 ;
     end
 end
 assign select_fifo1         = (camera_fifo_countr[10:9] == 2'b00); // 0 =< camera_fifo_countr < 512 
