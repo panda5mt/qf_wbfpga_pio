@@ -131,7 +131,7 @@ int main(void)
 volatile uint32_t a[512],b[512],c[512];
 volatile uint32_t flg,lp;
 
-
+// test for ringbuffer in FPGA
 for(uint32_t zz = 0; zz < 2000; zz++) {
 
     flg = fpga_getflag(1);
