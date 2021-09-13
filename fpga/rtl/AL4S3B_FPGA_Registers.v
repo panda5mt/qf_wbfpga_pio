@@ -256,7 +256,7 @@ reg[10:0]   cam_fifo_countr; // 11bit, up to 1536
 
 localparam  FIFO_COUNT_FULL = 11'd1535;
 /* FSM */
-reg[1:0]    cam_sta_reg;
+reg[1:0]    cam_status;
 
 localparam CRSET =2'd0;  // RESET
 localparam CB08F =2'd1;  // Camera buffer 8bit Full 
@@ -268,20 +268,20 @@ always @( posedge PCLKI or posedge WBs_RST_i )
 begin
     if(WBs_RST_i)
     begin
-        cam_reg1 <= 32'h0;
+        cam_reg1    <= 32'h0;
         cam_reg_out <= 32'h0;
-        cam_sta_reg <= CRSET;
-        cam_reg_ready <= 1'b0;
+        cam_status  <= CRSET;
+        cam_reg_ready   <= 1'b0;
     end
     else
-    case(cam_sta_reg)
+    case(cam_status)
     CRSET: begin
         cam_reg_out <= 32'h0;
         cam_reg_ready <= 1'b0;
             
         if(cam_data_valid) begin
             cam_reg1 <= {cam_reg1[23:0],8'hAA};
-            cam_sta_reg <= CB08F;
+            cam_status <= CB08F;
         end
     end
 
@@ -290,14 +290,14 @@ begin
             cam_reg_out <= {21'h0,(cam_fifo_countr + 11'h1)};//{cam_reg1[23:0],8'hCC};
             cam_reg1 <= 32'h0;
             cam_reg_ready <= 1'b1;
-            cam_sta_reg <= CRSET;
+            cam_status <= CRSET;
         end
     end
     
     default: begin
         if(cam_data_valid) begin
             cam_reg1 <= {cam_reg1[23:0],8'hBB};
-            cam_sta_reg <= cam_sta_reg + 2'd1;
+            cam_status <= cam_status + 2'd1;
         end
     end
     endcase
