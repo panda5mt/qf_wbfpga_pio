@@ -17,7 +17,7 @@
 /*==========================================================
  *
  *    File   : main.c
- *    Purpose: main for QuickFeather helloworldsw and LED/UserButton test
+ *    Purpose: main for QuickFeather CAMERA IF test
  *
  *=========================================================*/
 

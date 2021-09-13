@@ -1,6 +1,6 @@
 qf_wbfpga_pio
 =
-#### QuickLogic EOS S3:Cortex-M4 to FPGA Fabric via WISHBONE bus Sample Code.
+#### QuickLogic EOS S3:Cortex-M4 to FPGA Fabric via WISHBONE bus Sample Code with 8-bit CAMERA IF.
 ## I.Set up environment
 there's two way to use this project. You may choose each one which more comfortable.
 ### i. Clone the QORC-SDK before clone this project 
