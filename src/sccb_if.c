@@ -3,7 +3,7 @@
 #include "eoss3_hal_i2c.h"
 #include "sccb_if.h"
 
-#define PCLK_IS_6MHZ (1)
+#define PCLK_IS_6MHZ (0) // 1: 6MHz, 0: 24MHz
 // camera init
 void sccb_init(void) {
 

@@ -253,6 +253,7 @@ wire        select_fifo1;
 wire        select_fifo2;
 wire        select_fifo3;
 reg[10:0]   cam_fifo_countr; // 11bit, up to 1536
+reg[31:0]   cam_freerun;
 
 localparam  FIFO_COUNT_FULL = 11'd1535;
 /* FSM */
@@ -273,6 +274,7 @@ begin
         cam_status  <= CRSET;
         cam_reg_ready   <= 1'b0;
         cam_fifo_countr <= 11'h00;
+        cam_freerun <= 32'h00;
     end
     else
     case(cam_status)
@@ -288,10 +290,11 @@ begin
 
     CB24F: begin
         if(cam_data_valid) begin
-            cam_reg_out <= {21'h0,(cam_fifo_countr + 11'h1)};//{cam_reg1[23:0],8'hCC};
+            cam_reg_out <= cam_freerun;//{cam_reg1[23:0],8'hCC};
             cam_reg1 <= 32'h0;
             cam_reg_ready <= 1'b1;
             cam_fifo_countr <= (cam_fifo_countr == FIFO_COUNT_FULL)? 11'h00 : cam_fifo_countr + 11'h01;
+            cam_freerun <= cam_freerun + 32'h01;
             cam_status <= CRSET;
         end
     end
@@ -305,23 +308,6 @@ begin
     endcase
 end
 
-// Camera FIFO counter
-/*
-always @( posedge cam_reg_ready or posedge WBs_RST_i)
-begin
-    if(WBs_RST_i)
-    begin
-        cam_fifo_countr <= 11'h00;//FIFO_COUNT_FULL;
-    end
-    else if (cam_fifo_countr == FIFO_COUNT_FULL) begin
-        cam_fifo_countr <= 11'h00 ;
-    end
-    else
-    begin
-        cam_fifo_countr <= cam_fifo_countr + 11'h01 ;
-    end
-end
-*/
 assign select_fifo1         = (cam_fifo_countr[10:9] == 2'b00); // 0 =< cam_fifo_countr < 512 
 assign select_fifo2         = (cam_fifo_countr[10:9] == 2'b01); // 512 =< cam_fifo_countr < 1024 
 assign select_fifo3         = (cam_fifo_countr[10:9] == 2'b10); // 1024 =< cam_fifo_countr < 1536

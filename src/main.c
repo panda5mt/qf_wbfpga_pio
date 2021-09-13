@@ -132,7 +132,7 @@ volatile uint32_t a[512],b[512],c[512];
 volatile uint32_t flg,lp;
 
 
-for(uint32_t zz = 0; zz < 1200; zz++) {
+for(uint32_t zz = 0; zz < 2000; zz++) {
 
     flg = fpga_getflag(1);
     if(((flg & 0x0f) > 0x03) || ((flg & 0x0f)==0)) {
