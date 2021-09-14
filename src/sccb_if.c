@@ -213,7 +213,16 @@ void sccb_init(void) {
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
 
   // output format settings
-  sccb_dat[0]=0x43; sccb_dat[1]=0x00 ; sccb_dat[2]=0x30 ;   // YUV422
+  sccb_dat[0]=0x51; sccb_dat[1]=0x1e ; sccb_dat[2]=0x2a ;   
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  sccb_dat[0]=0x50; sccb_dat[1]=0x02 ; sccb_dat[2]=0x78 ;
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  sccb_dat[0]=0x50; sccb_dat[1]=0x1f ; sccb_dat[2]=0x01 ;
+  HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
+
+  sccb_dat[0]=0x43; sccb_dat[1]=0x00 ; sccb_dat[2]=0x30 ;   // RGB565
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
 
   // AEC Settings         
