@@ -110,16 +110,16 @@ int main(void)
     fpga_fifoctrl_init();
 
     HAL_Delay_Init();
-    dbg_str("\n\n");
-    dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather FPGA Example\n");
-    dbg_str( "SW Version: ");
-    dbg_str( SOFTWARE_VERSION_STR );
-    dbg_str( "\n" );
-    dbg_str( __DATE__ " " __TIME__ "\n" );
-    dbg_str( "##########################\n\n");
+    // dbg_str("\n\n");
+    // dbg_str( "##########################\n");
+    // dbg_str( "Quicklogic QuickFeather FPGA Example\n");
+    // dbg_str( "SW Version: ");
+    // dbg_str( SOFTWARE_VERSION_STR );
+    // dbg_str( "\n" );
+    // dbg_str( __DATE__ " " __TIME__ "\n" );
+    // dbg_str( "##########################\n\n");
 
-	  dbg_str( "\n\nfpga test...\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
+	//   dbg_str( "\n\nfpga test...\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
 
 
@@ -128,38 +128,29 @@ int main(void)
     
     // init ov5642
     sccb_init();
-volatile uint32_t a[512],b[512],c[512];
-volatile uint32_t flg,flg2, flgx, lp;
+volatile uint32_t a[512*6];
+volatile uint32_t flg, lp;
 
 // test for ringbuffer in FPGA
-for(uint32_t zz = 0; zz < 20000; zz++) {
-
-    flg = fpga_getflag(1) & 0x000f;
+uint32_t a_ptr = 0; 
+while(1) {
+    
+    ch = 1;
+    flg = fpga_getflag(ch) & 0x000f;
     if((flg > 0x03) || (!flg)) {
 
         for(uint32_t i=0 ; i<512 ;i++) {
-            a[i] = *(volatile uint32_t *)fifo1_regs;
+            a[a_ptr + i] = *(volatile uint32_t *)fifo1_regs;
         }
+        a_ptr = aptr + 512;
     }    
 
-    flg = fpga_getflag(2) & 0x000f;
-    if((flg > 0x03) || (!flg)) {
-        for(uint32_t i=0 ; i<512 ; i++) {
-            b[i] = *(volatile uint32_t *)fifo2_regs;
-        }
-    }
+    ch = ch + 1;
+    if (ch > 3) ch = 1;
 
-    flg = fpga_getflag(3) & 0x000f;
-    if((flg > 0x03) || (!flg)) {
-        flgx = flg;
-        for(uint32_t i=0 ; i<512 ; i++) {
-            c[i] = *(volatile uint32_t *)fifo3_regs;
-        }
-        flg2 = fpga_getflag(3);
-    }
-    
-
+    if(a_ptr >= (512*6))break;
 }
+
 
     for(uint32_t i=0 ; i<512 ; i++) {
         dbg_str("0x");dbg_hex32(a[i]);dbg_str("\r\n");
@@ -173,28 +164,10 @@ for(uint32_t zz = 0; zz < 20000; zz++) {
         dbg_str("0x");dbg_hex32(c[i]);dbg_str("\r\n");
     }
 
-    dbg_str("\r\nsta = 0x"); dbg_hex32(flgx);  dbg_str("\r\n");
-    dbg_str("\r\nfin = 0x"); dbg_hex32(flg2); dbg_str("\r\n"); dbg_str("\r\n");
+    // dbg_str("\r\nsta = 0x"); dbg_hex32(flgx); dbg_str("\r\n");
+    // dbg_str("\r\nfin = 0x"); dbg_hex32(flg2); dbg_str("\r\n"); dbg_str("\r\n");
 
-    // test each FIFOs(FIFO1~3)
-    // for (uint8_t ch=FIFO_CH2 ; ch<=FIFO_CH3 ; ch++) {
-    //   dbg_str("\r\n\r\n------------------ CHANNEL "); dbg_int(ch); dbg_str(" ------------------");
-
-    //   // for(uint32_t i=0 ; i<512 ; i++) {
-    //   //   fpga_setfifo(ch,i);
-    //   // }
-
-    //   for(uint32_t i=0 ; i<512 ; i++) {
-    //     dbg_str("\r\nstatus = 0x");
-    //     dbg_hex32(fpga_getflag(ch));
-    //     dbg_str("....fifo = 0x");
-    //     dbg_hex32(fpga_getfifo(ch));
-    //   }
-    //   dbg_str("\r\nstatus = 0x");
-    //   dbg_hex32(fpga_getflag(ch));
-    //   dbg_str(".\r\n");
-      
-    // }
+ 
     
     // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
@@ -217,8 +190,8 @@ void vTask1(void *pvParameters){
 void vTask2(void *pvParameters){
   while(1){
     vTaskDelay(500);
-    dbg_str("\r\n\r\nLED Blink Test!\r\nRead data from FPGA=0x");
-    dbg_hex32(fpga_getgpio());
+    //dbg_str("\r\n\r\nLED Blink Test!\r\nRead data from FPGA=0x");
+    //dbg_hex32(fpga_getgpio());
   }
 }
 
