@@ -3,7 +3,6 @@
 #include "eoss3_hal_i2c.h"
 #include "sccb_if.h"
 
-#define PCLK_IS_6MHZ (0) // 1: 6MHz, 0: 24MHz
 // camera init
 void sccb_init(void) {
 
@@ -222,7 +221,7 @@ void sccb_init(void) {
   sccb_dat[0]=0x50; sccb_dat[1]=0x1f ; sccb_dat[2]=0x01 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
 
-  sccb_dat[0]=0x43; sccb_dat[1]=0x00 ; sccb_dat[2]=0x30 ;   // RGB565
+  sccb_dat[0]=0x43; sccb_dat[1]=0x00 ; sccb_dat[2]=0x61 ;   // RGB565
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
 
   // AEC Settings         
@@ -803,48 +802,6 @@ void sccb_init(void) {
   sccb_dat[0]=0x36; sccb_dat[1]=0x20 ; sccb_dat[2]=0x52 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   
-
-  #ifdef PCLK_IS_6MHZ
-    sccb_dat[0]=0x30; sccb_dat[1]=0x11 ; sccb_dat[2]=0x08 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-
-    sccb_dat[0]=0x30; sccb_dat[1]=0x12 ; sccb_dat[2]=0x00 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-    
-    sccb_dat[0]=0x30; sccb_dat[1]=0x10 ; sccb_dat[2]=0x70 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-    // VFIFO
-    sccb_dat[0]=0x46; sccb_dat[1]=0x0c ; sccb_dat[2]=0x22 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-
-    sccb_dat[0]=0x38; sccb_dat[1]=0x0c ; sccb_dat[2]=0x0c ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-
-    sccb_dat[0]=0x38; sccb_dat[1]=0x0d ; sccb_dat[2]=0x80 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);    
-
-    sccb_dat[0]=0x3a; sccb_dat[1]=0x00 ; sccb_dat[2]=0x78 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);    
-
-    sccb_dat[0]=0x3a; sccb_dat[1]=0x08 ; sccb_dat[2]=0x09 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);    
-
-    sccb_dat[0]=0x3a; sccb_dat[1]=0x09 ; sccb_dat[2]=0x60 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-
-    sccb_dat[0]=0x3a; sccb_dat[1]=0x0a ; sccb_dat[2]=0x07 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-
-    sccb_dat[0]=0x3a; sccb_dat[1]=0x0b ; sccb_dat[2]=0xd0 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-
-    sccb_dat[0]=0x3a; sccb_dat[1]=0x0d ; sccb_dat[2]=0x08 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-
-    sccb_dat[0]=0x3a; sccb_dat[1]=0x0e ; sccb_dat[2]=0xd6 ; 
-    HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
-
-  #endif
 
   //VSYNC Active-Low
   sccb_dat[0]=0x47; sccb_dat[1]=0x40 ; sccb_dat[2]=0x01 ;
