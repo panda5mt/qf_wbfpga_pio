@@ -41,6 +41,7 @@ typedef struct fpga_fifoctrl {
     uint32_t    reserved3[127-1];
 	uint32_t	fifo3_acc;			// 0x400
 	uint32_t	fifo3_flags;        // 0x404
+    uint32_t    fifo_write_ch;      // 0x408
 } fpga_fifoctrl_t;
 
 // init API
@@ -54,6 +55,7 @@ void        fpga_gpio_setdir(uint32_t value); // 0:tri-state 1:Drive output
 // FIFO APIs
 uint32_t    fpga_getflag(uint8_t ch);
 uint32_t    fpga_getfifo(uint8_t ch); 
+uint32_t    fpga_get_wrch(void);
 void        fpga_setfifo(uint8_t ch, uint32_t value);
 
 #endif // __FPGA_LEDCTLR_H_

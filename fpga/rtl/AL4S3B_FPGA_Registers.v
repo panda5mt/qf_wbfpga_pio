@@ -79,7 +79,8 @@ parameter       		 FPGA_FIFO1_FLAG_ADR       =  9'h41;
 parameter       		 FPGA_FIFO2_ACC_ADR        =  9'h80; 
 parameter       		 FPGA_FIFO2_FLAG_ADR       =  9'h81; 
 parameter       		 FPGA_FIFO3_ACC_ADR        =  9'h100; 
-parameter       		 FPGA_FIFO3_FLAG_ADR       =  9'h101; 
+parameter       		 FPGA_FIFO3_FLAG_ADR       =  9'h101;
+parameter                FPGA_NOW_WRITE_ADR        =  9'h102;  // FIFO CH:1~3
 
 parameter                AL4S3B_DEVICE_ID            = 16'h0;
 parameter                AL4S3B_REV_LEVEL            = 32'h0;
@@ -297,7 +298,7 @@ begin
             cam_reg_out <= cam_freerun[31:0];//{cam_reg1[23:0],8'hCC};
             cam_reg1 <= 32'h0;
             cam_reg_ready <= 1'b1;
-            cam_fifo_countr <=  (cam_fifo_countr + 11'h01) % FIFO_COUNT_FULL; // modulo-N counter
+            cam_fifo_countr <= (cam_fifo_countr == FIFO_COUNT_FULL-1) ? 11'h00 : (cam_fifo_countr + 11'h01); // modulo-N counter
             cam_freerun <= cam_freerun + 32'h01;
             cam_status <= CRSET;
         end
@@ -416,6 +417,7 @@ always @(
 	FPGA_FIFO2_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty2,3'h0,POP_FLAG2,Almost_Full2,3'h0,PUSH_FLAG2 };
 	FPGA_FIFO3_ACC_ADR        : WBs_DAT_o <= FIFO3_DOUT ;
 	FPGA_FIFO3_FLAG_ADR       : WBs_DAT_o <= { 16'h0,Almost_Empty3,3'h0,POP_FLAG3,Almost_Full3,3'h0,PUSH_FLAG3 };
+    FPGA_NOW_WRITE_ADR        : WBs_DAT_o <= { 30'h0, cam_fifo_countr[10:9]};
 	default                   : WBs_DAT_o <= AL4S3B_DEF_REG_VALUE;
 	endcase
 end

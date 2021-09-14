@@ -136,11 +136,15 @@ uint32_t ch = 2;
 uint32_t a_ptr = 0; 
 while(1) {
 while(1) {
-    
+            // test
+        //dbg_str("0x");
+        dbg_hex8(fpga_get_wrch());
+        dbg_str("\r\n");
+        // test:end
     
     flg = fpga_getflag(ch) & 0x000f;
-    //if((flg > 0x03) || (!flg)) {
-    if((!flg)) {
+    if((flg > 0x04) || (!flg)) {
+    //if((!flg)) {
 
         for(uint32_t i=0 ; i<512 ;i++) {
             switch(ch){
@@ -157,9 +161,9 @@ while(1) {
                     break;
             }
 
-                
-            
         }
+
+
         a_ptr = a_ptr + 512;
     }    
 
@@ -170,14 +174,11 @@ while(1) {
 }
 
     a_ptr = 0;
-    for(uint32_t i=0 ; i<512*6 ; i++) {
-        dbg_str("0x");dbg_hex32(a[i]);dbg_str("\r\n");
-    }
-    
+    // todo: un-comment
+    // for(uint32_t i=0 ; i<512*6 ; i++) {
+    //     dbg_str("0x");dbg_hex32(a[i]);dbg_str("\r\n");
+    // }
 }
-    // dbg_str("\r\nsta = 0x"); dbg_hex32(flgx); dbg_str("\r\n");
-    // dbg_str("\r\nfin = 0x"); dbg_hex32(flg2); dbg_str("\r\n"); dbg_str("\r\n");
-
  
     
     // init task

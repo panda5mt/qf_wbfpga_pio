@@ -66,6 +66,10 @@ void fpga_setfifo(uint8_t ch, uint32_t value) {
 	}
 }
 
+uint32_t fpga_get_wrch(void) {
+	return fifoctrl_regs->fifo_write_ch;
+}
+
 uint32_t fpga_getfifo(uint8_t ch) {
 	switch(ch) {
 	case 1:
