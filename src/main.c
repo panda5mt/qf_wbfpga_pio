@@ -155,7 +155,7 @@ for(uint32_t zz = 0; zz < 20000; zz++) {
         for(uint32_t i=0 ; i<512 ; i++) {
             c[i] = *(volatile uint32_t *)fifo3_regs;
         }
-        flg2 = fpga_getflag(3) & 0x000f;
+        flg2 = fpga_getflag(3);
     }
     
 
