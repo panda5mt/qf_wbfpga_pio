@@ -139,8 +139,8 @@ while(1) {
     
     
     flg = fpga_getflag(ch) & 0x000f;
-    if((flg > 0x03) || (!flg)) {
-    //if((!flg)) {
+    //if((flg > 0x03) || (!flg)) {
+    if((!flg)) {
 
         for(uint32_t i=0 ; i<512 ;i++) {
             switch(ch){
