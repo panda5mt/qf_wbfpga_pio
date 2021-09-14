@@ -137,7 +137,7 @@ uint32_t a_ptr = 0;
 
 while(1) {
     
-    ch = 1;
+    
     flg = fpga_getflag(ch) & 0x000f;
     if((flg > 0x03) || (!flg)) {
 
