@@ -129,41 +129,38 @@ int main(void)
     // init ov5642
     sccb_init();
 volatile uint32_t a[512],b[512],c[512];
-volatile uint32_t flg,lp;
+volatile uint32_t flg,flg2, flgx, lp;
 
 // test for ringbuffer in FPGA
-for(uint32_t zz = 0; zz < 2000; zz++) {
+for(uint32_t zz = 0; zz < 20000; zz++) {
 
-    flg = fpga_getflag(1);
-    if(((flg & 0x0f) > 0x03) || ((flg & 0x0f)==0)) {
-        dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
+    flg = fpga_getflag(1) & 0x000f;
+    if((flg > 0x03) || (!flg)) {
+
         for(uint32_t i=0 ; i<512 ;i++) {
             a[i] = *(volatile uint32_t *)fifo1_regs;
         }
-        dbg_str("\r\nfsta = 0x");dbg_hex32(fpga_getflag(1));dbg_str("\r\n...");
     }    
 
-    flg = fpga_getflag(2);
-    if(((flg & 0x0f) > 0x03) || ((flg & 0x0f)==0)) {
-        dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
+    flg = fpga_getflag(2) & 0x000f;
+    if((flg > 0x03) || (!flg)) {
         for(uint32_t i=0 ; i<512 ; i++) {
             b[i] = *(volatile uint32_t *)fifo2_regs;
         }
-        dbg_str("\r\nfsta = 0x");dbg_hex32(fpga_getflag(2));dbg_str("\r\n");
     }
 
-    flg = fpga_getflag(3);
-    if(((flg & 0x0f) > 0x03) || ((flg & 0x0f)==0)) {
-        dbg_str("\r\nssta = 0x");dbg_hex32(flg);dbg_str("\r\n");
+    flg = fpga_getflag(3) & 0x000f;
+    if((flg > 0x03) || (!flg)) {
+        flgx = flg;
         for(uint32_t i=0 ; i<512 ; i++) {
             c[i] = *(volatile uint32_t *)fifo3_regs;
         }
-        dbg_str("\r\nfsta = 0x");dbg_hex32(fpga_getflag(3));dbg_str("\r\n");
+        flg2 = fpga_getflag(3) & 0x000f;
     }
     
 
 }
-    dbg_str("\r\n");
+
     for(uint32_t i=0 ; i<512 ; i++) {
         dbg_str("0x");dbg_hex32(a[i]);dbg_str("\r\n");
     }
@@ -175,6 +172,10 @@ for(uint32_t zz = 0; zz < 2000; zz++) {
     for(uint32_t i=0 ; i<512 ; i++) {
         dbg_str("0x");dbg_hex32(c[i]);dbg_str("\r\n");
     }
+
+    dbg_str("\r\nsta = 0x"); dbg_hex32(flgx);  dbg_str("\r\n");
+    dbg_str("\r\nfin = 0x"); dbg_hex32(flg2); dbg_str("\r\n"); dbg_str("\r\n");
+
     // test each FIFOs(FIFO1~3)
     // for (uint8_t ch=FIFO_CH2 ; ch<=FIFO_CH3 ; ch++) {
     //   dbg_str("\r\n\r\n------------------ CHANNEL "); dbg_int(ch); dbg_str(" ------------------");
