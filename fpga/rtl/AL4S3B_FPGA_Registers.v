@@ -255,7 +255,7 @@ wire        select_fifo3;
 reg[10:0]   cam_fifo_countr; // 11bit, up to 1536
 reg[31:0]   cam_freerun;
 
-localparam  FIFO_COUNT_FULL = 11'd1535;
+localparam  FIFO_COUNT_FULL = 11'd1536;
 /* FSM */
 reg[1:0]    cam_status;
 
@@ -279,21 +279,25 @@ begin
     else
     case(cam_status)
     CRSET: begin
-        cam_reg_out <= 32'h0;
-        cam_reg_ready <= 1'b0;
-            
         if(cam_data_valid) begin
             cam_reg1 <= {cam_reg1[23:0],8'hAA};
+            cam_reg_out <= 32'h0;
+            cam_reg_ready <= 1'b0;
             cam_status <= CB08F;
+        end
+        else
+        begin
+            cam_reg_out <= 32'h0;
+            cam_reg_ready <= 1'b0;
         end
     end
 
     CB24F: begin
         if(cam_data_valid) begin
-            cam_reg_out <= cam_freerun;//{cam_reg1[23:0],8'hCC};
+            cam_reg_out <= cam_freerun[31:0];//{cam_reg1[23:0],8'hCC};
             cam_reg1 <= 32'h0;
             cam_reg_ready <= 1'b1;
-            cam_fifo_countr <= (cam_fifo_countr == FIFO_COUNT_FULL)? 11'h00 : cam_fifo_countr + 11'h01;
+            cam_fifo_countr <=  (cam_fifo_countr + 11'h01) % FIFO_COUNT_FULL; // modulo-N counter
             cam_freerun <= cam_freerun + 32'h01;
             cam_status <= CRSET;
         end
@@ -422,8 +426,8 @@ af512x32_512x32 FIFO1_INST (
                 .DIN(cam_reg_out),              //.DIN(WBs_DAT_i),
                 .PUSH(cam_push_sig1),        //.PUSH(FB_FIFO1_Wr_Dcd),
                 .POP(pop1),
-                .Fifo_Push_Flush(WBs_RST_i | ~(VSYNCI)),
-                .Fifo_Pop_Flush(WBs_RST_i | ~(VSYNCI)),
+                .Fifo_Push_Flush(WBs_RST_i),
+                .Fifo_Pop_Flush(WBs_RST_i),
                 .Push_Clk(cam_push_clk),     //.Push_Clk(WBs_CLK_i),
                 .Pop_Clk(WBs_CLK_i),
                 .PUSH_FLAG(PUSH_FLAG1),
@@ -443,8 +447,8 @@ af512x32_512x32 FIFO2_INST (
                 .DIN(cam_reg_out),          //.DIN(WBs_DAT_i[31:0]),
                 .PUSH(cam_push_sig2),    //.PUSH(FB_FIFO2_Wr_Dcd),
                 .POP(pop2),
-                .Fifo_Push_Flush(WBs_RST_i | ~(VSYNCI)),
-                .Fifo_Pop_Flush(WBs_RST_i | ~(VSYNCI)),
+                .Fifo_Push_Flush(WBs_RST_i),
+                .Fifo_Pop_Flush(WBs_RST_i),
                 .Push_Clk(cam_push_clk), //.Push_Clk(WBs_CLK_i),
                 .Pop_Clk(WBs_CLK_i),
                 .PUSH_FLAG(PUSH_FLAG2),
@@ -464,8 +468,8 @@ af512x32_512x32 FIFO3_INST      (
 				.DIN(cam_reg_out),          //.DIN(WBs_DAT_i[31:0]),
 				.PUSH(cam_push_sig3),    //.PUSH(FB_FIFO3_Wr_Dcd),
 				.POP(pop3),
-				.Fifo_Push_Flush(WBs_RST_i | ~(VSYNCI)),
-				.Fifo_Pop_Flush(WBs_RST_i | ~(VSYNCI)),
+				.Fifo_Push_Flush(WBs_RST_i),
+				.Fifo_Pop_Flush(WBs_RST_i),
 				.Push_Clk(cam_push_clk), //.Push_Clk(WBs_CLK_i),
 				.Pop_Clk(WBs_CLK_i),
 				.PUSH_FLAG(PUSH_FLAG3),

@@ -94,12 +94,12 @@ parameter       QL_RESERVED_DEF_REG_VALUE   = 32'hDEF_FAB_AC; // Distinguish acc
 
 // GPIO
 //
-inout  [7:0]   GPIO_PIN       ; 
-output         CCLKO;
+inout  [7:0]    GPIO_PIN    ; 
+output          CCLKO       ;
 
-input       PCLKI;
-input       VSYNCI;
-input       HREFI;
+input           PCLKI       ;
+input           VSYNCI      ;
+input           HREFI       ;
 
 // clock pins added /4
 //output 			CLK_4MHZ_OUT;
@@ -110,6 +110,9 @@ input       HREFI;
 //
 wire   [7:0]   GPIO_PIN       ;
 
+// always @(posedge Sys_Clk0)begin
+//     CCLKO = ~CCLKO;
+// end
 assign CCLKO = Sys_Clk0; 
 //------Define Parameters--------------
 //
