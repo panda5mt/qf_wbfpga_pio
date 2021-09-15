@@ -298,7 +298,7 @@ begin
             cam_reg_out <= cam_freerun[31:0];//{cam_reg1[23:0],8'hCC};
             cam_reg1 <= 32'h0;
             cam_reg_ready <= 1'b1;
-            cam_fifo_countr <= (cam_fifo_countr == FIFO_COUNT_FULL-1) ? 11'h00 : (cam_fifo_countr + 11'h01); // modulo-N counter
+            cam_fifo_countr <= (cam_fifo_countr + 11'h01) % FIFO_COUNT_FULL; // modulo-N counter
             cam_freerun <= cam_freerun + 32'h01;
             cam_status <= CRSET;
         end

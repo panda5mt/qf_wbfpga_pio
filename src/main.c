@@ -139,7 +139,7 @@ while(1) {
 
     fpga_now_write_ch = fpga_get_wrch();
     flg = fpga_getflag(ch) & 0x000f;
-    if(/*(fpga_get_wrch != (ch+1)) && */((flg > 0x03) || (!flg))) {
+    if((fpga_get_wrch != (ch+1)) && ((flg > 0x03) || (!flg))) {
     //if((!flg)) {
 
         for(uint32_t i=0 ; i<512 ;i++) {
