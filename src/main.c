@@ -129,21 +129,17 @@ int main(void)
     // init ov5642
     sccb_init();
 volatile uint32_t a[512*6];
-volatile uint32_t flg, lp;
+volatile uint32_t flg, lp, fpga_now_write_ch;
 
 // test for ringbuffer in FPGA
 uint32_t ch = 2;
 uint32_t a_ptr = 0; 
+for(uint32_t jjj=0 ; jjj<2000 ;jjj++){
 while(1) {
-while(1) {
-            // test
-        //dbg_str("0x");
-        dbg_hex8(fpga_get_wrch());
-        dbg_str("\r\n");
-        // test:end
-    
+
+    fpga_now_write_ch = fpga_get_wrch();
     flg = fpga_getflag(ch) & 0x000f;
-    if((flg > 0x04) || (!flg)) {
+    if(/*(fpga_get_wrch != (ch+1)) && */((flg > 0x03) || (!flg))) {
     //if((!flg)) {
 
         for(uint32_t i=0 ; i<512 ;i++) {
@@ -174,11 +170,12 @@ while(1) {
 }
 
     a_ptr = 0;
-    // todo: un-comment
-    // for(uint32_t i=0 ; i<512*6 ; i++) {
-    //     dbg_str("0x");dbg_hex32(a[i]);dbg_str("\r\n");
-    // }
 }
+    // todo: un-comment
+    for(uint32_t i=0 ; i<512*6 ; i++) {
+        dbg_hex32(a[i]);dbg_str("\r\n");
+    }
+
  
     
     // init task
