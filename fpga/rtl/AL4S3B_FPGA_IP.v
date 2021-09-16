@@ -274,7 +274,7 @@ always @(
 	FPGA_RAM1_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM1_DAT   		;
 	FPGA_RAM2_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM2_DAT   		;
 	FPGA_RAM3_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM3_DAT   		; 
-  FPGA_RAM4_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM4_DAT   		;
+    FPGA_RAM4_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM4_DAT   		;
     QL_RESERVED_BASE_ADDRESS [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_DAT_o_QL_Reserved  ;
 	default:                                             WBs_RD_DAT  <=          DEFAULT_READ_VALUE     ;
 	endcase
