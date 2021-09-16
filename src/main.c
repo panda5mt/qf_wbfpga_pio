@@ -133,7 +133,7 @@ int main(void)
 
     // test for ringbuffer in FPGA
     for(uint32_t i = 0 ; i<512 ; i++) {
-        a[i] = (511-i);
+        a[i] = (i+0xffff);
     }
   
     memcpy(ram1_regs,a,(512 * sizeof(uint32_t))); // sizeof(uint32_t) * 512 
