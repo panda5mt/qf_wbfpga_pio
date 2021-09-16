@@ -60,10 +60,10 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-volatile uint32_t **ram1_regs = 0x40022000;//0x40020100; 
-volatile uint32_t **fifo2_regs = 0x40020200; 
-volatile uint32_t **fifo3_regs = 0x40020400; 
-
+volatile uint32_t **ram0_regs = 0x40022000;
+volatile uint32_t **ram1_regs = 0x40024000; 
+volatile uint32_t **ram2_regs = 0x40026000; 
+volatile uint32_t **ram3_regs = 0x40028000; 
 
 #if DBG_FLAGS_ENABLE
 uint32_t DBG_flags = DBG_flags_default;
@@ -136,10 +136,10 @@ int main(void)
         a[i] = (i+0xffff);
     }
   
-    memcpy(ram1_regs,a,(512 * sizeof(uint32_t))); // sizeof(uint32_t) * 512 
+    memcpy(ram0_regs,a,(512 * sizeof(uint32_t))); // sizeof(uint32_t) * 512 
     // todo: un-comment
     for(uint32_t i=0 ; i<512 ; i++) {
-        dbg_hex32(*(volatile uint32_t *)(ram1_regs +i));dbg_str("\r\n");
+        dbg_hex32(*(volatile uint32_t *)(ram0_regs +i));dbg_str("\r\n");
     }
     
     // init task
