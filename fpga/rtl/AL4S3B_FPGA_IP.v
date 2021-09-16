@@ -55,7 +55,6 @@ module AL4S3B_FPGA_IP (
                 PCLKI,
                 VSYNCI,
                 HREFI,
-
                 //
                 // Misc
 				CLK_4M_CNTL_o,
@@ -69,26 +68,26 @@ module AL4S3B_FPGA_IP (
 //
 
 parameter       APERWIDTH                   = 17            ;
-parameter       APERSIZE                    = 9            ;
+parameter       APERSIZE                    = 11             ;
 
 parameter       FPGA_REG_BASE_ADDRESS       = 17'h00000     ; // Assumes 128K Byte FPGA Memory Aperture
-parameter       QL_RESERVED_BASE_ADDRESS    = 17'h00800     ; // Assumes 128K Byte FPGA Memory Aperture
+parameter       FPGA_RAM0_BASE_ADDRESS      = 17'h02000     ; //0x40022000
+parameter       FPGA_RAM1_BASE_ADDRESS      = 17'h04000     ; //0x40024000
+parameter       FPGA_RAM2_BASE_ADDRESS      = 17'h06000     ; //0x40026000
+parameter       FPGA_RAM3_BASE_ADDRESS      = 17'h08000     ; //0x40028000
+parameter       FPGA_RAM4_BASE_ADDRESS      = 17'h0a000     ; //0x4002a000
+parameter       QL_RESERVED_BASE_ADDRESS    = 17'h0c000     ; // Assumes 128K Byte FPGA Memory Aperture
 
-parameter       ADDRWIDTH_FAB_REG           =  9            ;
+parameter       ADDRWIDTH_FAB_REG           =  7            ;
 parameter       DATAWIDTH_FAB_REG           = 32            ;
 
-parameter       FPGA_REG_ID_VALUE_ADR     =  9'h0; 
-parameter       FPGA_REV_NUM_ADR          =  9'h1; 
-parameter       FPGA_GPIO_IN_REG_ADR      =  9'h2; 
-parameter       FPGA_GPIO_OUT_REG_ADR     =  9'h3;
-parameter       FPGA_GPIO_OE_REG_ADR      =  9'h4; 
+parameter       ADDRWIDTH_FAB_RAMs          =  11           ;
 
-parameter       FPGA_FIFO1_ACC_ADR        =  9'h40; 
-parameter       FPGA_FIFO1_FLAG_ADR       =  9'h41; 
-parameter       FPGA_FIFO2_ACC_ADR        =  9'h80; 
-parameter       FPGA_FIFO2_FLAG_ADR       =  9'h81; 
-parameter       FPGA_FIFO3_ACC_ADR        =  9'h100; 
-parameter       FPGA_FIFO3_FLAG_ADR       =  9'h101; 
+parameter       FPGA_REG_ID_VALUE_ADR     =  7'h0; 
+parameter       FPGA_REV_NUM_ADR          =  7'h1; 
+parameter       FPGA_GPIO_IN_REG_ADR      =  7'h2; 
+parameter       FPGA_GPIO_OUT_REG_ADR     =  7'h3;
+parameter       FPGA_GPIO_OE_REG_ADR      =  7'h4; 
 
 
 parameter       AL4S3B_DEVICE_ID            = 16'h0;
@@ -102,7 +101,7 @@ parameter       DEFAULT_READ_VALUE          = 32'hBAD_FAB_AC; // Bad FPGA Access
 parameter       DEFAULT_CNTR_WIDTH          =  3            ;
 parameter       DEFAULT_CNTR_TIMEOUT        =  7            ;
 
-parameter       ADDRWIDTH_QL_RESERVED       =  9            ;
+parameter       ADDRWIDTH_QL_RESERVED       =  7            ;
 parameter       DATAWIDTH_QL_RESERVED       = 32            ;
 
 parameter       QL_RESERVED_CUST_PROD_ADR   =  7'h7E        ;
@@ -138,9 +137,11 @@ output          WBs_ACK          ;  // Transfer Cycle Acknowledge from FPGA
 inout   [7:0]  GPIO_PIN         ;
 
 // CAMERA
-input            PCLKI;
-input            VSYNCI;
-input            HREFI;
+//
+input           PCLKI;
+input           VSYNCI;
+input           HREFI;
+
 
 // Misc
 //
@@ -206,6 +207,19 @@ wire            WBs_ACK_QL_Reserved  ;
 wire    [31:0]  WBs_DAT_o_FPGA_Reg ;
 wire    [31:0]  WBs_DAT_o_QL_Reserved;
 
+wire            WBs_RAM0_CYC   ;
+wire            WBs_RAM1_CYC   ;
+wire            WBs_RAM2_CYC   ;
+wire            WBs_RAM3_CYC   ; 
+wire            WBs_RAM4_CYC   ;
+
+wire            WBs_ACK_RAMs   ;
+
+wire    [31:0]  WBs_RAM0_DAT ;
+wire    [31:0]  WBs_RAM1_DAT ;
+wire    [31:0]  WBs_RAM2_DAT ;
+wire    [31:0]  WBs_RAM3_DAT ;
+wire    [31:0]  WBs_RAM4_DAT ;
 
 //------Logic Operations---------------
 //
@@ -215,14 +229,29 @@ wire    [31:0]  WBs_DAT_o_QL_Reserved;
 //
 assign WBs_CYC_FPGA_Reg   = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == FPGA_REG_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2] ) 
                             & (  WBs_CYC                                                                                );
+
+assign WBs_RAM0_CYC       = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == FPGA_RAM0_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2] ) 
+                            & (  WBs_CYC                                                                                );
 							
+assign WBs_RAM1_CYC       = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == FPGA_RAM1_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2] ) 
+                            & (  WBs_CYC                                                                                );
+							
+assign WBs_RAM2_CYC       = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == FPGA_RAM2_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2] ) 
+                            & (  WBs_CYC                                                                                );
+							
+assign WBs_RAM3_CYC       = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == FPGA_RAM3_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2] ) 
+                            & (  WBs_CYC                                                                                ); 
+                            
+assign WBs_RAM4_CYC       = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == FPGA_RAM4_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2] ) 
+                            & (  WBs_CYC                                                                                );
+
 assign WBs_CYC_QL_Reserved  = (  WBs_ADR[APERWIDTH-1:APERSIZE+2] == QL_RESERVED_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2] ) 
                             & (  WBs_CYC  																				);
 
 
 // Define the Acknowledge back to the host for everything
 //
-assign WBs_ACK              =    WBs_ACK_FPGA_Reg 
+assign WBs_ACK              =    WBs_ACK_FPGA_Reg | WBs_ACK_RAMs
                             |    WBs_ACK_QL_Reserved;
 
 
@@ -231,12 +260,21 @@ assign WBs_ACK              =    WBs_ACK_FPGA_Reg
 always @(
          WBs_ADR               or
          WBs_DAT_o_FPGA_Reg    or
+		 WBs_RAM0_DAT          or
+		 WBs_RAM1_DAT		   or
+		 WBs_RAM2_DAT		   or
+		 WBs_RAM3_DAT		   or
          WBs_DAT_o_QL_Reserved or
          WBs_RD_DAT    
         )
  begin
     case(WBs_ADR[APERWIDTH-1:APERSIZE+2])
     FPGA_REG_BASE_ADDRESS    [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_DAT_o_FPGA_Reg   	;
+	FPGA_RAM0_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM0_DAT   		;
+	FPGA_RAM1_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM1_DAT   		;
+	FPGA_RAM2_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM2_DAT   		;
+	FPGA_RAM3_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM3_DAT   		; 
+  FPGA_RAM4_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM4_DAT   		;
     QL_RESERVED_BASE_ADDRESS [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_DAT_o_QL_Reserved  ;
 	default:                                             WBs_RD_DAT  <=          DEFAULT_READ_VALUE     ;
 	endcase
@@ -272,14 +310,7 @@ AL4S3B_FPGA_Registers #(
     .FPGA_REV_NUM_ADR         	( FPGA_REV_NUM_ADR            	),     
     .FPGA_GPIO_IN_REG_ADR     	( FPGA_GPIO_IN_REG_ADR        	),
     .FPGA_GPIO_OUT_REG_ADR    	( FPGA_GPIO_OUT_REG_ADR       	),
-    .FPGA_GPIO_OE_REG_ADR     	( FPGA_GPIO_OE_REG_ADR        	), 
-	
-	.FPGA_FIFO1_ACC_ADR     	( FPGA_FIFO1_ACC_ADR        	),
-	.FPGA_FIFO1_FLAG_ADR     	( FPGA_FIFO1_FLAG_ADR        	),
-	.FPGA_FIFO2_ACC_ADR     	( FPGA_FIFO2_ACC_ADR        	),
-	.FPGA_FIFO2_FLAG_ADR     	( FPGA_FIFO2_FLAG_ADR        	),
-	.FPGA_FIFO3_ACC_ADR     	( FPGA_FIFO3_ACC_ADR        	),
-	.FPGA_FIFO3_FLAG_ADR     	( FPGA_FIFO3_FLAG_ADR        	),
+    .FPGA_GPIO_OE_REG_ADR     	( FPGA_GPIO_OE_REG_ADR        	),
 	
     .AL4S3B_DEVICE_ID           ( AL4S3B_DEVICE_ID              ),
     .AL4S3B_REV_LEVEL           ( AL4S3B_REV_LEVEL              ),
@@ -297,7 +328,6 @@ AL4S3B_FPGA_Registers #(
     .WBs_CYC_i                 ( WBs_CYC_FPGA_Reg             ),
     .WBs_BYTE_STB_i            ( WBs_BYTE_STB                   ),
     .WBs_WE_i                  ( WBs_WE                         ),
-	.WBs_RD_i                  ( WBs_RD                         ),
     .WBs_STB_i                 ( WBs_STB                        ),
     .WBs_DAT_i                 ( WBs_WR_DAT                     ),
     .WBs_CLK_i                 ( WB_CLK                         ),
@@ -319,15 +349,40 @@ AL4S3B_FPGA_Registers #(
 	//
 	.GPIO_IN_i                 ( GPIO_In                        ),
 	.GPIO_OUT_o                ( GPIO_Out                       ),
-	.GPIO_OE_o                 ( GPIO_oe                        ),
-
-
-    // CAMERA
-    .PCLKI                      (PCLKI),
-    .VSYNCI                     (VSYNCI),
-    .HREFI                      (HREFI)
+	.GPIO_OE_o                 ( GPIO_oe                        )
                                                                 );
 																
+AL4S3B_FPGA_RAMs #(
+
+    .ADDRWIDTH                  ( ADDRWIDTH_FAB_RAMs            ),
+    .DATAWIDTH                  ( DATAWIDTH_FAB_REG             ),
+
+    .AL4S3B_DEF_REG_VALUE       ( AL4S3B_DEF_REG_VALUE          )
+                                                                )
+
+     u_AL4S3B_FPGA_RAMs 
+	                           ( 
+    // AHB-To_FPGA Bridge I/F
+    //
+    .WBs_ADR_i                 ( WBs_ADR[ADDRWIDTH_FAB_RAMs+1:2] ),
+    .WBs_RAM0_CYC_i            ( WBs_RAM0_CYC                   ),
+    .WBs_RAM1_CYC_i            ( WBs_RAM1_CYC                   ),
+    .WBs_RAM2_CYC_i            ( WBs_RAM2_CYC                   ),
+    .WBs_RAM3_CYC_i            ( WBs_RAM3_CYC                   ),
+    .WBs_RAM4_CYC_i            ( WBs_RAM4_CYC                   ),
+    .WBs_BYTE_STB_i            ( WBs_BYTE_STB                   ),
+    .WBs_WE_i                  ( WBs_WE                         ),
+    .WBs_STB_i                 ( WBs_STB                        ),
+    .WBs_DAT_i                 ( WBs_WR_DAT                     ),
+    .WBs_CLK_i                 ( WB_CLK                         ),
+    .WBs_RST_i                 ( WB_RST                         ),
+    .WBs_RAM0_DAT_o            ( WBs_RAM0_DAT               	),
+    .WBs_RAM1_DAT_o            ( WBs_RAM1_DAT               	),
+    .WBs_RAM2_DAT_o            ( WBs_RAM2_DAT               	),
+    .WBs_RAM3_DAT_o            ( WBs_RAM3_DAT               	),
+    .WBs_RAM4_DAT_o            ( WBs_RAM4_DAT               	),
+    .WBs_ACK_o                 ( WBs_ACK_RAMs                   )
+    );
 
 // Reserved Resources Block
 //

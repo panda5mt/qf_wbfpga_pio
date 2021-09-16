@@ -35,7 +35,7 @@ void fpga_fifoctrl_init(void) {
 	S3x_Clk_Enable(S3X_FB_16_CLK);
     
     // Confirm expected IP is loaded
-	configASSERT(fifoctrl_regs->device_id == 0xF1F07E57);
+	configASSERT(fifoctrl_regs->device_id ==0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
 }
 
 void fpga_setgpio(uint32_t value) {

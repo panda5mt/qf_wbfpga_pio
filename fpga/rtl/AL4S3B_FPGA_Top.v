@@ -35,6 +35,7 @@ module AL4S3B_FPGA_top (
             PCLKI,
             VSYNCI,
             HREFI
+
             );
 
 
@@ -42,27 +43,26 @@ module AL4S3B_FPGA_top (
 //
 
 parameter       APERWIDTH                   = 17            ;
-parameter       APERSIZE                    = 9            ;
+parameter       APERSIZE                    = 11            ;
 
 parameter       FPGA_REG_BASE_ADDRESS       = 17'h00000     ; // Assumes 128K Byte FPGA Memory Aperture
-parameter       QL_RESERVED_BASE_ADDRESS    = 17'h00800     ; // Assumes 128K Byte FPGA Memory Aperture
+parameter       FPGA_RAM0_BASE_ADDRESS      = 17'h02000     ; //0x40022000
+parameter       FPGA_RAM1_BASE_ADDRESS      = 17'h04000     ; //0x40024000
+parameter       FPGA_RAM2_BASE_ADDRESS      = 17'h06000     ; //0x40026000
+parameter       FPGA_RAM3_BASE_ADDRESS      = 17'h08000     ; //0x40028000
+parameter       FPGA_RAM4_BASE_ADDRESS      = 17'h0a000     ; //0x4002a000
+parameter       QL_RESERVED_BASE_ADDRESS    = 17'h0c000     ; // Assumes 128K Byte FPGA Memory Aperture
 
-parameter       ADDRWIDTH_FAB_REG           =  9            ;
+parameter       ADDRWIDTH_FAB_REG           =  7            ;
 parameter       DATAWIDTH_FAB_REG           = 32            ;
 
+parameter       ADDRWIDTH_FAB_RAMs          =  11           ;
 
-parameter       FPGA_REG_ID_VALUE_ADR     =  9'h0; 
-parameter       FPGA_REV_NUM_ADR          =  9'h1; 
-parameter       FPGA_GPIO_IN_REG_ADR      =  9'h2; 
-parameter       FPGA_GPIO_OUT_REG_ADR     =  9'h3;
-parameter       FPGA_GPIO_OE_REG_ADR      =  9'h4; 
-
-parameter       FPGA_FIFO1_ACC_ADR        =  9'h40; 
-parameter       FPGA_FIFO1_FLAG_ADR       =  9'h41; 
-parameter       FPGA_FIFO2_ACC_ADR        =  9'h80; 
-parameter       FPGA_FIFO2_FLAG_ADR       =  9'h81; 
-parameter       FPGA_FIFO3_ACC_ADR        =  9'h100; 
-parameter       FPGA_FIFO3_FLAG_ADR       =  9'h101; 
+parameter                FPGA_REG_ID_VALUE_ADR     =  7'h0; 
+parameter                FPGA_REV_NUM_ADR          =  7'h1; 
+parameter                FPGA_GPIO_IN_REG_ADR      =  7'h2; 
+parameter                FPGA_GPIO_OUT_REG_ADR     =  7'h3;
+parameter                FPGA_GPIO_OE_REG_ADR      =  7'h4; 
 
 parameter                AL4S3B_DEVICE_ID            = 16'h0;
 parameter                AL4S3B_REV_LEVEL            = 32'h0;
@@ -75,7 +75,7 @@ parameter       DEFAULT_READ_VALUE          = 32'hBAD_FAB_AC;
 parameter       DEFAULT_CNTR_WIDTH          =  3            ;
 parameter       DEFAULT_CNTR_TIMEOUT        =  7            ;
 
-parameter       ADDRWIDTH_QL_RESERVED       =  9            ;
+parameter       ADDRWIDTH_QL_RESERVED       =  7            ;
 parameter       DATAWIDTH_QL_RESERVED       = 32            ;
 
 parameter       QL_RESERVED_CUST_PROD_ADR   =  7'h7E        ;  // <<-- Very Top of the FPGA's Memory Aperture
@@ -94,12 +94,15 @@ parameter       QL_RESERVED_DEF_REG_VALUE   = 32'hDEF_FAB_AC; // Distinguish acc
 
 // GPIO
 //
-inout  [7:0]    GPIO_PIN    ; 
-output          CCLKO       ;
+inout  [7:0]   GPIO_PIN       ; 
 
-input           PCLKI       ;
-input           VSYNCI      ;
-input           HREFI       ;
+// CAMERA
+//
+output          CCLKO;
+input           PCLKI;
+input           VSYNCI;
+input           HREFI;
+
 
 // clock pins added /4
 //output 			CLK_4MHZ_OUT;
@@ -110,10 +113,8 @@ input           HREFI       ;
 //
 wire   [7:0]   GPIO_PIN       ;
 
-// always @(posedge Sys_Clk0)begin
-//     CCLKO = ~CCLKO;
-// end
-assign CCLKO = Sys_Clk0; 
+
+assign CCLKO = Sys_Clk0     ;
 //------Define Parameters--------------
 //
 
@@ -200,23 +201,23 @@ AL4S3B_FPGA_IP              #(
     .APERSIZE                  ( APERSIZE                    ),
 
     .FPGA_REG_BASE_ADDRESS     ( FPGA_REG_BASE_ADDRESS       ), 
+	.FPGA_RAM0_BASE_ADDRESS    ( FPGA_RAM0_BASE_ADDRESS      ),
+	.FPGA_RAM1_BASE_ADDRESS    ( FPGA_RAM1_BASE_ADDRESS      ),
+	.FPGA_RAM2_BASE_ADDRESS    ( FPGA_RAM2_BASE_ADDRESS      ),
+	.FPGA_RAM3_BASE_ADDRESS    ( FPGA_RAM3_BASE_ADDRESS      ),
+  .FPGA_RAM4_BASE_ADDRESS    ( FPGA_RAM4_BASE_ADDRESS      ),
     .QL_RESERVED_BASE_ADDRESS  ( QL_RESERVED_BASE_ADDRESS    ),
 
 	.ADDRWIDTH_FAB_REG         ( ADDRWIDTH_FAB_REG           ), 
     .DATAWIDTH_FAB_REG         ( DATAWIDTH_FAB_REG           ),
+	.ADDRWIDTH_FAB_RAMs        ( ADDRWIDTH_FAB_RAMs          ),
 	
-    .FPGA_REG_ID_VALUE_ADR     ( FPGA_REG_ID_VALUE_ADR       ),
-    .FPGA_REV_NUM_ADR          ( FPGA_REV_NUM_ADR            ),     
-    .FPGA_GPIO_IN_REG_ADR      ( FPGA_GPIO_IN_REG_ADR        ),
-    .FPGA_GPIO_OUT_REG_ADR     ( FPGA_GPIO_OUT_REG_ADR       ),
-    .FPGA_GPIO_OE_REG_ADR      ( FPGA_GPIO_OE_REG_ADR        ),
-
-	.FPGA_FIFO1_ACC_ADR     	( FPGA_FIFO1_ACC_ADR        	),
-	.FPGA_FIFO1_FLAG_ADR     	( FPGA_FIFO1_FLAG_ADR        	),
-	.FPGA_FIFO2_ACC_ADR     	( FPGA_FIFO2_ACC_ADR        	),
-	.FPGA_FIFO2_FLAG_ADR     	( FPGA_FIFO2_FLAG_ADR        	),
-	.FPGA_FIFO3_ACC_ADR     	( FPGA_FIFO3_ACC_ADR        	),
-	.FPGA_FIFO3_FLAG_ADR     	( FPGA_FIFO3_FLAG_ADR        	),	
+    .FPGA_REG_ID_VALUE_ADR    ( FPGA_REG_ID_VALUE_ADR       ),
+    .FPGA_REV_NUM_ADR         ( FPGA_REV_NUM_ADR            ),     
+    .FPGA_GPIO_IN_REG_ADR     ( FPGA_GPIO_IN_REG_ADR        ),
+    .FPGA_GPIO_OUT_REG_ADR    ( FPGA_GPIO_OUT_REG_ADR       ),
+    .FPGA_GPIO_OE_REG_ADR     ( FPGA_GPIO_OE_REG_ADR        ),
+	
 
     .AL4S3B_DEVICE_ID           ( AL4S3B_DEVICE_ID              ),
     .AL4S3B_REV_LEVEL           ( AL4S3B_REV_LEVEL              ),
@@ -267,11 +268,12 @@ AL4S3B_FPGA_IP              #(
     //
     .GPIO_PIN                  ( GPIO_PIN                    ),
 
+    //
     // CAMERA
-    .PCLKI                      ( PCLKI                      ),
-    .VSYNCI                     ( VSYNCI                     ),
-    .HREFI                      ( HREFI                      ),
-
+    //
+    .PCLKI                      (PCLKI),
+    .VSYNCI                     (VSYNCI),
+    .HREFI                      (HREFI),
     //
     // Misc
     //
