@@ -385,7 +385,10 @@ AL4S3B_FPGA_RAMs #(
     .WBs_RAM3_DAT_o            ( WBs_RAM3_DAT               	),
     .WBs_RAM_STATUS_o          ( WBs_RAM_STATUS                 ),
     //.WBs_RAM4_DAT_o            ( WBs_RAM4_DAT               	),
-    .WBs_ACK_o                 ( WBs_ACK_RAMs                   )
+    .WBs_ACK_o                 ( WBs_ACK_RAMs                   ),
+    .PCLKI  (PCLKI),
+    .VSYNCI (VSYNCI),
+    .HREFI  (HREFI)
     );
 
 // Reserved Resources Block
