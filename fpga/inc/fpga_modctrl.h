@@ -26,7 +26,7 @@
 #include <eoss3_hal_def.h>
 #include "s3x_clock.h"
 
-typedef struct fpga_fifoctrl {
+typedef struct fpga_modctrl {
     uint32_t    device_id;			// 0x00
     uint32_t    rev_num;			// 0x04
     uint32_t    gpio_in;			// 0x08
@@ -42,10 +42,10 @@ typedef struct fpga_fifoctrl {
 	// uint32_t	fifo3_acc;			// 0x400
 	// uint32_t	fifo3_flags;        // 0x404
     // uint32_t    fifo_write_ch;      // 0x408
-} fpga_fifoctrl_t;
+} fpga_modctrl_t;
 
 // init API
-void    	fpga_fifoctrl_init(void);
+void    	fpga_modctrl_init(void);
 
 // GPIO APIs
 uint32_t    fpga_getgpio(void);
