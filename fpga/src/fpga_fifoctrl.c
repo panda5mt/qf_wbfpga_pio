@@ -29,11 +29,14 @@ fpga_fifoctrl_t* fifoctrl_regs = (fpga_fifoctrl_t*)(FPGA_PERIPH_BASE);
 //------------- Local variables ------------------------//
 void fpga_fifoctrl_init(void) {
     // Setup FPGA clocks
-	S3x_Clk_Set_Rate(S3X_FB_16_CLK, HSOSC_72MHZ);
+	S3x_Clk_Disable(S3X_FB_16_CLK);
+	S3x_Clk_Disable(S3X_FB_21_CLK);
+	
+	S3x_Clk_Set_Rate(S3X_FB_16_CLK, HSOSC_12MHZ);
 	S3x_Clk_Enable(S3X_FB_16_CLK);
 
-	// S3x_Clk_Set_Rate(S3X_FB_21_CLK, HSOSC_4MHZ);
-	// S3x_Clk_Enable(S3X_FB_21_CLK);
+	S3x_Clk_Set_Rate(S3X_FB_21_CLK, HSOSC_12MHZ);
+	S3x_Clk_Enable(S3X_FB_21_CLK);
     
     // Confirm expected IP is loaded
 	configASSERT(fifoctrl_regs->device_id ==0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57

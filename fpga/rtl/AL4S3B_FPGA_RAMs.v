@@ -26,6 +26,7 @@
 // -----------------------------------------------------------------------------
 //
 `timescale 1ns / 10ps
+
 module AL4S3B_FPGA_RAMs ( 
 
 				// AHB-To_FPGA Bridge I/F
@@ -116,7 +117,6 @@ reg                      WBs_ACK_o     ;  // Wishbone Client Acknowledge
 //
 // CAMERA 
 //
-// CAMERA
 input           PCLKI;
 input           VSYNCI;
 input           HREFI;
@@ -168,17 +168,30 @@ assign WBs_ACK_o_nxt     = (WBs_RAM0_CYC_i | WBs_RAM1_CYC_i | WBs_RAM2_CYC_i | W
 /* CAMERA - FIFO interface: begin */
 reg         cam_reg_ready;
 wire        cam_reg_ready;
+wire		cam_data_valid;
 
 wire        select_fifo0;   
 wire        select_fifo1;
 wire        select_fifo2;
 wire        select_fifo3;
-reg[10:0]   cam_fifo_countr; // 11bit, up to 2048
-reg[31:0]   cam_freerun;
+wire        cam_push_sig0;
+wire        cam_push_sig1;
+wire        cam_push_sig2;
+wire        cam_push_sig3;
+wire        cam_push_clk;
 
-localparam  FIFO_COUNT_FULL = 11'd2048;
+reg  [10:0]   	cam_fifo_countr; // 11bit, up to 2048
+reg  [31:0]     cam_reg1;
+reg  [31:0]		cam_reg_out;     
+reg  [31:0]		cam_freerun;
+
+wire [31:0] 	cam_reg_out;
+wire [31:0]		cam_freerun;
+
+localparam  FIFO_COUNT_FULL = 11'd512;
+
 /* FSM */
-reg[1:0]    cam_status;
+reg	 [1:0]  	 cam_status;
 
 localparam CRSET =2'd0;  // RESET
 localparam CB08F =2'd1;  // Camera buffer 8bit Full 
@@ -191,7 +204,7 @@ begin
     if(WBs_RST_i)
     begin
         cam_reg1    <= 32'h0;
-        cam_reg_out <= 32'h0;
+        cam_reg_out <= 32'h00;
         cam_status  <= CRSET;
         cam_reg_ready   <= 1'b0;
         cam_fifo_countr <= 11'h00;
@@ -202,7 +215,7 @@ begin
     CRSET: begin
         if(cam_data_valid) begin
             cam_reg1 <= {cam_reg1[23:0],8'hAA};
-            cam_reg_out <= 32'h0;
+            //cam_reg_out <= 32'h0;
             cam_reg_ready <= 1'b0;
             cam_status <= CB08F;
         end
@@ -218,7 +231,7 @@ begin
             cam_reg_out <= cam_freerun[31:0];//{cam_reg1[23:0],8'hCC};
             cam_reg1 <= 32'h0;
             cam_reg_ready <= 1'b1;
-            cam_fifo_countr <= (cam_fifo_countr + 11'h01);// % FIFO_COUNT_FULL; // modulo-N counter
+            cam_fifo_countr <= cam_fifo_countr + 11'h01;// % FIFO_COUNT_FULL; // modulo-N counter
             cam_freerun <= cam_freerun + 32'h01;
             cam_status <= CRSET;
         end
@@ -265,10 +278,10 @@ assign WBs_RAM0_DAT_o = RAM0_Dat_out;
 r512x32_512x32 RAM0_INST (	
 			.WA(cam_fifo_countr[8:0]), 	//.WA(WBs_ADR_i[8:0]),
 			.RA(WBs_ADR_i[8:0]),
-			.WD(cam_reg_out[31:0]),		//.WD(WBs_DAT_i[31:0]),
+			.WD(cam_reg_out),			//.WD(WBs_DAT_i[31:0]),
 			.WClk(cam_push_clk),		//.WClk(WBs_CLK_i),
 			.RClk(WBs_CLK_i),
-			.WClk_En(1'b1),
+			.WClk_En(1'b1),//.WClk_En(1'b1),
 			.RClk_En(1'b1),
 			.WEN({cam_push_sig0,cam_push_sig0,cam_push_sig0,cam_push_sig0}),
 			//.WEN({FB_RAM0_Wr_Dcd,FB_RAM0_Wr_Dcd,FB_RAM0_Wr_Dcd,FB_RAM0_Wr_Dcd}),
@@ -280,7 +293,7 @@ assign WBs_RAM1_DAT_o = {RAM1_Dat_out};
 r512x32_512x32 RAM1_INST (	
 			.WA(cam_fifo_countr[8:0]), 	//.WA(WBs_ADR_i[8:0]),
 			.RA(WBs_ADR_i[8:0]),
-			.WD(cam_reg_out[31:0]),		//.WD(WBs_DAT_i[31:0]),
+			.WD(cam_reg_out),			//.WD(WBs_DAT_i[31:0]),
 			.WClk(cam_push_clk),		//.WClk(WBs_CLK_i),
 			.RClk(WBs_CLK_i),
 			.WClk_En(1'b1),
@@ -296,7 +309,7 @@ assign WBs_RAM2_DAT_o = {RAM2_Dat_out};
 r512x32_512x32 RAM2_INST (	
 			.WA(cam_fifo_countr[8:0]), 	//.WA(WBs_ADR_i[8:0]),
 			.RA(WBs_ADR_i[8:0]),
-			.WD(cam_reg_out[31:0]),		//.WD(WBs_DAT_i[31:0]),
+			.WD(cam_reg_out),			//.WD(WBs_DAT_i[31:0]),
 			.WClk(cam_push_clk),		//.WClk(WBs_CLK_i),
 			.RClk(WBs_CLK_i),
 			.WClk_En(1'b1),
@@ -311,7 +324,7 @@ assign WBs_RAM3_DAT_o = RAM3_Dat_out;
 r512x32_512x32 RAM3_INST (	
 			.WA(cam_fifo_countr[8:0]), 	//.WA(WBs_ADR_i[8:0]),
 			.RA(WBs_ADR_i[8:0]),
-			.WD(cam_reg_out[31:0]),		//.WD(WBs_DAT_i[31:0]),
+			.WD(cam_reg_out),			//.WD(WBs_DAT_i[31:0]),
 			.WClk(cam_push_clk),		//.WClk(WBs_CLK_i),
 			.RClk(WBs_CLK_i),
 			.WClk_En(1'b1),
@@ -323,7 +336,7 @@ r512x32_512x32 RAM3_INST (
 
 
 
-assign WBs_RAM_STATUS_o = {32'hDEADDEAD}; //RAM_Status_out;
+assign WBs_RAM_STATUS_o = {30'h0,cam_fifo_countr[10:9]}; //RAM_Status_out;
 //assign WBs_RAM_DAT_o = {24'h0,RAM4_Dat_out};
 //
 // r2048x8_2048x8 RAM4_INST (	

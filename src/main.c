@@ -67,6 +67,7 @@ volatile uint32_t **ram1_regs = 0x40024000;
 volatile uint32_t **ram2_regs = 0x40026000; 
 volatile uint32_t **ram3_regs = 0x40028000; 
 volatile uint32_t **status_regs = 0x4002a000;
+ uint32_t a[512],b[512],c[512],d[512];
 #if DBG_FLAGS_ENABLE
 uint32_t DBG_flags = DBG_flags_default;
 #endif
@@ -131,24 +132,29 @@ int main(void)
     
     // init ov5642
     sccb_init();
-    uint32_t a[512],b[512];
-
-    // test for ringbuffer in FPGA
-    for(uint32_t i = 0 ; i<512 ; i++) {
-        a[i] = (i);
+   
+    for (uint32_t i = 0; i < 300 ; i++) {
+    memcpy(a, ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
+    memcpy(b, ram1_regs, (512 * sizeof(uint32_t))); // ram0_regs -> b
+    memcpy(c, ram2_regs, (512 * sizeof(uint32_t))); // ram0_regs -> c
+    memcpy(d, ram3_regs, (512 * sizeof(uint32_t))); // ram0_regs -> d
+    dbg_hex32(*(volatile uint32_t *)status_regs);dbg_str("\r\n");
     }
-  
-    memcpy(ram0_regs, a, (512 * sizeof(uint32_t))); // a -> ram0_regs
-    memcpy(b, ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> b
-    // todo: un-comment
     for(uint32_t i=0 ; i<512 ; i++) {
-        dbg_hex32(*(volatile uint32_t *)(ram0_regs +i));dbg_str("\r\n");
+        dbg_hex32(a[i]);dbg_str("\r\n");
     }
-    dbg_str("-----------------------------\r\n");
+    dbg_str("\r\n");
     for(uint32_t i=0 ; i<512 ; i++) {
         dbg_hex32(b[i]);dbg_str("\r\n");
     }
-    
+    dbg_str("\r\n");
+    for(uint32_t i=0 ; i<512 ; i++) {
+        dbg_hex32(c[i]);dbg_str("\r\n");
+    }
+    dbg_str("\r\n");
+    for(uint32_t i=0 ; i<512 ; i++) {
+        dbg_hex32(d[i]);dbg_str("\r\n");
+    }
 
     dbg_str("sta=0x");dbg_hex32(*(volatile uint32_t *)(status_regs));dbg_str("\r\n");
 
