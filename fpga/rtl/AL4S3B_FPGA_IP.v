@@ -75,6 +75,7 @@ parameter       FPGA_RAM0_BASE_ADDRESS      = 17'h02000     ; //0x40022000
 parameter       FPGA_RAM1_BASE_ADDRESS      = 17'h04000     ; //0x40024000
 parameter       FPGA_RAM2_BASE_ADDRESS      = 17'h06000     ; //0x40026000
 parameter       FPGA_RAM3_BASE_ADDRESS      = 17'h08000     ; //0x40028000
+parameter       FPGA_RAM_STATUS_ADDRESS     = 17'h0a000     ; //0x4002a000
 //parameter       FPGA_RAM4_BASE_ADDRESS      = 17'h0a000     ; //0x4002a000
 parameter       QL_RESERVED_BASE_ADDRESS    = 17'h0c000     ; // Assumes 128K Byte FPGA Memory Aperture
 
@@ -219,6 +220,7 @@ wire    [31:0]  WBs_RAM0_DAT ;
 wire    [31:0]  WBs_RAM1_DAT ;
 wire    [31:0]  WBs_RAM2_DAT ;
 wire    [31:0]  WBs_RAM3_DAT ;
+wire    [31:0]  WBs_RAM_STATUS ;
 //wire    [31:0]  WBs_RAM4_DAT ;
 
 //------Logic Operations---------------
@@ -264,6 +266,7 @@ always @(
 		 WBs_RAM1_DAT		   or
 		 WBs_RAM2_DAT		   or
 		 WBs_RAM3_DAT		   or
+         WBs_RAM_STATUS        or
          WBs_DAT_o_QL_Reserved or
          WBs_RD_DAT    
         )
@@ -274,7 +277,7 @@ always @(
 	FPGA_RAM1_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM1_DAT   		;
 	FPGA_RAM2_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM2_DAT   		;
 	FPGA_RAM3_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM3_DAT   		; 
-    //FPGA_RAM4_BASE_ADDRESS   [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM4_DAT   		;
+    FPGA_RAM_STATUS_ADDRESS  [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_RAM_STATUS   		;
     QL_RESERVED_BASE_ADDRESS [APERWIDTH-1:APERSIZE+2]:   WBs_RD_DAT  <=          WBs_DAT_o_QL_Reserved  ;
 	default:                                             WBs_RD_DAT  <=          DEFAULT_READ_VALUE     ;
 	endcase
@@ -380,6 +383,7 @@ AL4S3B_FPGA_RAMs #(
     .WBs_RAM1_DAT_o            ( WBs_RAM1_DAT               	),
     .WBs_RAM2_DAT_o            ( WBs_RAM2_DAT               	),
     .WBs_RAM3_DAT_o            ( WBs_RAM3_DAT               	),
+    .WBs_RAM_STATUS_o          ( WBs_RAM_STATUS                 ),
     //.WBs_RAM4_DAT_o            ( WBs_RAM4_DAT               	),
     .WBs_ACK_o                 ( WBs_ACK_RAMs                   )
     );

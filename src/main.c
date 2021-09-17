@@ -60,11 +60,13 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
+
+volatile uint32_t **gpo_regs = 0x4002000C;
 volatile uint32_t **ram0_regs = 0x40022000;
 volatile uint32_t **ram1_regs = 0x40024000; 
 volatile uint32_t **ram2_regs = 0x40026000; 
 volatile uint32_t **ram3_regs = 0x40028000; 
-
+volatile uint32_t **status_regs = 0x4002a000;
 #if DBG_FLAGS_ENABLE
 uint32_t DBG_flags = DBG_flags_default;
 #endif
@@ -124,24 +126,32 @@ int main(void)
 
 
     // GPIO init
-    fpga_gpio_setdir(0xff);
+    fpga_gpio_setdir(0x0f);
+    *(volatile uint32_t *)(gpo_regs) = 0x0f;
     
     // init ov5642
     sccb_init();
-    volatile uint32_t a[512*6];
-    volatile uint32_t flg, lp, fpga_now_write_ch;
+    uint32_t a[512],b[512];
 
     // test for ringbuffer in FPGA
     for(uint32_t i = 0 ; i<512 ; i++) {
-        a[i] = (i+0xffff);
+        a[i] = (i);
     }
   
-    memcpy(ram0_regs,a,(512 * sizeof(uint32_t))); // sizeof(uint32_t) * 512 
+    memcpy(ram0_regs, a, (512 * sizeof(uint32_t))); // a -> ram0_regs
+    memcpy(b, ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> b
     // todo: un-comment
     for(uint32_t i=0 ; i<512 ; i++) {
         dbg_hex32(*(volatile uint32_t *)(ram0_regs +i));dbg_str("\r\n");
     }
+    dbg_str("-----------------------------\r\n");
+    for(uint32_t i=0 ; i<512 ; i++) {
+        dbg_hex32(b[i]);dbg_str("\r\n");
+    }
     
+
+    dbg_str("sta=0x");dbg_hex32(*(volatile uint32_t *)(status_regs));dbg_str("\r\n");
+
     // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
@@ -153,9 +163,9 @@ int main(void)
 
 void vTask1(void *pvParameters){
   while(1){
-      fpga_setgpio(0x05);
+      *(volatile uint32_t *)(gpo_regs) = 0x05;
       vTaskDelay(400);
-      fpga_setgpio(0x0a);
+      *(volatile uint32_t *)(gpo_regs) = 0x0a;
       vTaskDelay(400);
     
   }
@@ -164,7 +174,7 @@ void vTask2(void *pvParameters){
   while(1){
     vTaskDelay(500);
     dbg_str("\r\n\r\nLED Blink Test!\r\n");
-    //dbg_hex32(fpga_getgpio());
+    dbg_hex32(fpga_getgpio());
   }
 }
 

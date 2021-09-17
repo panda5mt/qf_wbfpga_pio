@@ -46,6 +46,7 @@ module AL4S3B_FPGA_RAMs (
                          WBs_RAM1_DAT_o,
                          WBs_RAM2_DAT_o,
                          WBs_RAM3_DAT_o,
+						 WBs_RAM_STATUS_o,
                          //WBs_RAM4_DAT_o,
                          WBs_ACK_o
                          );
@@ -80,7 +81,8 @@ input                    WBs_RST_i     ;  // FPGA Reset               to   FPGA
 output  [DATAWIDTH-1:0]  WBs_RAM0_DAT_o; 
 output  [DATAWIDTH-1:0]  WBs_RAM1_DAT_o;  
 output  [DATAWIDTH-1:0]  WBs_RAM2_DAT_o;  
-output  [DATAWIDTH-1:0]  WBs_RAM3_DAT_o;  
+output  [DATAWIDTH-1:0]  WBs_RAM3_DAT_o;
+output  [DATAWIDTH-1:0]  WBs_RAM_STATUS_o;  
 //output  [DATAWIDTH-1:0]  WBs_RAM4_DAT_o;
 output                   WBs_ACK_o     ;  // Transfer Cycle Acknowledge from FPGA
 
@@ -127,6 +129,7 @@ wire [31:0]  	RAM0_Dat_out;
 wire [31:0]		RAM1_Dat_out;
 wire [31:0]		RAM2_Dat_out;
 wire [31:0]		RAM3_Dat_out;
+wire [31:0]		RAM_Status_out;
 //wire [7:0]   RAM4_Dat_out;
 
 
@@ -217,7 +220,10 @@ r512x32_512x32 RAM3_INST (
 			.RD(RAM3_Dat_out)
 			);
 
-//assign WBs_RAM4_DAT_o = {24'h0,RAM4_Dat_out};
+
+
+assign WBs_RAM_STATUS_o = {32'hDEADDEAD}; //RAM_Status_out;
+//assign WBs_RAM_DAT_o = {24'h0,RAM4_Dat_out};
 //
 // r2048x8_2048x8 RAM4_INST (	
 // 			.WA(WBs_ADR_i[10:0]),

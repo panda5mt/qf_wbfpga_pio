@@ -49,7 +49,7 @@ uint32_t fpga_getgpio(void) {
 void fpga_gpio_setdir(uint32_t value) {
 	fifoctrl_regs->gpio_oe = value;
 }
-
+/*
 void fpga_setfifo(uint8_t ch, uint32_t value) {
 	switch(ch){
 	case 1:
@@ -95,5 +95,5 @@ uint32_t fpga_getflag(uint8_t ch) {
 		return (0xDEADBEEF);
 	}
 }
-
+*/
 

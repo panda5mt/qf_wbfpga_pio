@@ -1,8 +1,8 @@
 // Note: Quickfeather uses the QFN package so the format is: set <signal name> <QFN pin #>
-set_io GPIO_PIN(7) 34
-set_io GPIO_PIN(6) 39
-set_io GPIO_PIN(5) 26
-set_io GPIO_PIN(4) 2
+//set_io GPIO_PIN(7) 34
+//set_io GPIO_PIN(6) 39
+//set_io GPIO_PIN(5) 26
+//set_io GPIO_PIN(4) 2
 set_io GPIO_PIN(3) 28
 set_io GPIO_PIN(1) 37
 set_io GPIO_PIN(2) 42
