@@ -126,7 +126,7 @@ int main(void)
 
 
     // GPIO init
-    fpga_gpio_setdir(0x0f);
+    fpga_gpio_setdir(0xff);
     *(volatile uint32_t *)(gpo_regs) = 0x0f;
     
     // init ov5642
