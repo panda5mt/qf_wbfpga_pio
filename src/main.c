@@ -53,14 +53,9 @@
 #include "sccb_if.h"
 
 
-
-#define FIFO_CH1 (1)
-#define FIFO_CH2 (2)
-#define FIFO_CH3 (3)
-
 extern const struct cli_cmd_entry my_main_menu[];
 
-
+// memory maps on FPGA
 volatile uint32_t **gpo_regs = 0x4002000C;
 volatile uint32_t **ram0_regs = 0x40022000;
 volatile uint32_t **ram1_regs = 0x40024000; 
