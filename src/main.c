@@ -130,9 +130,9 @@ int main(void)
    
     for (uint32_t i = 0; i < 300 ; i++) {
     memcpy(a, ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
-    memcpy(b, ram1_regs, (512 * sizeof(uint32_t))); // ram0_regs -> b
-    memcpy(c, ram2_regs, (512 * sizeof(uint32_t))); // ram0_regs -> c
-    memcpy(d, ram3_regs, (512 * sizeof(uint32_t))); // ram0_regs -> d
+    memcpy(b, ram1_regs, (512 * sizeof(uint32_t))); // ram1_regs -> b
+    memcpy(c, ram2_regs, (512 * sizeof(uint32_t))); // ram2_regs -> c
+    memcpy(d, ram3_regs, (512 * sizeof(uint32_t))); // ram3_regs -> d
     dbg_hex32(*(volatile uint32_t *)status_regs);dbg_str("\r\n");
     }
     for(uint32_t i=0 ; i<512 ; i++) {
