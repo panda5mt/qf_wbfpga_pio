@@ -119,7 +119,7 @@ wire           HREFI;
 wire   [7:0]   GPIO_PIN       ;
 
 
-assign CCLKO = Sys_Clk0     ;
+assign CCLKO = Sys_Clk1     ;
 //------Define Parameters--------------
 //
 

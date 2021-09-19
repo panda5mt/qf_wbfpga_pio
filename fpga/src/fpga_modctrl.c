@@ -29,11 +29,11 @@ fpga_modctrl_t* modctrl_regs = (fpga_modctrl_t*)(FPGA_PERIPH_BASE);
 //------------- Local variables ------------------------//
 void fpga_modctrl_init(void) {
     // Setup FPGA clocks
-	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_12MHZ);
-	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_12MHZ);
+	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_10MHZ);
+	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_24MHZ);
 	S3x_Clk_Enable(S3X_FB_16_CLK);
 	S3x_Clk_Enable(S3X_FB_21_CLK);
-	#if 0
+	#if 1
 	S3x_Register_Qos_Node(S3X_FB_16_CLK);
   	S3x_Set_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ, HSOSC_72MHZ);
 	#endif
