@@ -51,6 +51,7 @@
 #include "datablk_processor.h"
 #include "process_imu.h"
 #include "sccb_if.h"
+#include "fpga_modctrl.h"
 
 
 extern const struct cli_cmd_entry my_main_menu[];
@@ -128,12 +129,13 @@ int main(void)
     // init ov5642
     sccb_init();
    
-    for (uint32_t i = 0; i < 300 ; i++) {
-    memcpy(a, ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
-    memcpy(b, ram1_regs, (512 * sizeof(uint32_t))); // ram1_regs -> b
-    memcpy(c, ram2_regs, (512 * sizeof(uint32_t))); // ram2_regs -> c
-    memcpy(d, ram3_regs, (512 * sizeof(uint32_t))); // ram3_regs -> d
-    dbg_hex32(*(volatile uint32_t *)status_regs);dbg_str("\r\n");
+    //while(*(volatile uint32_t *)status_regs==0);
+    for (uint32_t i = 0; i < 1300 ; i++) {
+        memcpy(a, ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
+        memcpy(b, ram1_regs, (512 * sizeof(uint32_t))); // ram1_regs -> b
+        memcpy(c, ram2_regs, (512 * sizeof(uint32_t))); // ram2_regs -> c
+        memcpy(d, ram3_regs, (512 * sizeof(uint32_t))); // ram3_regs -> d
+        dbg_hex32(*(volatile uint32_t *)status_regs);dbg_str("\r\n");
     }
     for(uint32_t i=0 ; i<512 ; i++) {
         dbg_hex32(a[i]);dbg_str("\r\n");

@@ -29,15 +29,14 @@ fpga_modctrl_t* modctrl_regs = (fpga_modctrl_t*)(FPGA_PERIPH_BASE);
 //------------- Local variables ------------------------//
 void fpga_modctrl_init(void) {
     // Setup FPGA clocks
-	S3x_Clk_Disable(S3X_FB_16_CLK);
-	//S3x_Clk_Disable(S3X_FB_21_CLK);
-	
-	S3x_Clk_Set_Rate(S3X_FB_16_CLK, HSOSC_72MHZ);
+	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_12MHZ);
+	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_12MHZ);
 	S3x_Clk_Enable(S3X_FB_16_CLK);
-
-	// S3x_Clk_Set_Rate(S3X_FB_21_CLK, HSOSC_12MHZ);
-	// S3x_Clk_Enable(S3X_FB_21_CLK);
-    
+	S3x_Clk_Enable(S3X_FB_21_CLK);
+	#if 0
+	S3x_Register_Qos_Node(S3X_FB_16_CLK);
+  	S3x_Set_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ, HSOSC_72MHZ);
+	#endif
     // Confirm expected IP is loaded
 	configASSERT(modctrl_regs->device_id ==0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
 }

@@ -8,7 +8,7 @@ set_io GPIO_PIN(1) 37
 set_io GPIO_PIN(2) 42
 set_io GPIO_PIN(0) 40
 set_io CCLKO       33
-set_io PCLKI     32
+set_io PCLK     32
 set_io VSYNCI    27
 set_io HREFI     23
 // QFN pin #:27(IO28),33(IO23,clk), 32(IO24,clk), 23(IO31) ,2

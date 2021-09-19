@@ -32,7 +32,7 @@
 module AL4S3B_FPGA_top ( 
             GPIO_PIN,
             CCLKO,
-            PCLKI,
+            PCLK,
             VSYNCI,
             HREFI
 
@@ -99,10 +99,15 @@ inout  [7:0]   GPIO_PIN       ;
 // CAMERA
 //
 output          CCLKO;
-input           PCLKI;
+input           PCLK;
 input           VSYNCI;
 input           HREFI;
 
+wire           PCLK;
+wire           PCLK_gck;
+
+wire           VSYNCI;
+wire           HREFI;
 
 // clock pins added /4
 //output 			CLK_4MHZ_OUT;
@@ -192,7 +197,8 @@ gclkbuff u_gclkbuff_clock ( .A(Sys_Clk0             ) , .Z(WB_CLK       ) );
 gclkbuff u_gclkbuff_reset1 ( .A(Sys_Clk1_Rst) , .Z(RST_fb1) );
 gclkbuff u_gclkbuff_clock1  ( .A(Sys_Clk1   ) , .Z(CLK_4M ) );
 
-
+gclkbuff u_gclkbuff_clock2  ( .A(PCLK   ) , .Z(PCLK_gck ) );
+//assign PCLK_gck = PCLK;
 // Example FPGA Design
 //
 AL4S3B_FPGA_IP              #(
@@ -271,7 +277,7 @@ AL4S3B_FPGA_IP              #(
     //
     // CAMERA
     //
-    .PCLKI                      (PCLKI),
+    .PCLKI                      (PCLK_gck),
     .VSYNCI                     (VSYNCI),
     .HREFI                      (HREFI),
     //

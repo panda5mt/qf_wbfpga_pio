@@ -14,8 +14,8 @@
  * limitations under the License.
  *==========================================================*/
 
-#ifndef __FPGA_LEDCTLR_H_
-#define __FPGA_LEDCTLR_H_
+#ifndef __FPGA_MODCTRL_H_
+#define __FPGA_MODCTRL_H_
 
 #include <stdbool.h>
 
@@ -59,4 +59,4 @@ uint32_t    fpga_getfifo(uint8_t ch);
 uint32_t    fpga_get_wrch(void);
 void        fpga_setfifo(uint8_t ch, uint32_t value);
 */
-#endif // __FPGA_LEDCTLR_H_
+#endif // __FPGA_MODCTRL_H_
