@@ -211,37 +211,46 @@ begin
     end
     else
     case(cam_status)
-    CRSET: begin
-        if(cam_data_valid) begin
-            cam_reg1	<= {cam_reg1[23:0],8'hAA};
-            //cam_reg_out <= 32'h0;
-            cam_reg_rdy <= 1'b0;
-            cam_status	<= CB08F;
-        end
-        else
-        begin
-            cam_reg_out <= 32'h0;
-            cam_reg_rdy <= 1'b0;
-        end
-    end
-
-    CB24F: begin
-        if(cam_data_valid) begin
-            cam_reg_out	<= cam_freerun[31:0];//{cam_reg1[23:0],8'hCC};
-            cam_reg1	<= 32'h0;
-            cam_reg_rdy	<= 1'b1;
-            cam_ram_cnt	<= cam_ram_cnt + 11'h01;// % RAM_COUNT_FULL; // modulo-N counter
-            cam_freerun	<= cam_freerun + 32'h01;
-            cam_status	<= CRSET;
-        end
-    end
-    
-    default: begin
-        if(cam_data_valid) begin
-            cam_reg1	<= {cam_reg1[23:0],8'hBB};
-            cam_status	<= cam_status + 2'd1;
-        end
-    end
+		CRSET: begin
+			if(cam_data_valid) begin
+				cam_reg1	<= {24'h0, 8'hAA};
+				cam_reg_out <= 32'h0;
+				cam_reg_rdy <= 1'b0;
+				cam_status	<= CB08F;
+			end
+			else
+			begin
+				cam_reg_out <= 32'h0;
+				cam_reg_rdy <= 1'b0;
+			end
+		end
+		CB08F: begin	
+			if(cam_data_valid) begin
+				cam_reg1	<= {cam_reg1[23:0],8'hBB};
+				cam_status	<= CB16F;
+			end
+		end
+		CB16F: begin	
+			if(cam_data_valid) begin
+				cam_reg1	<= {cam_reg1[23:0],8'hCC};
+				cam_status	<= CB24F;
+			end
+		end
+		CB24F: begin
+			if(cam_data_valid) begin
+				cam_reg_out	<= cam_freerun[31:0];//{cam_reg1[23:0],8'hDD};
+				cam_reg1	<= 32'h0;
+				cam_reg_rdy	<= 1'b1;
+				cam_ram_cnt	<= cam_ram_cnt + 11'h01;// % RAM_COUNT_FULL; // modulo-N counter
+				cam_freerun	<= cam_freerun + 32'h01;
+				cam_status	<= CRSET;
+			end
+		end
+		default: begin
+			cam_reg1	<= cam_reg1;
+			cam_status	<= CRSET;
+			cam_reg_rdy <= 1'b0;
+		end
     endcase
 end
 assign select_ram0		= (cam_ram_cnt[10:9] == 2'b00); // 0 =< cam_ram_cnt < 512

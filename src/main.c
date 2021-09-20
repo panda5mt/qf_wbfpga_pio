@@ -197,7 +197,12 @@ void vTask2(void *pvParameters){
         
         if(cntr > 2) {
             for(uint32_t i = 0 ; i < 512 * 8 ; i+=64) {
-                dbg_hex32(a[i]);dbg_str("\r\n");
+                // dbg_ch_raw((a[i])& 0xff);
+                // dbg_ch_raw((a[i] >> 8)& 0xff);
+                // dbg_ch_raw((a[i] >> 16)& 0xff);
+                // dbg_ch_raw((a[i] >> 24) & 0xff);
+                dbg_hex32(a[i]);
+                dbg_str("\n");
             }
             cntr -= 8;
         }
