@@ -220,7 +220,7 @@ begin
 			end
 			else
 			begin
-				cam_reg_out <= 32'h0;
+				//cam_reg_out <= 32'h0;
 				cam_reg_rdy <= 1'b0;
 			end
 		end
