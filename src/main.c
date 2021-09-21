@@ -129,13 +129,6 @@ int main(void)
     fpga_gpio_setdir(0xff);
     *(volatile uint32_t *)(gpo_regs) = 0x0f;
     
-    
-
-   
-    
-
-    dbg_str("sta=0x");dbg_hex32(*(volatile uint32_t *)(status_regs));dbg_str("\r\n");
-
     // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
     xTaskCreate(vTask2,"Task2", 100, NULL, 1, NULL);
@@ -194,7 +187,7 @@ void vTask2(void *pvParameters){
     uint32_t nowptr = 0;    
     while(1) {
         if(cntr > 4) {
-            for(uint32_t i = 0 ; i < 512 * 8 ; i+=32) {
+            for(uint32_t i = 0 ; i < 512 * 8 ; i+=64) {
                 // dbg_ch_raw((a[i])& 0xff);
                 // dbg_ch_raw((a[i] >> 8)& 0xff);
                 // dbg_ch_raw((a[i] >> 16)& 0xff);
