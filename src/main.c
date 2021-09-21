@@ -226,8 +226,8 @@ void wait_ffe_fpga_load(void){ return; };
 
 void fpga_sysclk_init (void) {
      // Setup FPGA clocks
-	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_10MHZ); // WISHBONE Clock
-	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_24MHZ); // Clock for Camera
+	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_12MHZ); // WISHBONE Clock
+	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_12MHZ); // Clock for Camera
 	S3x_Clk_Enable(S3X_FB_16_CLK);
 	S3x_Clk_Enable(S3X_FB_21_CLK);
 	#if 1
