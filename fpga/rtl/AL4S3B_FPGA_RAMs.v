@@ -185,19 +185,21 @@ reg  [31:0]     cam_reg1;
 reg  [31:0]		cam_reg_out;     
 reg  [31:0]		cam_freerun;
 
+wire [31:0]     cam_reg1;
 wire [31:0] 	cam_reg_out;
 wire [31:0]		cam_freerun;
 
 /* FSM */
 localparam  RAM_COUNT_FULL = 11'd2048;
 reg	 [1:0]  	 cam_status;
+wire [1:0]  	 cam_status;
 
 localparam CRSET =2'd0;  // RESET
 localparam CB08F =2'd1;  // Camera buffer 8bit Full 
 localparam CB16F =2'd2;  // Camera buffer 16bit full
 localparam CB24F =2'd3;  // Camera buffer 24bit full
 //localparam CB32F =3'd4;
-
+assign cam_data_valid	= HREFI & VSYNCI ;
 always @( posedge PCLKI or posedge WBs_RST_i )
 begin
     if(WBs_RST_i)
@@ -209,35 +211,26 @@ begin
         cam_ram_cnt		<= 11'h00;
         cam_freerun		<= 32'h00;
     end
-    else
-    case(cam_status)
-		CRSET: begin
-			if(cam_data_valid) begin
-				cam_reg1	<= {24'h0, 8'hAA};
-				cam_reg_out <= 32'h0;
+    else begin // PCLK
+		if(cam_data_valid)begin
+			case(cam_status)
+			CRSET: begin
+				cam_reg1	<= {24'h00, 8'hAA};
+				//cam_reg_out <= 32'h0;
 				cam_reg_rdy <= 1'b0;
 				cam_status	<= CB08F;
 			end
-			else
-			begin
-				//cam_reg_out <= 32'h0;
+			CB08F: begin	
+				cam_reg1	<= {16'h00,cam_reg1[7:0],8'hBB};
 				cam_reg_rdy <= 1'b0;
-			end
-		end
-		CB08F: begin	
-			if(cam_data_valid) begin
-				cam_reg1	<= {cam_reg1[23:0],8'hBB};
 				cam_status	<= CB16F;
 			end
-		end
-		CB16F: begin	
-			if(cam_data_valid) begin
-				cam_reg1	<= {cam_reg1[23:0],8'hCC};
+			CB16F: begin	
+				cam_reg1	<= {8'h00,cam_reg1[15:0],8'hCC};
+				cam_reg_rdy <= 1'b0;
 				cam_status	<= CB24F;
 			end
-		end
-		CB24F: begin
-			if(cam_data_valid) begin
+			CB24F: begin
 				cam_reg_out	<= cam_freerun[31:0];//{cam_reg1[23:0],8'hDD};
 				cam_reg1	<= 32'h0;
 				cam_reg_rdy	<= 1'b1;
@@ -245,20 +238,23 @@ begin
 				cam_freerun	<= cam_freerun + 32'h01;
 				cam_status	<= CRSET;
 			end
+			default: begin
+				cam_reg_out	<= cam_reg_out;
+				cam_reg_rdy <= 1'b0;
+			end
+			endcase
 		end
-		default: begin
-			cam_reg1	<= cam_reg1;
-			cam_status	<= CRSET;
-			cam_reg_rdy <= 1'b0;
+		else begin //!cam_data_valid
+			cam_reg_rdy	<= 1'b0;
+			cam_status	<= cam_status;
+			cam_reg_out <= cam_reg_out;
 		end
-    endcase
+	end	// PCLK
 end
 assign select_ram0		= (cam_ram_cnt[10:9] == 2'b00); // 0 =< cam_ram_cnt < 512
 assign select_ram1		= (cam_ram_cnt[10:9] == 2'b01); // 512 =< cam_ram_cnt < 1024 
 assign select_ram2		= (cam_ram_cnt[10:9] == 2'b10); // 1024 =< cam_ram_cnt < 1536 
 assign select_ram3		= (cam_ram_cnt[10:9] == 2'b11); // 1536 =< cam_ram_cnt < 2048
-
-assign cam_data_valid	= HREFI & VSYNCI ;
 assign cam_push_clk		= cam_reg_rdy & ~(PCLKI) ;
 
 assign cam_push_sig0	= cam_reg_rdy & select_ram0;

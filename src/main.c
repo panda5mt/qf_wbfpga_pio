@@ -190,13 +190,11 @@ void vTask1(void *pvParameters){
 
 void vTask2(void *pvParameters){
 
-    
     int32_t j = 0;
     uint32_t nowptr = 0;    
     while(1) {
-        
-        if(cntr > 2) {
-            for(uint32_t i = 0 ; i < 512 * 8 ; i+=64) {
+        if(cntr > 4) {
+            for(uint32_t i = 0 ; i < 512 * 8 ; i+=32) {
                 // dbg_ch_raw((a[i])& 0xff);
                 // dbg_ch_raw((a[i] >> 8)& 0xff);
                 // dbg_ch_raw((a[i] >> 16)& 0xff);
