@@ -34,7 +34,8 @@ module AL4S3B_FPGA_top (
             CCLKO,
             PCLK,
             VSYNCI,
-            HREFI
+            HREFI,
+            CAM_DAT
 
             );
 
@@ -98,16 +99,18 @@ inout  [7:0]   GPIO_PIN       ;
 
 // CAMERA
 //
-output          CCLKO;
-input           PCLK;
-input           VSYNCI;
-input           HREFI;
+output          CCLKO       ;
+input           PCLK        ;
+input           VSYNCI      ;
+input           HREFI       ;
+input [7:0]     CAM_DAT     ;
 
-wire           PCLK;
-wire           PCLK_gck;
+wire            PCLK        ;
+wire            PCLK_gck    ;
 
-wire           VSYNCI;
-wire           HREFI;
+wire            VSYNCI      ;
+wire            HREFI       ;
+wire  [7:0]     CAM_DAT     ;  
 
 // clock pins added /4
 //output 			CLK_4MHZ_OUT;
@@ -280,6 +283,7 @@ AL4S3B_FPGA_IP              #(
     .PCLKI                      (PCLK_gck),
     .VSYNCI                     (VSYNCI),
     .HREFI                      (HREFI),
+    .CAM_DAT                    (CAM_DAT),
     //
     // Misc
     //

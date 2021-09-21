@@ -55,6 +55,7 @@ module AL4S3B_FPGA_IP (
                 PCLKI,
                 VSYNCI,
                 HREFI,
+                CAM_DAT,
                 //
                 // Misc
 				CLK_4M_CNTL_o,
@@ -142,6 +143,12 @@ inout   [7:0]  GPIO_PIN         ;
 input           PCLKI;
 input           VSYNCI;
 input           HREFI;
+input  [7:0]    CAM_DAT;
+
+wire           PCLKI;
+wire           VSYNCI;
+wire           HREFI;
+wire  [7:0]    CAM_DAT;
 
 
 // Misc
@@ -388,7 +395,8 @@ AL4S3B_FPGA_RAMs #(
     .WBs_ACK_o                 ( WBs_ACK_RAMs                   ),
     .PCLKI  (PCLKI),
     .VSYNCI (VSYNCI),
-    .HREFI  (HREFI)
+    .HREFI  (HREFI),
+    .CAM_DAT (CAM_DAT)
     );
 
 // Reserved Resources Block

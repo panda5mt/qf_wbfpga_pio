@@ -53,7 +53,8 @@ module AL4S3B_FPGA_RAMs (
 				
 				PCLKI,
 				VSYNCI,
-				HREFI
+				HREFI,
+				CAM_DAT
 			);
 
 
@@ -120,10 +121,12 @@ reg                      WBs_ACK_o     ;  // Wishbone Client Acknowledge
 input           PCLKI;
 input           VSYNCI;
 input           HREFI;
+input [7:0]		CAM_DAT;
 
 wire 			PCLKI;
 wire 			VSYNCI;
 wire 			HREFI;
+wire [7:0]		CAM_DAT;
 
 //------Define Parameters--------------
 //
@@ -215,23 +218,23 @@ begin
 		if(cam_data_valid)begin
 			case(cam_status)
 			CRSET: begin
-				cam_reg1	<= {24'h00, 8'hAA};
+				cam_reg1	<= {24'h00, CAM_DAT[7:0]};
 				//cam_reg_out <= 32'h0;
 				cam_reg_rdy <= 1'b0;
 				cam_status	<= CB08F;
 			end
 			CB08F: begin	
-				cam_reg1	<= {16'h00,cam_reg1[7:0],8'hBB};
+				cam_reg1	<= {16'h00,cam_reg1[7:0],CAM_DAT[7:0]};
 				cam_reg_rdy <= 1'b0;
 				cam_status	<= CB16F;
 			end
 			CB16F: begin	
-				cam_reg1	<= {8'h00,cam_reg1[15:0],8'hCC};
+				cam_reg1	<= {8'h00,cam_reg1[15:0],CAM_DAT[7:0]};
 				cam_reg_rdy <= 1'b0;
 				cam_status	<= CB24F;
 			end
 			CB24F: begin
-				cam_reg_out	<= cam_freerun[31:0];//{cam_reg1[23:0],8'hDD};
+				cam_reg_out	<= /*cam_freerun[31:0];*/{cam_reg1[23:0],CAM_DAT[7:0]};
 				cam_reg1	<= 32'h0;
 				cam_reg_rdy	<= 1'b1;
 				cam_ram_cnt	<= cam_ram_cnt + 11'h01;// % RAM_COUNT_FULL; // modulo-N counter

@@ -175,6 +175,7 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD11_FUNC_SEL_FBIO_11,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
   { // Pad 12 -- GPIO
@@ -182,6 +183,7 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD12_FUNC_SEL_FBIO_12,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
   { // Pad 4 -- GPIO
@@ -189,6 +191,7 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD4_FUNC_SEL_FBIO_4,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
    { // Pad 5 -- GPIO
@@ -196,6 +199,7 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD5_FUNC_SEL_FBIO_5,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
   { // Pad 7 -- GPIO
@@ -203,6 +207,7 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD7_FUNC_SEL_FBIO_7,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
     { // Pad 8 -- GPIO
@@ -210,6 +215,7 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD8_FUNC_SEL_FBIO_8,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
   { // Pad 10 -- GPIO
@@ -217,6 +223,7 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD10_FUNC_SEL_FBIO_10,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
   { // Pad 3 -- GPIO
@@ -224,6 +231,7 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD3_FUNC_SEL_FBIO_3,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
     
