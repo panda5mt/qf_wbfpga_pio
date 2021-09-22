@@ -53,6 +53,8 @@
 #include "sccb_if.h"
 #include "fpga_modctrl.h"
 
+#include "eoss3_hal_spi.h"
+
 
 extern const struct cli_cmd_entry my_main_menu[];
 
@@ -144,8 +146,6 @@ void vTask1(void *pvParameters){
     // init ov5642
     sccb_init();
 
-    
-    //while(*(volatile uint32_t *)status_regs==0);
     while(1){
         while(0 == *(volatile uint32_t *)status_regs);
         memcpy(&a[0],   ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
