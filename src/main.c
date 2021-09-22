@@ -236,5 +236,5 @@ void fpga_sysclk_init (void) {
 	#endif
     // Confirm expected IP is loaded
     fpga_modctrl_t* fb_modules = (fpga_modctrl_t*)(FPGA_PERIPH_BASE);
-	configASSERT(fb_modules->device_id ==0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
+	configASSERT(fb_modules->device_id == 0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
 }
