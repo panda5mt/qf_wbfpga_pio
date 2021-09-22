@@ -130,6 +130,20 @@ int main(void)
     // GPIO init
     fpga_gpio_setdir(0xff);
     *(volatile uint32_t *)(gpo_regs) = 0x0f;
+
+
+    ///////////////////////SPItest:start
+    SPI_HandleTypeDef spiFlashHandle;    
+    //SPI master init for SPI flash
+    spiFlashHandle.Init.ucFreq       = SPI_BAUDRATE_5MHZ; //above 5MHz does not work
+    spiFlashHandle.Init.ucSPIInf     = SPI_4_WIRE_MODE;
+    spiFlashHandle.Init.ucSSn        = SPI_SLAVE_1_SELECT;
+    spiFlashHandle.Init.ulCLKPhase   = SPI_PHASE_1EDGE;
+    spiFlashHandle.Init.ulCLKPolarity = SPI_POLARITY_LOW;
+    spiFlashHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
+    spiFlashHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
+    spiFlashHandle.ucSPIx            = SPI1_MASTER_SEL;
+    ///////////////////////SPItest:end
     
     // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
