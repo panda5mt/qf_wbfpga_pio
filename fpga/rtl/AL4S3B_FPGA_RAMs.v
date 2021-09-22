@@ -241,10 +241,12 @@ begin
 				cam_freerun	<= cam_freerun + 32'h01;
 				cam_status	<= CRSET;
 			end
+			/*
 			default: begin
 				cam_reg_out	<= cam_reg_out;
 				cam_reg_rdy <= 1'b0;
 			end
+			*/
 			endcase
 		end
 		else begin //!cam_data_valid
