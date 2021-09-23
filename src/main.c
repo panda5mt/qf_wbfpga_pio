@@ -117,16 +117,28 @@ int main(void)
 
 
     ///////////////////////SPItest:start
-    SPI_HandleTypeDef spiFlashHandle;    
+    SPI_HandleTypeDef spiSramHandle;    
     //SPI master init for SPI flash
-    spiFlashHandle.Init.ucFreq       = SPI_BAUDRATE_5MHZ; //above 5MHz does not work
-    spiFlashHandle.Init.ucSPIInf     = SPI_4_WIRE_MODE;
-    spiFlashHandle.Init.ucSSn        = SPI_SLAVE_1_SELECT;
-    spiFlashHandle.Init.ulCLKPhase   = SPI_PHASE_1EDGE;
-    spiFlashHandle.Init.ulCLKPolarity = SPI_POLARITY_LOW;
-    spiFlashHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
-    spiFlashHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
-    spiFlashHandle.ucSPIx            = SPI1_MASTER_SEL;
+    spiSramHandle.Init.ucFreq       = SPI_BAUDRATE_20MHZ; 
+    spiSramHandle.Init.ucSPIInf     = SPI_4_WIRE_MODE;
+    spiSramHandle.Init.ucSSn        = SPI_SLAVE_3_SELECT;
+    spiSramHandle.Init.ulCLKPhase   = SPI_PHASE_1EDGE;
+    spiSramHandle.Init.ulCLKPolarity = SPI_POLARITY_LOW;
+    spiSramHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
+    spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
+    spiSramHandle.ucSPIx            = SPI1_MASTER_SEL;
+
+    if(ret=HAL_SPI_Init(&spiSramHandle) != HAL_OK)
+    {
+        printf("HAL_SPI1_Init failed\r\n");
+        
+    }
+    ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
+    if(ret != HAL_OK)
+    {
+        printf("Failed to send command %02x: %d\n",*cmd,ret);
+        ret = FlashCmdFailed;
+    }
     ///////////////////////SPItest:end
 
     

@@ -309,9 +309,9 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  { // Pad 39 -- SPI Master SSn1
-    .ucPin = PAD_39,
-    .ucFunc = PAD39_FUNC_SEL_SPIm_SSn1,
+  { // Pad 25 -- SPI Master SSn3
+    .ucPin = PAD_25,
+    .ucFunc = PAD25_FUNC_SEL_SPIm_SSN3,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
