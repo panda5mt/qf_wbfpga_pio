@@ -115,7 +115,7 @@ int main(void)
     fpga_gpio_setdir(0xff);
     *(volatile uint32_t *)fb_gpioout = 0x0f;
 
-
+    /*
     ///////////////////////SPItest:start
     SPI_HandleTypeDef spiSramHandle;    
     //SPI master init for SPI flash
@@ -126,7 +126,7 @@ int main(void)
     spiSramHandle.Init.ulCLKPolarity = SPI_POLARITY_LOW;
     spiSramHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
     spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
-    spiSramHandle.ucSPIx            = SPI1_MASTER_SEL;
+    spiSramHandle.ucSPIx            = SPI0_MASTER_SEL;
     uint32_t ret;
     uint8_t cmd[4] = {0xaa,0xaa,0xaa,0xaa};
     uint8_t cmd_len =  4;
@@ -140,7 +140,7 @@ int main(void)
     {
         printf("Failed to send command %02x: %d\n",*cmd,ret);
         ret = FlashCmdFailed;
-    }
+    }*/
     ///////////////////////SPItest:end
 
     
