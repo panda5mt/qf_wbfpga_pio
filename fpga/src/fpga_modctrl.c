@@ -21,20 +21,20 @@
 #include "fpga_modctrl.h"
 
 //------------- Pointer to registers ---------------------//
-//fpga_modctrl_t* modctrl_regs = (fpga_modctrl_t*)(FPGA_PERIPH_BASE);
+//fpga_modctrl_t* modctrl = (fpga_modctrl_t*)(FPGA_PERIPH_BASE);
 
 //------------- Local functions -------------------------//
 // memory maps on FPGA
-volatile uint32_t **devid_regs 		= 0x40020000;
-volatile uint32_t **revnum_regs 	= 0x40020004;
-volatile uint32_t **gpioin_regs 	= 0x40020008;
-volatile uint32_t **gpioout_regs 	= 0x4002000C;
-volatile uint32_t **gpiooe_regs 	= 0x40020010;
-volatile uint32_t **ram0_regs 		= 0x40022000;
-volatile uint32_t **ram1_regs 		= 0x40024000; 
-volatile uint32_t **ram2_regs 		= 0x40026000; 
-volatile uint32_t **ram3_regs 		= 0x40028000; 
-volatile uint32_t **status_regs 	= 0x4002a000;
+volatile uint32_t **fb_devid	= 0x40020000;
+volatile uint32_t **fb_revnum 	= 0x40020004;
+volatile uint32_t **fb_gpioin 	= 0x40020008;
+volatile uint32_t **fb_gpioout	= 0x4002000C;
+volatile uint32_t **fb_gpiooe 	= 0x40020010;
+volatile uint32_t **fb_ram0		= 0x40022000;
+volatile uint32_t **fb_ram1		= 0x40024000; 
+volatile uint32_t **fb_ram2		= 0x40026000; 
+volatile uint32_t **fb_ram3		= 0x40028000; 
+volatile uint32_t **fb_status 	= 0x4002a000;
 
 
 //------------- Local variables ------------------------//
@@ -49,19 +49,19 @@ void fpga_modctrl_init(void) {
   	S3x_Set_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ, HSOSC_72MHZ);
 	#endif
     // Confirm expected IP is loaded
-	configASSERT(*(volatile uint32_t *)(devid_regs) == 0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
+	configASSERT(*(volatile uint32_t *)(fb_devid) == 0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
 }
 
 void fpga_setgpio(uint32_t value) {
-	*(volatile uint32_t *)(gpioout_regs) = value ;
+	*(volatile uint32_t *)(fb_gpioout) = value ;
 }
 
 uint32_t fpga_getgpio(void) {
-	return (*(volatile uint32_t *)gpioin_regs) ;
+	return (*(volatile uint32_t *)(fb_gpioin)) ;
 }
 
 void fpga_gpio_setdir(uint32_t value) {
-	*(volatile uint32_t *)(gpiooe_regs) = value;
+	*(volatile uint32_t *)(fb_gpiooe) = value;
 }
 
 

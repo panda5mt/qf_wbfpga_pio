@@ -99,7 +99,7 @@ int main(void)
 
     qf_hardwareSetup();
     nvic_init();
-    
+
     S3x_Clk_Disable(S3X_FB_21_CLK);
     S3x_Clk_Disable(S3X_FB_16_CLK);
     S3x_Clk_Enable(S3X_A1_CLK);
@@ -113,7 +113,7 @@ int main(void)
 
     // GPIO init
     fpga_gpio_setdir(0xff);
-    *(volatile uint32_t *)(gpioout_regs) = 0x0f;
+    *(volatile uint32_t *)fb_gpioout = 0x0f;
 
 
     ///////////////////////SPItest:start
@@ -128,6 +128,7 @@ int main(void)
     spiFlashHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
     spiFlashHandle.ucSPIx            = SPI1_MASTER_SEL;
     ///////////////////////SPItest:end
+
     
     // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
@@ -145,31 +146,31 @@ void vTask1(void *pvParameters){
     sccb_init();
 
     while(1){
-        while(0 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[0], ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
-        while(1 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[512], ram1_regs, (512 * sizeof(uint32_t))); // ram1_regs -> a
+        while(0 == *(volatile uint32_t *)fb_status);
+        memcpy(&a[0], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
+        while(1 == *(volatile uint32_t *)fb_status);
+        memcpy(&a[512], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
         
         cntr+=2;
         
-        while(2 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[512*2], ram2_regs, (512 * sizeof(uint32_t))); // ram2_regs -> a
-        while(3 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[512*3], ram3_regs, (512 * sizeof(uint32_t))); // ram3_regs -> a
+        while(2 == *(volatile uint32_t *)fb_status);
+        memcpy(&a[512*2], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
+        while(3 == *(volatile uint32_t *)fb_status);
+        memcpy(&a[512*3], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
         
         cntr+=2;
 
-        while(0 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[512*4], ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
-        while(1 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[512*5], ram1_regs, (512 * sizeof(uint32_t))); // ram1_regs -> a
+        while(0 == *(volatile uint32_t *)fb_status);
+        memcpy(&a[512*4], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
+        while(1 == *(volatile uint32_t *)fb_status);
+        memcpy(&a[512*5], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
         
         cntr+=2;
         
-        while(2 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[512*6], ram2_regs, (512 * sizeof(uint32_t))); // ram2_regs -> a
-        while(3 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[512*7], ram3_regs, (512 * sizeof(uint32_t))); // ram3_regs -> a
+        while(2 == *(volatile uint32_t *)fb_status);
+        memcpy(&a[512*6], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
+        while(3 == *(volatile uint32_t *)fb_status);
+        memcpy(&a[512*7], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
         
         cntr+=2;
     }
@@ -185,7 +186,7 @@ void vTask2(void *pvParameters){
     uint32_t nowptr = 0;    
     while(1) {
         if(cntr > 4) {
-            for(uint32_t i = 0 ; i < 512 * 8 ; i+=64) {
+            for(uint32_t i = 0 ; i < 512 * 8 ; i+=128) {
                 // dbg_ch_raw((a[i])& 0xff);
                 // dbg_ch_raw((a[i] >> 8)& 0xff);
                 // dbg_ch_raw((a[i] >> 16)& 0xff);

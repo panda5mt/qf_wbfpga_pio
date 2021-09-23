@@ -27,16 +27,16 @@
 #include "s3x_clock.h"
 
 // memory maps on FPGA
-volatile uint32_t **devid_regs ;
-volatile uint32_t **revnum_regs;
-volatile uint32_t **gpioin_regs;
-volatile uint32_t **gpioout_regs;
-volatile uint32_t **gpiooe_regs;
-volatile uint32_t **ram0_regs;
-volatile uint32_t **ram1_regs; 
-volatile uint32_t **ram2_regs; 
-volatile uint32_t **ram3_regs; 
-volatile uint32_t **status_regs;
+volatile uint32_t **fb_devid ;
+volatile uint32_t **fb_revnum;
+volatile uint32_t **fb_gpioin;
+volatile uint32_t **fb_gpioout;
+volatile uint32_t **fb_gpiooe;
+volatile uint32_t **fb_ram0;
+volatile uint32_t **fb_ram1; 
+volatile uint32_t **fb_ram2; 
+volatile uint32_t **fb_ram3; 
+volatile uint32_t **fb_status;
 
 
 // init API
