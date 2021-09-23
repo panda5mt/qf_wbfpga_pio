@@ -128,17 +128,19 @@ int main(void)
     spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
     spiSramHandle.ucSPIx            = SPI1_MASTER_SEL;
     uint32_t ret;
+    uint8_t cmd[4] = {0xaa,0xaa,0xaa,0xaa};
+    uint8_t cmd_len =  4;
     if(ret=HAL_SPI_Init(&spiSramHandle) != HAL_OK)
     {
         printf("HAL_SPI1_Init failed\r\n");
         
     }
-    // ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
-    // if(ret != HAL_OK)
-    // {
-    //     printf("Failed to send command %02x: %d\n",*cmd,ret);
-    //     ret = FlashCmdFailed;
-    // }
+    ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
+    if(ret != HAL_OK)
+    {
+        printf("Failed to send command %02x: %d\n",*cmd,ret);
+        ret = FlashCmdFailed;
+    }
     ///////////////////////SPItest:end
 
     
