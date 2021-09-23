@@ -127,18 +127,18 @@ int main(void)
     spiSramHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
     spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
     spiSramHandle.ucSPIx            = SPI1_MASTER_SEL;
-
+    uint32_t ret;
     if(ret=HAL_SPI_Init(&spiSramHandle) != HAL_OK)
     {
         printf("HAL_SPI1_Init failed\r\n");
         
     }
-    ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
-    if(ret != HAL_OK)
-    {
-        printf("Failed to send command %02x: %d\n",*cmd,ret);
-        ret = FlashCmdFailed;
-    }
+    // ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
+    // if(ret != HAL_OK)
+    // {
+    //     printf("Failed to send command %02x: %d\n",*cmd,ret);
+    //     ret = FlashCmdFailed;
+    // }
     ///////////////////////SPItest:end
 
     
