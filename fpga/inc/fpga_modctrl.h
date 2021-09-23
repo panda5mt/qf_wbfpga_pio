@@ -26,23 +26,18 @@
 #include <eoss3_hal_def.h>
 #include "s3x_clock.h"
 
-typedef struct fpga_modctrl {
-    uint32_t    device_id;			// 0x00
-    uint32_t    rev_num;			// 0x04
-    uint32_t    gpio_in;			// 0x08
-    uint32_t    gpio_out;		    // 0x0C
-    uint32_t    gpio_oe;			// 0x10
-    // uint32_t    reserved1[60-1];
-    // uint32_t    fifo1_acc;          // 0x100
-    // uint32_t    fifo1_flags;    	// 0x104
-    // uint32_t    reserved2[63-1];
-    // uint32_t    fifo2_acc; 		    // 0x200
-	// uint32_t	fifo2_flags;    	// 0x204
-    // uint32_t    reserved3[127-1];
-	// uint32_t	fifo3_acc;			// 0x400
-	// uint32_t	fifo3_flags;        // 0x404
-    // uint32_t    fifo_write_ch;      // 0x408
-} fpga_modctrl_t;
+// memory maps on FPGA
+volatile uint32_t **devid_regs ;
+volatile uint32_t **revnum_regs;
+volatile uint32_t **gpioin_regs;
+volatile uint32_t **gpioout_regs;
+volatile uint32_t **gpiooe_regs;
+volatile uint32_t **ram0_regs;
+volatile uint32_t **ram1_regs; 
+volatile uint32_t **ram2_regs; 
+volatile uint32_t **ram3_regs; 
+volatile uint32_t **status_regs;
+
 
 // init API
 void    	fpga_modctrl_init(void);
@@ -52,11 +47,4 @@ uint32_t    fpga_getgpio(void);
 void        fpga_setgpio(uint32_t value);
 void        fpga_gpio_setdir(uint32_t value); // 0:tri-state 1:Drive output
 
-/*
-// FIFO APIs
-uint32_t    fpga_getflag(uint8_t ch);
-uint32_t    fpga_getfifo(uint8_t ch); 
-uint32_t    fpga_get_wrch(void);
-void        fpga_setfifo(uint8_t ch, uint32_t value);
-*/
 #endif // __FPGA_MODCTRL_H_

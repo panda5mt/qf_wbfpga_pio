@@ -21,16 +21,27 @@
 #include "fpga_modctrl.h"
 
 //------------- Pointer to registers ---------------------//
-fpga_modctrl_t* modctrl_regs = (fpga_modctrl_t*)(FPGA_PERIPH_BASE);
+//fpga_modctrl_t* modctrl_regs = (fpga_modctrl_t*)(FPGA_PERIPH_BASE);
 
 //------------- Local functions -------------------------//
+// memory maps on FPGA
+volatile uint32_t **devid_regs 		= 0x40020000;
+volatile uint32_t **revnum_regs 	= 0x40020004;
+volatile uint32_t **gpioin_regs 	= 0x40020008;
+volatile uint32_t **gpioout_regs 	= 0x4002000C;
+volatile uint32_t **gpiooe_regs 	= 0x40020010;
+volatile uint32_t **ram0_regs 		= 0x40022000;
+volatile uint32_t **ram1_regs 		= 0x40024000; 
+volatile uint32_t **ram2_regs 		= 0x40026000; 
+volatile uint32_t **ram3_regs 		= 0x40028000; 
+volatile uint32_t **status_regs 	= 0x4002a000;
 
 
 //------------- Local variables ------------------------//
 void fpga_modctrl_init(void) {
-    // Setup FPGA clocks
-	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_10MHZ);
-	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_24MHZ);
+
+	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_12MHZ); // WISHBONE Clock
+	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_12MHZ); // Clock for Camera
 	S3x_Clk_Enable(S3X_FB_16_CLK);
 	S3x_Clk_Enable(S3X_FB_21_CLK);
 	#if 1
@@ -38,65 +49,20 @@ void fpga_modctrl_init(void) {
   	S3x_Set_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ, HSOSC_72MHZ);
 	#endif
     // Confirm expected IP is loaded
-	configASSERT(modctrl_regs->device_id ==0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
+	configASSERT(*(volatile uint32_t *)(devid_regs) == 0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
 }
 
 void fpga_setgpio(uint32_t value) {
-	modctrl_regs->gpio_out = value;
+	*(volatile uint32_t *)(gpioout_regs) = value ;
 }
 
 uint32_t fpga_getgpio(void) {
-	return modctrl_regs->gpio_in;
+	return (*(volatile uint32_t *)gpioin_regs) ;
 }
 
 void fpga_gpio_setdir(uint32_t value) {
-	modctrl_regs->gpio_oe = value;
-}
-/*
-void fpga_setfifo(uint8_t ch, uint32_t value) {
-	switch(ch){
-	case 1:
-		modctrl_regs->fifo1_acc = value;
-		break;
-	case 2:
-		modctrl_regs->fifo2_acc = value;
-		break;
-	case 3:
-		modctrl_regs->fifo3_acc = value;
-		break;
-	default:
-		modctrl_regs->fifo1_acc = value;
-	}
+	*(volatile uint32_t *)(gpiooe_regs) = value;
 }
 
-uint32_t fpga_get_wrch(void) {
-	return modctrl_regs->fifo_write_ch;
-}
 
-uint32_t fpga_getfifo(uint8_t ch) {
-	switch(ch) {
-	case 1:
-		return modctrl_regs->fifo1_acc;
-	case 2:
-		return modctrl_regs->fifo2_acc;
-	case 3:
-		return modctrl_regs->fifo3_acc;
-	default:
-		return (0xDEADBEEF);
-	}
-}
-
-uint32_t fpga_getflag(uint8_t ch) {
-	switch(ch){
-	case 1:
-		return modctrl_regs->fifo1_flags;
-	case 2:
-		return modctrl_regs->fifo2_flags;
-	case 3:
-		return modctrl_regs->fifo3_flags;
-	default:
-		return (0xDEADBEEF);
-	}
-}
-*/
 

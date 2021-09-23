@@ -34,6 +34,7 @@
 #include "eoss3_hal_gpio.h"
 #include "eoss3_hal_rtc.h"
 #include "eoss3_hal_sdma.h"
+#include "eoss3_hal_timer.h"
 #include "ql_time.h"
 #include "s3x_clock_hal.h"
 #include "s3x_clock.h"
@@ -58,13 +59,7 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-// memory maps on FPGA
-volatile uint32_t **gpo_regs = 0x4002000C;
-volatile uint32_t **ram0_regs = 0x40022000;
-volatile uint32_t **ram1_regs = 0x40024000; 
-volatile uint32_t **ram2_regs = 0x40026000; 
-volatile uint32_t **ram3_regs = 0x40028000; 
-volatile uint32_t **status_regs = 0x4002a000;
+
 uint32_t a[512*8];
 volatile int32_t cntr;
 #if DBG_FLAGS_ENABLE
@@ -87,7 +82,6 @@ char *pSupportedPaths[NUM_SUPPORTED_PATHS] = {"/default/"};
  */
 extern void qf_hardwareSetup();
 static void nvic_init(void);
-void fpga_sysclk_init(void);
 void vTask1(void *pvParameters);
 void vTask2(void *pvParameters);
 
@@ -105,31 +99,21 @@ int main(void)
 
     qf_hardwareSetup();
     nvic_init();
+    
     S3x_Clk_Disable(S3X_FB_21_CLK);
     S3x_Clk_Disable(S3X_FB_16_CLK);
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
+    
     load_fpga(sizeof(axFPGABitStream), axFPGABitStream);     // Load bitstrem into FPGA
-    //fpga_modctrl_init();
-    fpga_sysclk_init();
-
+    fpga_modctrl_init();
+    
     HAL_Delay_Init();
-    // dbg_str("\n\n");
-    // dbg_str( "##########################\n");
-    // dbg_str( "Quicklogic QuickFeather FPGA Example\n");
-    // dbg_str( "SW Version: ");
-    // dbg_str( SOFTWARE_VERSION_STR );
-    // dbg_str( "\n" );
-    // dbg_str( __DATE__ " " __TIME__ "\n" );
-    // dbg_str( "##########################\n\n");
-
-	//   dbg_str( "\n\nfpga test...\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
-
 
 
     // GPIO init
     fpga_gpio_setdir(0xff);
-    *(volatile uint32_t *)(gpo_regs) = 0x0f;
+    *(volatile uint32_t *)(gpioout_regs) = 0x0f;
 
 
     ///////////////////////SPItest:start
@@ -162,7 +146,7 @@ void vTask1(void *pvParameters){
 
     while(1){
         while(0 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[0],   ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
+        memcpy(&a[0], ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
         while(1 == *(volatile uint32_t *)status_regs);
         memcpy(&a[512], ram1_regs, (512 * sizeof(uint32_t))); // ram1_regs -> a
         
@@ -176,7 +160,7 @@ void vTask1(void *pvParameters){
         cntr+=2;
 
         while(0 == *(volatile uint32_t *)status_regs);
-        memcpy(&a[512*4],   ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
+        memcpy(&a[512*4], ram0_regs, (512 * sizeof(uint32_t))); // ram0_regs -> a
         while(1 == *(volatile uint32_t *)status_regs);
         memcpy(&a[512*5], ram1_regs, (512 * sizeof(uint32_t))); // ram1_regs -> a
         
@@ -238,17 +222,3 @@ void SystemInit(void)
 //missing functions for S3 project
 void wait_ffe_fpga_load(void){ return; };
 
-void fpga_sysclk_init (void) {
-     // Setup FPGA clocks
-	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_12MHZ); // WISHBONE Clock
-	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_12MHZ); // Clock for Camera
-	S3x_Clk_Enable(S3X_FB_16_CLK);
-	S3x_Clk_Enable(S3X_FB_21_CLK);
-	#if 1
-	S3x_Register_Qos_Node(S3X_FB_16_CLK);
-  	S3x_Set_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ, HSOSC_72MHZ);
-	#endif
-    // Confirm expected IP is loaded
-    fpga_modctrl_t* fb_modules = (fpga_modctrl_t*)(FPGA_PERIPH_BASE);
-	configASSERT(fb_modules->device_id == 0x56A37E57); //RAM:0x56A37E57, FIFO:0xF1F07E57
-}
