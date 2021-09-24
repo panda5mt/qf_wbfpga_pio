@@ -202,7 +202,7 @@ void vTask2(void *pvParameters){
 
     while(1) {
         if(cntr > 3) {
-            for(uint32_t i = 0 ; i < 512 * 8 ; i+=256) {
+            for(uint32_t i = 0 ; i < 512 * 8 ; i+=32) {
                 // dbg_ch_raw((a[i])& 0xff);
                 // dbg_ch_raw((a[i] >> 8)& 0xff);
                 // dbg_ch_raw((a[i] >> 16)& 0xff);
