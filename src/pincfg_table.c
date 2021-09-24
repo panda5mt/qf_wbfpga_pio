@@ -154,19 +154,19 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
-   { // Pad 31 -- GPIO(HREFI)
-    .ucPin = PAD_31,
-    .ucFunc = PAD31_FUNC_SEL_FBIO_31,
+   { // Pad 13 -- GPIO(HREFI)
+    .ucPin = PAD_13,
+    .ucFunc = PAD13_FUNC_SEL_FBIO_13,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
- { // Pad 28 -- GPIO(VSYNCI)
-    .ucPin = PAD_27,
-    .ucFunc = PAD27_FUNC_SEL_FBIO_27,
+ { // Pad 25 -- GPIO(VSYNCI)
+    .ucPin = PAD_25,
+    .ucFunc = PAD25_FUNC_SEL_FBIO_25,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucMode = PAD_MODE_INPUT_EN,
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
@@ -285,9 +285,7 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
 #endif
-
-
-  
+/*  
     // SPI Master
    { // Pad 34 -- SPI Master CLK
     .ucPin = PAD_34,
@@ -325,7 +323,7 @@ PadConfig pincfg_table[] =
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_INPUT_EN,
     .ucPull = PAD_NOPULL, //PAD_PULLUP,//PAD_NOPULL,
-   },
+   },*/
   
   //------------- USB ---------------//
    { // Pad 37 -- USB Pullup control

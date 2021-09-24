@@ -203,7 +203,7 @@ localparam CB16F =2'd2;  // Camera buffer 16bit full
 localparam CB24F =2'd3;  // Camera buffer 24bit full
 //localparam CB32F =3'd4;
 assign cam_data_valid	= HREFI & VSYNCI ;
-always @( posedge PCLKI or posedge WBs_RST_i )
+always @( posedge PCLKI or posedge WBs_RST_i)
 begin
     if(WBs_RST_i)
     begin

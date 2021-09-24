@@ -844,7 +844,7 @@ void sccb_init(void) {
   #endif
 
   //VSYNC Active-Low
-  sccb_dat[0]=0x47; sccb_dat[1]=0x40 ; sccb_dat[2]=0x01 ;
+  sccb_dat[0]=0x47; sccb_dat[1]=0x40 ; sccb_dat[2]=0x21 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   // sccb_dat[0]=0x3a; sccb_dat[1]=0x00 ; sccb_dat[2]=0x78 ;
 

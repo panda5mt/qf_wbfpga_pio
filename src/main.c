@@ -59,9 +59,9 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-
+SPI_HandleTypeDef spiSramHandle; 
 uint32_t a[512*8];
-volatile int32_t cntr;
+volatile int32_t cntr=0;
 #if DBG_FLAGS_ENABLE
 uint32_t DBG_flags = DBG_flags_default;
 #endif
@@ -114,35 +114,6 @@ int main(void)
     // GPIO init
     fpga_gpio_setdir(0xff);
     *(volatile uint32_t *)fb_gpioout = 0x0f;
-
-    /*
-    ///////////////////////SPItest:start
-    SPI_HandleTypeDef spiSramHandle;    
-    //SPI master init for SPI flash
-    spiSramHandle.Init.ucFreq       = SPI_BAUDRATE_20MHZ; 
-    spiSramHandle.Init.ucSPIInf     = SPI_4_WIRE_MODE;
-    spiSramHandle.Init.ucSSn        = SPI_SLAVE_3_SELECT;
-    spiSramHandle.Init.ulCLKPhase   = SPI_PHASE_1EDGE;
-    spiSramHandle.Init.ulCLKPolarity = SPI_POLARITY_LOW;
-    spiSramHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
-    spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
-    spiSramHandle.ucSPIx            = SPI0_MASTER_SEL;
-    uint32_t ret;
-    uint8_t cmd[4] = {0xaa,0xaa,0xaa,0xaa};
-    uint8_t cmd_len =  4;
-    if(ret=HAL_SPI_Init(&spiSramHandle) != HAL_OK)
-    {
-        printf("HAL_SPI1_Init failed\r\n");
-        
-    }
-    ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
-    if(ret != HAL_OK)
-    {
-        printf("Failed to send command %02x: %d\n",*cmd,ret);
-        ret = FlashCmdFailed;
-    }*/
-    ///////////////////////SPItest:end
-
     
     // init task
     xTaskCreate(vTask1,"Task1", 100, NULL, 1, NULL);
@@ -198,9 +169,40 @@ void vTask2(void *pvParameters){
 
     int32_t j = 0;
     uint32_t nowptr = 0;    
+    dbg_str("start...");
+    ///////////////////////SPItest:start
+    /*   
+    //SPI master init for SPI flash
+    spiSramHandle.Init.ucFreq       = SPI_BAUDRATE_20MHZ; 
+    spiSramHandle.Init.ucSPIInf     = SPI_4_WIRE_MODE;
+    spiSramHandle.Init.ucSSn        = SPI_SLAVE_3_SELECT;
+    spiSramHandle.Init.ulCLKPhase   = SPI_PHASE_1EDGE;
+    spiSramHandle.Init.ulCLKPolarity = SPI_POLARITY_LOW;
+    spiSramHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
+    spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
+    spiSramHandle.Init.ucCmdType    = CMD_NoResponse;
+    spiSramHandle.ucSPIx            = SPI1_MASTER_SEL;
+    uint32_t ret;
+    uint8_t cmd[4] = {0xaa,0xaa,0xaa,0xaa};
+    uint8_t cmd_len =  4;
+    if(ret=HAL_SPI_Init(&spiSramHandle) != HAL_OK)
+    {
+        printf("HAL_SPI1_Init failed\r\n");
+        
+    }
+    ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
+    if(ret != HAL_OK)
+    {
+        printf("Failed to send command %02x: %d\n",*cmd,ret);
+        ret = FlashCmdFailed;
+    }
+    */
+    ///////////////////////SPItest:end
+
+
     while(1) {
-        if(cntr > 4) {
-            for(uint32_t i = 0 ; i < 512 * 8 ; i+=128) {
+        if(cntr > 3) {
+            for(uint32_t i = 0 ; i < 512 * 8 ; i+=256) {
                 // dbg_ch_raw((a[i])& 0xff);
                 // dbg_ch_raw((a[i] >> 8)& 0xff);
                 // dbg_ch_raw((a[i] >> 16)& 0xff);
