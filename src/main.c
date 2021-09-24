@@ -181,7 +181,7 @@ void vTask2(void *pvParameters){
     spiSramHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
     spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
     spiSramHandle.Init.ucCmdType    = CMD_NoResponse;
-    spiSramHandle.ucSPIx            = SPI1_MASTER_SEL;
+    spiSramHandle.ucSPIx            = SPI0_MASTER_SEL;
     uint32_t ret;
     uint8_t cmd[4] = {0xaa,0xaa,0xaa,0xaa};
     uint8_t cmd_len =  4;
