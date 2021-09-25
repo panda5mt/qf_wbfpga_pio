@@ -128,30 +128,30 @@ void vTask1(void *pvParameters){
     sccb_init();
 
     while(1){
-        while(0 == *(volatile uint32_t *)fb_status);
+        while(0x10 == *(volatile uint32_t *)fb_status);
         memcpy(&a[0], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
-        while(1 == *(volatile uint32_t *)fb_status);
+        while(0x11 == *(volatile uint32_t *)fb_status);
         memcpy(&a[512], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
         
         cntr+=2;
         
-        while(2 == *(volatile uint32_t *)fb_status);
+        while(0x12 == *(volatile uint32_t *)fb_status);
         memcpy(&a[512*2], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
-        while(3 == *(volatile uint32_t *)fb_status);
+        while(0x13 == *(volatile uint32_t *)fb_status);
         memcpy(&a[512*3], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
         
         cntr+=2;
 
-        while(0 == *(volatile uint32_t *)fb_status);
+        while(0x10 == *(volatile uint32_t *)fb_status);
         memcpy(&a[512*4], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
-        while(1 == *(volatile uint32_t *)fb_status);
+        while(0x11 == *(volatile uint32_t *)fb_status);
         memcpy(&a[512*5], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
         
         cntr+=2;
         
-        while(2 == *(volatile uint32_t *)fb_status);
+        while(0x12 == *(volatile uint32_t *)fb_status);
         memcpy(&a[512*6], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
-        while(3 == *(volatile uint32_t *)fb_status);
+        while(0x13 == *(volatile uint32_t *)fb_status);
         memcpy(&a[512*7], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
         
         cntr+=2;
@@ -162,7 +162,7 @@ void vTask1(void *pvParameters){
   }
 }
 
-void vTask2(void *pvParameters){
+void vTask2(void *pvParameters) {
 
     int32_t j = 0;
     uint32_t nowptr = 0;    
@@ -174,14 +174,14 @@ void vTask2(void *pvParameters){
     
     ret_data = spi0_sram_init();
     if(HAL_OK == ret_data) {
-        dbg_str("SPI Init OK\r\n");   
+        //dbg_str("SPI Init OK\r\n");   
     }
 
     ret_data = spi0_sram_trans(cmd, cmd_len);
     if(HAL_OK == ret_data) {
-        dbg_str("SPI Trans OK\r\n");
+        //dbg_str("SPI Trans OK\r\n");
     }
-    
+
     while(1) {
         if(cntr > 3) {
             for(uint32_t i = 0 ; i < 512 * 8 ; i+=32) {

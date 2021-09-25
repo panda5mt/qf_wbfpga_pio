@@ -345,7 +345,7 @@ r512x32_512x32 RAM3_INST (
 
 
 
-assign WBs_RAM_STATUS_o = {29'h0, VSYNCI, cam_ram_cnt[10:9]}; //RAM_Status_out;
+assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 6'h0, cam_ram_cnt[10:9]}; //RAM_Status_out;
 
 			
 endmodule
