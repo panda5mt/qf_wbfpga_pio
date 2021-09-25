@@ -1,5 +1,5 @@
 #ifndef _SCCB_IF_H_
-#define _SCCB_ID_H_
+#define _SCCB_IF_H_
 
 #ifdef __cplusplus
 extern "C" {

@@ -53,13 +53,10 @@
 #include "process_imu.h"
 #include "sccb_if.h"
 #include "fpga_modctrl.h"
-
-#include "eoss3_hal_spi.h"
-
+#include "spi_sram.h"
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-SPI_HandleTypeDef spiSramHandle; 
 uint32_t a[512*8];
 volatile int32_t cntr=0;
 #if DBG_FLAGS_ENABLE
@@ -169,37 +166,22 @@ void vTask2(void *pvParameters){
 
     int32_t j = 0;
     uint32_t nowptr = 0;    
-    dbg_str("start...");
-    ///////////////////////SPItest:start
-    /*   
-    //SPI master init for SPI flash
-    spiSramHandle.Init.ucFreq       = SPI_BAUDRATE_20MHZ; 
-    spiSramHandle.Init.ucSPIInf     = SPI_4_WIRE_MODE;
-    spiSramHandle.Init.ucSSn        = SPI_SLAVE_3_SELECT;
-    spiSramHandle.Init.ulCLKPhase   = SPI_PHASE_1EDGE;
-    spiSramHandle.Init.ulCLKPolarity = SPI_POLARITY_LOW;
-    spiSramHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
-    spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
-    spiSramHandle.Init.ucCmdType    = CMD_NoResponse;
-    spiSramHandle.ucSPIx            = SPI0_MASTER_SEL;
-    uint32_t ret;
+
     uint8_t cmd[4] = {0xaa,0xaa,0xaa,0xaa};
     uint8_t cmd_len =  4;
-    if(ret=HAL_SPI_Init(&spiSramHandle) != HAL_OK)
-    {
-        printf("HAL_SPI1_Init failed\r\n");
-        
-    }
-    ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
-    if(ret != HAL_OK)
-    {
-        printf("Failed to send command %02x: %d\n",*cmd,ret);
-        ret = FlashCmdFailed;
-    }
-    */
-    ///////////////////////SPItest:end
+    HAL_StatusTypeDef ret_data;
 
+    
+    ret_data = spi0_sram_init();
+    if(HAL_OK == ret_data) {
+        dbg_str("SPI Init OK\r\n");   
+    }
 
+    ret_data = spi0_sram_trans(cmd, cmd_len);
+    if(HAL_OK == ret_data) {
+        dbg_str("SPI Trans OK\r\n");
+    }
+    
     while(1) {
         if(cntr > 3) {
             for(uint32_t i = 0 ; i < 512 * 8 ; i+=32) {
