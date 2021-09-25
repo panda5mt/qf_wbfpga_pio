@@ -138,14 +138,6 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucSmtTrg = PAD_SMT_TRIG_EN,
   },
-   { // Pad 28 -- GPIO(VSYNCI)
-    .ucPin = PAD_28,
-    .ucFunc = PAD28_FUNC_SEL_FBIO_28,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucSpeed = PAD_SLEW_RATE_FAST,
-    .ucPull = PAD_NOPULL,
-  },
     { // Pad 24 -- GPIO(PCLKI)
     .ucPin = PAD_24,
     .ucFunc = PAD24_FUNC_SEL_FBIO_24,
@@ -234,14 +226,6 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
-    
-  { // Pad 29 -- GPIO INPUT
-    .ucPin = PAD_29,
-    .ucFunc = PAD29_FUNC_SEL_FBIO_29,
-    .ucCtrl = PAD_CTRL_SRC_FPGA,
-    .ucMode = PAD_MODE_INPUT_EN,
-    .ucPull = PAD_PULLUP,
-  },
   // LEDS
    { // setup blue LED
     .ucPin = PAD_18,
@@ -285,11 +269,11 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
 #endif
-/*  
-    // SPI Master
-   { // Pad 34 -- SPI Master CLK
-    .ucPin = PAD_34,
-    .ucFunc = PAD34_FUNC_SEL_SPIm_CLK,
+  
+    // SPI0 Master
+   { // Pad 31 -- SPI0 Master CLK
+    .ucPin = PAD_31,
+    .ucFunc = PAD31_FUNC_SEL_SPI_SENSOR_CLK,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -297,9 +281,9 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  { // Pad 38 -- SPI Master MOSI
-    .ucPin = PAD_38,
-    .ucFunc = PAD38_FUNC_SEL_SPIm_MOSI,
+  { // Pad 28 -- SPI0 Master MOSI
+    .ucPin = PAD_28,
+    .ucFunc = PAD28_FUNC_SEL_SPI_SENSOR_MOSI,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -307,9 +291,9 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-  { // Pad 25 -- SPI Master SSn3
-    .ucPin = PAD_25,
-    .ucFunc = PAD25_FUNC_SEL_SPIm_SSN3,
+  { // Pad 30 -- SPI0 Master SSn1
+    .ucPin = PAD_30,
+    .ucFunc = PAD30_FUNC_SEL_SPI_SENSOR_SSn_1,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
@@ -317,13 +301,13 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
-   { // Pad 36 -- SPI Master MISO
-    .ucPin = PAD_36,
-    .ucFunc = PAD36_FUNC_SEL_SPIm_MISO,
+   { // Pad 29 -- SPI0 Master MISO
+    .ucPin = PAD_29,
+    .ucFunc = PAD29_FUNC_SEL_SPI_SENSOR_MISO,
     .ucCtrl = PAD_CTRL_SRC_A0,
     .ucMode = PAD_MODE_INPUT_EN,
     .ucPull = PAD_NOPULL, //PAD_PULLUP,//PAD_NOPULL,
-   },*/
+   },
   
   //------------- USB ---------------//
    { // Pad 37 -- USB Pullup control

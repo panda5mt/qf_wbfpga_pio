@@ -129,7 +129,7 @@ void vTask1(void *pvParameters){
 
     while(1){
         while(0x10 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[0], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
+        memcpy(&a[0], fb_ram0, (512 * sizeof(uint32_t)));   // ram0 -> a
         while(0x11 == *(volatile uint32_t *)fb_status);
         memcpy(&a[512], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
         
