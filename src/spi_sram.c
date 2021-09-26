@@ -1,40 +1,40 @@
 #include "Fw_global_config.h"
 #include <stdio.h>
-#include "eoss3_hal_spi.h"
+#include <stdio.h>
+#include <string.h>
+#include <test_types.h>
+#include "s3x_clock_hal.h"
 #include "spi_sram.h"
-SPI_HandleTypeDef spiSramHandle; 
+
 
 HAL_StatusTypeDef spi0_sram_init(void) {
-    //SPI master init for SPI flash
-    spiSramHandle.Init.ucFreq       = SPI_BAUDRATE_20MHZ; 
-    spiSramHandle.Init.ucSPIInf     = SPI_4_WIRE_MODE;
-    spiSramHandle.Init.ucSSn        = SPI_SLAVE_3_SELECT;
-    spiSramHandle.Init.ulCLKPhase   = SPI_PHASE_1EDGE;
-    spiSramHandle.Init.ulCLKPolarity = SPI_POLARITY_LOW;
-    spiSramHandle.Init.ulDataSize   = SPI_DATASIZE_8BIT;
-    spiSramHandle.Init.ulFirstBit   = SPI_FIRSTBIT_MSB;
-    spiSramHandle.Init.ucCmdType    = CMD_NoResponse;
-    spiSramHandle.ucSPIx            = SPI0_MASTER_SEL;  // must select SPI0 not SPI1
+
+    //SPI0 master init 
+    HAL_StatusTypeDef ret = HAL_OK;
+    //HAL_WB_Init(WB_ADDR_SPI0_SLAVE_SEL);
+    //PadConfig  padcfg;
+
+    //enable FFE power & clock domain
+    PMU->FFE_PWR_MODE_CFG = 0x0;
+    PMU->FFE_PD_SRC_MASK_N = 0x0;
+    PMU->FFE_WU_SRC_MASK_N = 0x0;
+
+    //wake up FFE
+    PMU->FFE_FB_PF_SW_WU = 0x1;
+    //check if FFE is in Active mode
+    while(!(PMU->FFE_STATUS & 0x1));
+
+  
+    S3x_Clk_Enable(S3X_FFE_X1_CLK);
+    S3x_Clk_Enable(S3X_FFE_CLK);
     
-    HAL_StatusTypeDef ret = HAL_ERROR;
-    
-    ret = HAL_SPI_Init(&spiSramHandle);
-    if(ret != HAL_OK) {
-        printf("HAL_SPI0_Init failed\r\n");
-    }
     return ret;
 
 }
 
   HAL_StatusTypeDef spi0_sram_trans(uint8_t *cmd, uint32_t cmd_len) {
     
-    spiSramHandle.Init.ucCmdType  = CMD_NoResponse; // transmit only.
-    HAL_StatusTypeDef ret = HAL_ERROR;
+    HAL_StatusTypeDef ret = HAL_OK;
 
-    ret = HAL_SPI_Transmit(&spiSramHandle,cmd,cmd_len,NULL);
-    if(ret != HAL_OK) {
-        printf("Failed to send command %02x: %d\n",*cmd,ret);
-        ret = FlashCmdFailed;
-    }
     return ret;
   }

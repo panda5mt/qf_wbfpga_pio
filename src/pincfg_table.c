@@ -269,7 +269,7 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
 #endif
-  
+  /*
     // SPI0 Master
    { // Pad 31 -- SPI0 Master CLK
     .ucPin = PAD_31,
@@ -308,7 +308,7 @@ PadConfig pincfg_table[] =
     .ucMode = PAD_MODE_INPUT_EN,
     .ucPull = PAD_NOPULL, //PAD_PULLUP,//PAD_NOPULL,
    },
-  
+  */
   //------------- USB ---------------//
    { // Pad 37 -- USB Pullup control
     .ucPin = PAD_37,

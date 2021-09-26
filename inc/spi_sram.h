@@ -5,7 +5,10 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include "eoss3_hal_spi.h"
+#include "eoss3_dev.h"
+#include "eoss3_hal_pad_config.h"
+#include "eoss3_hal_wb.h"
+
 
 HAL_StatusTypeDef spi0_sram_init(void);
 HAL_StatusTypeDef spi0_sram_trans(uint8_t *cmd, uint32_t cmd_len) ;
