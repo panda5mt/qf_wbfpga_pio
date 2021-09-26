@@ -177,7 +177,7 @@ void vTask2(void *pvParameters) {
         //dbg_str("SPI Init OK\r\n");   
     }
 
-    ret_data = spi0_sram_trans(cmd, cmd_len);
+    ret_data = spi0_sram_trans(0x55);
     if(HAL_OK == ret_data) {
         //dbg_str("SPI Trans OK\r\n");
     }
