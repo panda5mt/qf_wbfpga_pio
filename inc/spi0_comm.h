@@ -1,5 +1,5 @@
-#ifndef _SPI_SRAM_H_
-#define _SPI_SRAM_H_
+#ifndef _SPI0_COMM_H_
+#define _SPI0_COMM_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,10 +22,10 @@ extern "C" {
 #define SPI0_CLK_DEACT  (0x07)
 
 
-HAL_StatusTypeDef spi0_sram_init(void);
-HAL_StatusTypeDef spi0_sram_trans(uint8_t data) ;
+HAL_StatusTypeDef spi0_init(void);
+HAL_StatusTypeDef spi0_trans(uint8_t data) ;
 
 #ifdef __cplusplus
   }
 #endif /* __cplusplus */
-#endif /* _SPI_SRAM_H_ */
+#endif /* _SPI0_COMM_H_ */

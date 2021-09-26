@@ -11,7 +11,7 @@ MAIN_SRCS:= $(MAIN_DIR)/c_lib_retarget.c \
             $(MAIN_DIR)/Sensor_Attributes.c \
             $(MAIN_DIR)/watchdog.c \
             $(MAIN_DIR)/sccb_if.c \
-            $(MAIN_DIR)/spi_sram.c
+            $(MAIN_DIR)/spi0_comm.c
 
             
 

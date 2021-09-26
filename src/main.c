@@ -53,7 +53,7 @@
 #include "process_imu.h"
 #include "sccb_if.h"
 #include "fpga_modctrl.h"
-#include "spi_sram.h"
+#include "spi0_comm.h"
 
 extern const struct cli_cmd_entry my_main_menu[];
 
@@ -166,21 +166,18 @@ void vTask2(void *pvParameters) {
 
     int32_t j = 0;
     uint32_t nowptr = 0;    
-
-    uint8_t cmd[4] = {0xaa,0xaa,0xaa,0xaa};
-    uint8_t cmd_len =  4;
     HAL_StatusTypeDef ret_data;
 
     
-    ret_data = spi0_sram_init();
-    if(HAL_OK == ret_data) {
-        //dbg_str("SPI Init OK\r\n");   
-    }
+    // ret_data = spi0_init();
+    // if(HAL_OK == ret_data) {
+    //     //dbg_str("SPI Init OK\r\n");   
+    // }
 
-    ret_data = spi0_sram_trans(0x55);
-    if(HAL_OK == ret_data) {
-        //dbg_str("SPI Trans OK\r\n");
-    }
+    // ret_data = spi0_trans(0x55);
+    // if(HAL_OK == ret_data) {
+    //     //dbg_str("SPI Trans OK\r\n");
+    // }
 
     while(1) {
         if(cntr > 3) {

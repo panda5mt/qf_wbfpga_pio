@@ -4,12 +4,12 @@
 #include <string.h>
 #include <test_types.h>
 #include "s3x_clock_hal.h"
-#include "spi_sram.h"
+#include "spi0_comm.h"
 
 
 uint8_t ucSPI0SS = WB_ADDR_SPI0_SLAVE_SEL;
 
-HAL_StatusTypeDef spi0_sram_init(void) {
+HAL_StatusTypeDef spi0_init(void) {
 
     //SPI0 master init 
     HAL_StatusTypeDef ret = HAL_OK;
@@ -35,7 +35,7 @@ HAL_StatusTypeDef spi0_sram_init(void) {
 
 }
 
-  HAL_StatusTypeDef spi0_sram_trans(uint8_t data) {
+  HAL_StatusTypeDef spi0_trans(uint8_t data) {
     
     HAL_StatusTypeDef ret = HAL_OK;
     uint32_t spi_status = 0;
