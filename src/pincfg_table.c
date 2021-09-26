@@ -274,7 +274,7 @@ PadConfig pincfg_table[] =
    { // Pad 31 -- SPI0 Master CLK
     .ucPin = PAD_31,
     .ucFunc = PAD31_FUNC_SEL_SPI_SENSOR_CLK,
-    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucCtrl = PAD_CTRL_SRC_OTHER,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
     .ucDrv = PAD_DRV_STRENGHT_4MA,
@@ -284,7 +284,7 @@ PadConfig pincfg_table[] =
   { // Pad 28 -- SPI0 Master MOSI
     .ucPin = PAD_28,
     .ucFunc = PAD28_FUNC_SEL_SPI_SENSOR_MOSI,
-    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucCtrl = PAD_CTRL_SRC_OTHER,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
     .ucDrv = PAD_DRV_STRENGHT_4MA,
@@ -294,7 +294,7 @@ PadConfig pincfg_table[] =
   { // Pad 30 -- SPI0 Master SSn1
     .ucPin = PAD_30,
     .ucFunc = PAD30_FUNC_SEL_SPI_SENSOR_SSn_1,
-    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucCtrl = PAD_CTRL_SRC_OTHER,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
     .ucDrv = PAD_DRV_STRENGHT_4MA,
@@ -304,7 +304,7 @@ PadConfig pincfg_table[] =
    { // Pad 29 -- SPI0 Master MISO
     .ucPin = PAD_29,
     .ucFunc = PAD29_FUNC_SEL_SPI_SENSOR_MISO,
-    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucCtrl = PAD_CTRL_SRC_OTHER,
     .ucMode = PAD_MODE_INPUT_EN,
     .ucPull = PAD_NOPULL, //PAD_PULLUP,//PAD_NOPULL,
    },
