@@ -54,7 +54,10 @@ module AL4S3B_FPGA_RAMs (
 				PCLKI,
 				VSYNCI,
 				HREFI,
-				CAM_DAT
+				CAM_DAT,
+				QUAD_In_i,
+				QUAD_oe_o,
+				QUAD_Out_o, 
 			);
 
 
@@ -114,19 +117,26 @@ wire    [DATAWIDTH-1:0]  WBs_DAT_i     ;  // Wishbone Write  Data Bus
  
 reg                      WBs_ACK_o     ;  // Wishbone Client Acknowledge
 
-
+// SPI SRAMS
 //
+input	[3:0]	QUAD_In_i		;
+output			QUAD_oe_o		;
+input	[3:0]	QUAD_Out_o		;
+
+wire	[3:0]	QUAD_In_i		;
+wire			QUAD_oe_o		;
+wire	[3:0]	QUAD_Out_o		;
 // CAMERA 
 //
-input           PCLKI;
-input           VSYNCI;
-input           HREFI;
-input [7:0]		CAM_DAT;
+input           PCLKI			;
+input           VSYNCI			;
+input           HREFI			;
+input	[7:0]	CAM_DAT			;
 
-wire 			PCLKI;
-wire 			VSYNCI;
-wire 			HREFI;
-wire [7:0]		CAM_DAT;
+wire 			PCLKI			;
+wire 			VSYNCI			;
+wire 			HREFI			;
+wire	[7:0]	CAM_DAT			;
 
 //------Define Parameters--------------
 //
@@ -270,6 +280,74 @@ assign cam_push_sig2	= cam_reg_rdy & select_ram2;
 assign cam_push_sig3	= cam_reg_rdy & select_ram3;
 /* CAMERA - RAM interface: end */
 
+
+/* QSPI SRAM - RAM interface: begin */
+/* FSM */
+//localparam  RAM_COUNT_FULL = 11'd2048;
+reg	 [7:0]  	 qsram_status;
+wire [7:0]  	 qsram_status;
+reg  [7:0]		 qsram_command;
+wire [7:0]		 qsram_command;
+
+localparam QRSET =8'd0;  // RESET
+localparam QWR00 =8'd1;  // Write Command bit[7] send 
+// ........
+localparam QWR07 =8'd8;  // Write Command bit[0] send
+localparam QWADR =8'd9;  // Write Address set
+
+
+localparam QPIWR =8'b0011_1000;	// Quad Write Command (8'h38)
+localparam QPIRD =8'b1110_1011;	// Quad Read Command  (8'hEB)
+localparam STADR =24'h00;		// Quad Start Address (24bit)
+
+wire qsram_write_mode;
+wire qsram_sram_mode;
+
+assign qsram_write_mode = (WBs_RAM_STATUS_i[1:0] == 2'b10);
+assign qsram_read_mode = (WBs_RAM_STATUS_i[1:0] == 2'b01);
+
+
+always @( posedge PCLKI or posedge WBs_RST_i) begin
+	if(WBs_RST_i)begin
+		qsram_status	<= QRSET;
+		QUAD_oe_o		<= 1'b1;	// OE = 1 Output, OE=0 input
+
+	end
+	else 
+	begin
+		if (qsram_write_mode) begin
+		casez(qsram_status)
+		QRSET:begin
+			qsram_status	<= QWR00;	// do not forget CE = 0
+			qsram_command	<= QPIWR;	// Write Command
+		end
+		8'b0000_0???:begin		// send qsram_command[7]~[1]
+			QUAD_Out_o[0]	<= qsram_command[7];
+			qsram_command	<= {qsram_command[6:0],1'b0};
+			qsram_status	<= qsram_status + 8'b1;
+		end
+		QWR07:begin				// send qsram_command[0]
+			QUAD_Out_o[0]	<= qsram_command[7];
+			qsram_command	<= {qsram_command[6:0],1'b0};
+			qsram_status	<= QWADR;
+		end
+		QWADR:begin
+			QUAD_Out_o[0]	<= qsram_command[7];
+			//qsram_command	<= {qsram_command[6:0],1'b0};
+			qsram_status	<= qsram_status ; // stop
+		end
+		default:begin
+			qsram_status	<= qsram_status ; // stop
+		end
+		endcase
+		end
+	end
+end
+
+
+/* QSPI SRAM - RAM interface: end */
+
+
 // Define the FPGA's Local Registers
 //
 always @( posedge WBs_CLK_i or posedge WBs_RST_i)
@@ -360,6 +438,6 @@ always @( posedge WBs_CLK_i or posedge WBs_RST_i)begin
 
 end
 
-assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 6'h0, cam_ram_cnt[10:9]}; //status written by FPGA
+assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 6'h0, cam_ram_cnt[10:9]}; // status written by FPGA
 			
 endmodule

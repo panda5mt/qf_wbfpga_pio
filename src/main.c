@@ -167,18 +167,11 @@ void vTask2(void *pvParameters) {
     int32_t j = 0;
     uint32_t nowptr = 0;    
     HAL_StatusTypeDef ret_data;
-
     
-    // ret_data = spi0_init();
-    // if(HAL_OK == ret_data) {
-    //     //dbg_str("SPI Init OK\r\n");   
-    // }
-
-    // ret_data = spi0_trans(0x55);
-    // if(HAL_OK == ret_data) {
-    //     //dbg_str("SPI Trans OK\r\n");
-    // }
-
+    // vTaskDelay(1000);
+    // *(volatile uint32_t *)fb_status = 0x02;
+    // while(1);
+  
     while(1) {
         if(cntr > 3) {
             for(uint32_t i = 0 ; i < 512 * 8 ; i+=32) {

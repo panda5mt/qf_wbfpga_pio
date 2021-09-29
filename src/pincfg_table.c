@@ -275,6 +275,13 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
+  { // Pad 30 -- QSPI SRAM (SIO(0))
+    .ucPin = PAD_30,
+    .ucFunc = PAD30_FUNC_SEL_FBIO_30,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_INPUT_EN,
+    .ucPull = PAD_NOPULL,
+  },
 #if 0
    {
     // Pad6 is the user button
