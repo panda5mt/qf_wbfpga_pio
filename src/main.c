@@ -169,7 +169,7 @@ void vTask2(void *pvParameters) {
     HAL_StatusTypeDef ret_data;
     
     // vTaskDelay(1000);
-    // *(volatile uint32_t *)fb_status = 0x02;
+    // *(volatile uint32_t *)fb_status = 0x02; // spi ram write
     // while(1);
   
     while(1) {

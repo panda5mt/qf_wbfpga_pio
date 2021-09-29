@@ -312,6 +312,7 @@ assign qsram_read_mode = (WBs_RAM_STATUS_i[1:0] == 2'b01);
 always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 	if(WBs_RST_i)begin
 		qsram_status	<= QRSET;
+		qsram_command	<= QPIRD;
 		QUAD_oe_o		<= 1'b1;	// OE = 1 Output, OE=0 input
 
 	end
@@ -320,6 +321,7 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 		if (qsram_write_mode) begin
 		casez(qsram_status)
 		QRSET:begin
+			// QPI_nCE <= 1'b0;
 			qsram_status	<= QWR00;	// do not forget CE = 0
 			qsram_command	<= QPIWR;	// Write Command
 		end
