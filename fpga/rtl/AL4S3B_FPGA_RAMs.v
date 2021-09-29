@@ -288,6 +288,8 @@ reg	 [7:0]  	 qsram_status;
 wire [7:0]  	 qsram_status;
 reg  [7:0]		 qsram_command;
 wire [7:0]		 qsram_command;
+reg  [23:0]		 qsram_addr;
+wire [23:0]		 qsram_addr;
 
 localparam QRSET =8'd0;  // RESET
 localparam QWR00 =8'd1;  // Write Command bit[7] send 
@@ -300,14 +302,14 @@ localparam QPIWR =8'b0011_1000;	// Quad Write Command (8'h38)
 localparam QPIRD =8'b1110_1011;	// Quad Read Command  (8'hEB)
 localparam STADR =24'h00;		// Quad Start Address (24bit)
 
-wire qsram_write_mode;
-wire qsram_sram_mode;
+wire qsram_write_mode;	// RAM0,1 -> QSPI SRAM
+wire qsram_sram_mode;	// QSPI SRAM -> RAM2,3
 
 assign qsram_write_mode = (WBs_RAM_STATUS_i[1:0] == 2'b10);
 assign qsram_read_mode = (WBs_RAM_STATUS_i[1:0] == 2'b01);
 
 
-always @( posedge PCLKI or posedge WBs_RST_i) begin
+always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 	if(WBs_RST_i)begin
 		qsram_status	<= QRSET;
 		QUAD_oe_o		<= 1'b1;	// OE = 1 Output, OE=0 input
@@ -337,7 +339,7 @@ always @( posedge PCLKI or posedge WBs_RST_i) begin
 			qsram_status	<= qsram_status ; // stop
 		end
 		default:begin
-			qsram_status	<= qsram_status ; // stop
+			qsram_status	<= QRSET ; // stop
 		end
 		endcase
 		end
