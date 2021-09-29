@@ -106,7 +106,7 @@ input           HREFI       ;
 input [7:0]     CAM_DAT     ;
 
 wire            PCLK        ;
-wire            PCLK_gck    ;
+wire            PCLK_gck    ;      
 
 wire            VSYNCI      ;
 wire            HREFI       ;
@@ -122,7 +122,19 @@ wire  [7:0]     CAM_DAT     ;
 wire   [7:0]   GPIO_PIN       ;
 
 
-assign CCLKO = Sys_Clk1     ;
+// CAMERA Clocks:begin
+reg [1:0]   pscale_reg      ;
+always @(posedge USERCLK)
+if(RST_fb1)begin
+    pscale_reg <= 2'b0;
+end 
+else 
+begin
+    pscale_reg <= (pscale_reg + 2'b1) % 3; //Modulo-N
+end   
+assign CCLKO = pscale_reg[1];
+// CAMERA Clocks:end
+
 //------Define Parameters--------------
 //
 
@@ -142,6 +154,7 @@ wire            Sys_Clk0_Rst   ; // Selected FPGA Reset
 
 wire            Sys_Clk1       ; // Selected FPGA Clock
 wire            Sys_Clk1_Rst   ; // Selected FPGA Reset
+
 
 // Wishbone Bus Signals
 //
@@ -183,7 +196,7 @@ wire    [1:0]   SDMA_Active_Extra;
 
 //reg		[1:0]   clk_div;
 
-wire			CLK_4M;
+wire			USERCLK;
 wire			RST_fb1;
 
 
@@ -198,7 +211,7 @@ gclkbuff u_gclkbuff_reset ( .A(Sys_Clk0_Rst | WB_RST) , .Z(WB_RST_FPGA) );
 gclkbuff u_gclkbuff_clock ( .A(Sys_Clk0             ) , .Z(WB_CLK       ) );
 
 gclkbuff u_gclkbuff_reset1 ( .A(Sys_Clk1_Rst) , .Z(RST_fb1) );
-gclkbuff u_gclkbuff_clock1  ( .A(Sys_Clk1   ) , .Z(CLK_4M ) );
+gclkbuff u_gclkbuff_clock1  ( .A(Sys_Clk1   ) , .Z(USERCLK ) );
 
 gclkbuff u_gclkbuff_clock2  ( .A(PCLK   ) , .Z(PCLK_gck ) );
 //assign PCLK_gck = PCLK;
@@ -257,7 +270,7 @@ AL4S3B_FPGA_IP              #(
 
 	// AHB-To_FPGA Bridge I/F
 	//
-	.CLK_4M_i				   ( CLK_4M						 ),
+	.CLK_4M_i				   ( USERCLK						 ),
 	.RST_fb_i				   ( RST_fb1					 ),
 	
     .WBs_ADR                   ( WBs_ADR                     ), // input  [16:0] | Address Bus                to   FPGA

@@ -11,6 +11,7 @@ set_io GPIO_PIN(2) 42
 // camera clock
 set_io CCLKO        33
 set_io PCLK         32
+
 set_io VSYNCI       31
 set_io HREFI        55
 // camera data

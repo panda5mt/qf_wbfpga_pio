@@ -36,7 +36,7 @@ module AL4S3B_FPGA_RAMs (
 				WBs_RAM1_CYC_i,
 				WBs_RAM2_CYC_i,
 				WBs_RAM3_CYC_i,
-				//WBs_RAM4_CYC_i,
+				WBs_STATUS_CYC_i,
 				WBs_BYTE_STB_i,
 				WBs_WE_i,
 				WBs_STB_i,
@@ -77,7 +77,7 @@ input                    WBs_RAM0_CYC_i;
 input                    WBs_RAM1_CYC_i;
 input                    WBs_RAM2_CYC_i;
 input                    WBs_RAM3_CYC_i;
-//input                    WBs_RAM4_CYC_i;
+input                    WBs_STATUS_CYC_i;
 input             [3:0]  WBs_BYTE_STB_i;  // Byte Select                to   FPGA
 input                    WBs_WE_i      ;  // Write Enable               to   FPGA
 input                    WBs_STB_i     ;  // Strobe Signal              to   FPGA
@@ -106,7 +106,7 @@ wire                     WBs_RAM0_CYC_i;
 wire                     WBs_RAM1_CYC_i;
 wire                     WBs_RAM2_CYC_i;
 wire                     WBs_RAM3_CYC_i;
-//wire                     WBs_RAM4_CYC_i;
+wire                     WBs_STATUS_CYC_i;
 wire              [3:0]  WBs_BYTE_STB_i;  // Wishbone Byte   Enables
 wire                     WBs_WE_i      ;  // Wishbone Write  Enable Strobe
 wire                     WBs_STB_i     ;  // Wishbone Transfer      Strobe
@@ -141,6 +141,8 @@ wire			FB_RAM0_Wr_Dcd    ;
 wire			FB_RAM1_Wr_Dcd    ;
 wire			FB_RAM2_Wr_Dcd    ;
 wire			FB_RAM3_Wr_Dcd    ;
+wire			FB_STATUS_Wr_Dcd  ;
+
 
 
 wire			WBs_ACK_o_nxt;
@@ -162,11 +164,11 @@ assign FB_RAM0_Wr_Dcd    = WBs_RAM0_CYC_i & WBs_STB_i & WBs_WE_i  & (~WBs_ACK_o)
 assign FB_RAM1_Wr_Dcd    = WBs_RAM1_CYC_i & WBs_STB_i & WBs_WE_i  & (~WBs_ACK_o);
 assign FB_RAM2_Wr_Dcd    = WBs_RAM2_CYC_i & WBs_STB_i & WBs_WE_i  & (~WBs_ACK_o);
 assign FB_RAM3_Wr_Dcd    = WBs_RAM3_CYC_i & WBs_STB_i & WBs_WE_i  & (~WBs_ACK_o);
-//assign FB_RAM4_Wr_Dcd    = WBs_RAM4_CYC_i & WBs_STB_i & WBs_WE_i  & (~WBs_ACK_o);
+assign FB_STATUS_Wr_Dcd  = WBs_STATUS_CYC_i & WBs_STB_i & WBs_WE_i  & (~WBs_ACK_o);
 
 // Define the Acknowledge back to the host for registers
 //
-assign WBs_ACK_o_nxt     = (WBs_RAM0_CYC_i | WBs_RAM1_CYC_i | WBs_RAM2_CYC_i | WBs_RAM3_CYC_i/* | WBs_RAM4_CYC_i*/) & WBs_STB_i & (~WBs_ACK_o);
+assign WBs_ACK_o_nxt     = (WBs_RAM0_CYC_i | WBs_RAM1_CYC_i | WBs_RAM2_CYC_i | WBs_RAM3_CYC_i | WBs_STATUS_CYC_i) & WBs_STB_i & (~WBs_ACK_o);
 
 /* CAMERA - RAM interface: begin */
 reg         cam_reg_rdy;
@@ -343,9 +345,21 @@ r512x32_512x32 RAM3_INST (
 			.RD(RAM3_Dat_out)
 			);
 
+// status register
+reg [31:0] WBs_RAM_STATUS_i;	//status written by Cortex-M4F
+wire [31:0] WBs_RAM_STATUS_i;
 
 
-assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 6'h0, cam_ram_cnt[10:9]}; //RAM_Status_out;
+always @( posedge WBs_CLK_i or posedge WBs_RST_i)begin
+	if(WBs_RST_i) begin
+		WBs_RAM_STATUS_i <= 32'h0;		
+	end
+	else if(FB_STATUS_Wr_Dcd) begin
+		WBs_RAM_STATUS_i <= WBs_DAT_i[31:0];
+	end
 
+end
+
+assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 6'h0, cam_ram_cnt[10:9]}; //status written by FPGA
 			
 endmodule
