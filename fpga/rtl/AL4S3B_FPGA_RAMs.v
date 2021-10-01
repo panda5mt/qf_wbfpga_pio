@@ -426,6 +426,7 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 		end
 
 		EXEC8 :begin
+			QUAD_Out_o[3:0]		<= 4'h00						;
 			QUAD_nCE_o 			<= 1'b1 						;	// deactivate nCE
 			qsram_addr			<= qsram_addr_next				;
 			qsram_status 		<= EXEC9						;
