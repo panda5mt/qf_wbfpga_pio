@@ -417,7 +417,8 @@ AL4S3B_FPGA_RAMs #(
     .QUAD_In_i                  (QUAD_In),
     .QUAD_oe_o                  (QUAD_oe),
     .QUAD_Out_o                 (QUAD_Out),
-    .QUAD_nCE_o                 (QUAD_nCE)
+    .QUAD_nCE_o                 (QUAD_nCE),
+    .HS_Clk_i                   (CLK_4M_i)
     );
 
 // Reserved Resources Block

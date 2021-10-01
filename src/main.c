@@ -168,9 +168,9 @@ void vTask2(void *pvParameters) {
     uint32_t nowptr = 0;    
     HAL_StatusTypeDef ret_data;
     
-    vTaskDelay(1000);
-    *(volatile uint32_t *)fb_status = 0x02; // spi ram write
-    while(1);
+    // vTaskDelay(1000);
+    // *(volatile uint32_t *)fb_status = 0x02; // spi ram write
+    // while(1);
   
     while(1) {
         if(cntr > 3) {

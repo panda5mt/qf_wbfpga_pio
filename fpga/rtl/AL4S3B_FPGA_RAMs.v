@@ -58,7 +58,8 @@ module AL4S3B_FPGA_RAMs (
 				QUAD_In_i,
 				QUAD_oe_o,
 				QUAD_Out_o, 
-				QUAD_nCE_o
+				QUAD_nCE_o,
+				HS_Clk_i
 			);
 
 
@@ -73,7 +74,8 @@ parameter                AL4S3B_DEF_REG_VALUE        = 32'hFAB_DEF_AC;
 
 //------Port Signals-------------------
 //
-
+// HighSpeed CLK(72~80MHz)
+input					HS_Clk_i;
 // AHB-To_FPGA Bridge I/F
 //
 input   [10:0]           WBs_ADR_i     ;  // Address Bus                to   FPGA
@@ -100,26 +102,28 @@ output                   WBs_ACK_o     ;  // Transfer Cycle Acknowledge from FPG
 
 // FPGA Global Signals
 //
-wire                     WBs_CLK_i     ;  // Wishbone FPGA Clock
-wire                     WBs_RST_i     ;  // Wishbone FPGA Reset
+wire                    WBs_CLK_i   ;	// Wishbone FPGA Clock
+wire                    WBs_RST_i   ;	// Wishbone FPGA Reset
+wire 					HS_Clk_i	;
 
 // Wishbone Bus Signals
 //
-wire    [10:0]  WBs_ADR_i     ;  // Wishbone Address Bus
-wire                     WBs_RAM0_CYC_i;  
-wire                     WBs_RAM1_CYC_i;
-wire                     WBs_RAM2_CYC_i;
-wire                     WBs_RAM3_CYC_i;
-wire                     WBs_STATUS_CYC_i;
-wire              [3:0]  WBs_BYTE_STB_i;  // Wishbone Byte   Enables
-wire                     WBs_WE_i      ;  // Wishbone Write  Enable Strobe
-wire                     WBs_STB_i     ;  // Wishbone Transfer      Strobe
-wire    [DATAWIDTH-1:0]  WBs_DAT_i     ;  // Wishbone Write  Data Bus
+wire    [10:0]			WBs_ADR_i     ;  // Wishbone Address Bus
+wire					WBs_RAM0_CYC_i;  
+wire					WBs_RAM1_CYC_i;
+wire					WBs_RAM2_CYC_i;
+wire					WBs_RAM3_CYC_i;
+wire					WBs_STATUS_CYC_i;
+wire	[3:0]			WBs_BYTE_STB_i;  // Wishbone Byte   Enables
+wire					WBs_WE_i      ;  // Wishbone Write  Enable Strobe
+wire					WBs_STB_i     ;  // Wishbone Transfer      Strobe
+wire	[DATAWIDTH-1:0]	WBs_DAT_i     ;  // Wishbone Write  Data Bus
  
-reg                      WBs_ACK_o     ;  // Wishbone Client Acknowledge
+reg						WBs_ACK_o     ;  // Wishbone Client Acknowledge
 
 // SPI SRAMS
 //
+
 input	[3:0]	QUAD_In_i		;
 output			QUAD_oe_o		;
 input	[3:0]	QUAD_Out_o		;
@@ -342,7 +346,7 @@ assign qsram_write_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b10);
 assign qsram_read_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b01);
 
 
-always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
+always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
 	if(WBs_RST_i)begin
 		qsram_status		<= QRSET	;
 		qsram_command		<= QPIRD	;	// Read Command

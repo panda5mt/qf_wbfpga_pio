@@ -104,6 +104,7 @@ output          QUAD_nCE        ;
 // CAMERA
 //
 output          CCLKO       ;
+wire            CCLKO       ;  
 input           PCLK        ;
 input           VSYNCI      ;
 input           HREFI       ;
@@ -276,7 +277,7 @@ AL4S3B_FPGA_IP              #(
 
 	// AHB-To_FPGA Bridge I/F
 	//
-	.CLK_4M_i				   ( USERCLK						 ),
+	.CLK_4M_i				   ( /*USERCLK*/CCLKO						 ),
 	.RST_fb_i				   ( RST_fb1					 ),
 	
     .WBs_ADR                   ( WBs_ADR                     ), // input  [16:0] | Address Bus                to   FPGA
