@@ -327,8 +327,8 @@ localparam EXEC5 	= 8'd19;	// Send data[11:8]
 localparam EXEC6 	= 8'd20;	// Send data[7:4] & get data(32bit length) from FB_RAM
 localparam EXEC7 	= 8'd21;	// Send data[3:0] & check QSPI RAM address whether end of 512byte burst length
 localparam EXEC8 	= 8'd22;	// update QSPI RAM Address(if we need one more 512byte-burst)
-localparam EXEC9 	= 8'd23;	// check FB_RAM address whether end of RAM0 or RAM1
-
+localparam EXEC9 	= 8'd23;	// dummy wait
+localparam EXEC10 	= 8'd24;	// check FB_RAM address whether end of RAM0 or RAM1
 // QSPI SRAM's parameter 
 localparam QPIWR 	= 8'b0011_1000;	// Quad Write Command (8'h38)
 localparam QPIRD	= 8'b1110_1011;	// Quad Read Command  (8'hEB)
@@ -433,8 +433,13 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 			
 		end
 
+		// dummy wait 
+		EXEC9 :begin
+			qsram_status 		<= EXEC10						;
+		end
+		
 		// now, We are on end of address of RAM0 or RAM1 ?
-		EXEC9 :begin 
+		EXEC10 :begin 
 			if (read_fbram_addr[8:0] == 9'h00)	
 			begin 
 				if((read_fbram_ch == 1'b0) && (read_fbram_addr[10:9]==2'b01))	// selected RAM0 but next address is RAM1
@@ -473,7 +478,7 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 				qsram_command	<= QPIWR	;	// QSPI SRAM Write Command
 				qsram_status 	<= QWR00	;	// back to state "QWR00" 
 			end			
-		end // EXEC9
+		end // EXEC10
 
 		default :begin
 			QUAD_nCE_o 			<= 1'b1		;	// deactivate nCE
