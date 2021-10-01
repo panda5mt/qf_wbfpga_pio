@@ -205,14 +205,14 @@ wire [31:0] 	cam_reg_out;
 wire [31:0]		cam_freerun;
 
 /* FSM */
-localparam  RAM_COUNT_FULL = 11'd1024;
-reg	 [1:0]  	 cam_status;
-wire [1:0]  	 cam_status;
+localparam  	RAM_COUNT_FULL = 11'd1024;
+reg	 [1:0]		cam_status;
+wire [1:0]		cam_status;
 
-localparam CRSET =2'd0;  // RESET
-localparam CB08F =2'd1;  // Camera buffer 8bit Full 
-localparam CB16F =2'd2;  // Camera buffer 16bit full
-localparam CB24F =2'd3;  // Camera buffer 24bit full
+localparam		CRSET = 2'd0;  // RESET
+localparam		CB08F = 2'd1;  // Camera buffer 8bit Full 
+localparam		CB16F = 2'd2;  // Camera buffer 16bit full
+localparam		CB24F = 2'd3;  // Camera buffer 24bit full
 //localparam CB32F =3'd4;
 assign cam_data_valid	= HREFI & VSYNCI ;
 always @( posedge PCLKI or posedge WBs_RST_i)
@@ -283,7 +283,6 @@ assign cam_push_sig3	= cam_reg_rdy & select_ram3;
 
 /* QSPI SRAM - RAM interface: begin */
 /* FSM */
-//localparam  RAM_COUNT_FULL = 11'd2048;
 reg		[7:0]	qsram_status	;
 wire	[7:0]	qsram_status	;
 reg		[7:0]	qsram_command	;
@@ -298,14 +297,10 @@ reg		[10:0]	read_fbram_addr	;
 
 wire 			read_fbram_ch	;
 reg				read_fbram_ch	;
-
-
 wire 			read_fbram_sig	; // read signal
 reg				read_fbram_sig	;
-
 wire 	[31:0]	read_fbram_data	;
 reg		[31:0]	read_fbram_data	;
-
 wire 			read_fbram_clk	;
 
 assign read_fbram_clk = PCLKI & read_fbram_sig ;
@@ -332,28 +327,27 @@ localparam EXEC8 	= 8'd22;	// update QSPI RAM Address(if we need one more 512byt
 localparam EXEC9 	= 8'd23;	// check FB_RAM address whether end of RAM0 or RAM1
 
 // QSPI SRAM's parameter 
-localparam QPIWR =8'b0011_1000;	// Quad Write Command (8'h38)
-localparam QPIRD =8'b1110_1011;	// Quad Read Command  (8'hEB)
-localparam STADR =24'h01;		// Quad Start Address (24bit)
+localparam QPIWR 	= 8'b0011_1000;	// Quad Write Command (8'h38)
+localparam QPIRD	= 8'b1110_1011;	// Quad Read Command  (8'hEB)
+localparam STADR	= 24'h04;		// Quad Start Address (24bit)
 
 // select state-machine parameter 
 wire qsram_write_mode;	// RAM0,1 -> QSPI SRAM
 wire qsram_sram_mode;	// QSPI SRAM -> RAM2,3
 
-assign qsram_write_mode = (WBs_RAM_STATUS_i[1:0] == 2'b10);
-assign qsram_read_mode = (WBs_RAM_STATUS_i[1:0] == 2'b01);
+assign qsram_write_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b10);
+assign qsram_read_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b01);
 
 
 always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 	if(WBs_RST_i)begin
-		qsram_status	<= QRSET;
-		qsram_command	<= QPIRD;	// Read Command
-		QUAD_oe_o		<= 1'b1;	// OE = 1 Output, OE=0 input
-		qsram_addr		<= STADR;
-		read_fbram_addr <= 11'b0;
-		qsram_addr_next <= 22'b0;
-
-	end
+		qsram_status		<= QRSET;
+		qsram_command		<= QPIRD;	// Read Command
+		QUAD_oe_o			<= 1'b1;	// OE = 1 Output, OE=0 input
+		qsram_addr			<= STADR;
+		read_fbram_addr		<= 11'b0;
+		qsram_addr_next		<= 22'b0;
+	end // reset
 	else 
 	begin
 		if (qsram_write_mode) begin
@@ -392,11 +386,11 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 		QWADR4 :begin									
 			QUAD_Out_o[3:0]		<= qsram_addr[23:20]			;
 			qsram_addr			<= {qsram_addr[19:0],4'h0}		; // 4bit shift
-			read_fbram_sig		<= 1'b1							; // hardmacro RAM read signal
+			read_fbram_sig		<= 1'b1							; // FB_RAM read signal
 			qsram_status		<= QWADR5						; 
 		end
 
-		// get data from 8kb-hardmacro
+		// get data from FB_RAM
 		QWADR5 :begin									
 			QUAD_Out_o[3:0]		<= qsram_addr[23:20]			;
 			read_fbram_sig		<= 1'b0 						;
@@ -415,7 +409,7 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 		EXEC6 :begin										
 			QUAD_Out_o[3:0]		<= read_fbram_data[31:28]		;
 			read_fbram_data		<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
-			read_fbram_sig		<= 1'b1							;	// hardmacro RAM read signal
+			read_fbram_sig		<= 1'b1							;	// FB_RAM read signal
 			qsram_status		<= EXEC7						;			
 		end
 
@@ -436,7 +430,7 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 		end
 
 		// now, We are on end of address of RAM0 or RAM1 ?
-		EXEC9: begin 
+		EXEC9 :begin 
 			if (read_fbram_addr[8:0] == 9'h00)	
 			begin 
 				if((read_fbram_ch == 1'b0) && (read_fbram_addr[10:9]==2'b01))	// selected RAM0 but next address is RAM1
@@ -477,7 +471,7 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 			end			
 		end // EXEC9
 
-		default:begin
+		default :begin
 			qsram_status	<= QRSET ; // reset
 		end
 		endcase
