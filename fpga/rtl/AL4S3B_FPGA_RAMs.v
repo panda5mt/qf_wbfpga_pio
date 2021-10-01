@@ -205,7 +205,7 @@ wire [31:0] 	cam_reg_out;
 wire [31:0]		cam_freerun;
 
 /* FSM */
-localparam  RAM_COUNT_FULL = 11'd2048;
+localparam  RAM_COUNT_FULL = 11'd1024;
 reg	 [1:0]  	 cam_status;
 wire [1:0]  	 cam_status;
 
@@ -249,7 +249,7 @@ begin
 				cam_reg_out	<= {cam_reg1[23:0],CAM_DAT[7:0]}; //cam_freerun[31:0];
 				cam_reg1	<= 32'h0;
 				cam_reg_rdy	<= 1'b1;
-				cam_ram_cnt	<= cam_ram_cnt + 11'h01;// % RAM_COUNT_FULL; // modulo-N counter
+				cam_ram_cnt	<= (cam_ram_cnt + 11'h01) % RAM_COUNT_FULL; // modulo-N counter
 				cam_freerun	<= cam_freerun + 32'h01;
 				cam_status	<= CRSET;
 			end
@@ -398,7 +398,6 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 		QWADR5 :begin									
 			QUAD_Out_o[3:0]	<= qsram_addr[23:20];
 			//qsram_addr		<= qsram_addr_next	;			// QSPI SRAM next address
-			read_fbram_addr <= (read_fbram_addr + 11'h01) % 1024  ;
 			read_fbram_sig	<= 1'b0 ;
 			read_fbram_data <= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
 			qsram_status	<= EXEC0; 
