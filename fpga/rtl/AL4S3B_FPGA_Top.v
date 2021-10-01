@@ -36,7 +36,8 @@ module AL4S3B_FPGA_top (
             VSYNCI,
             HREFI,
             CAM_DAT,
-            QUAD_SIO
+            QUAD_SIO,
+            QUAD_nCE
 
             );
 
@@ -98,6 +99,7 @@ parameter       QL_RESERVED_DEF_REG_VALUE   = 32'hDEF_FAB_AC; // Distinguish acc
 //
 inout  [7:0]    GPIO_PIN        ;
 inout  [3:0]    QUAD_SIO        ; 
+output          QUAD_nCE        ;
 
 // CAMERA
 //
@@ -123,6 +125,7 @@ wire  [7:0]     CAM_DAT     ;
 //
 wire   [7:0]    GPIO_PIN    ;
 wire   [3:0]    QUAD_SIO    ;
+wire            QUAD_nCE    ;  
 
 
 // CAMERA Clocks:begin
@@ -301,6 +304,7 @@ AL4S3B_FPGA_IP              #(
     .HREFI                      ( HREFI     ),
     .CAM_DAT                    ( CAM_DAT   ),
     .QUAD_SIO                   ( QUAD_SIO  ),
+    .QUAD_nCE                   ( QUAD_nCE  ),
     //
     // Misc
     //

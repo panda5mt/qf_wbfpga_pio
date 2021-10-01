@@ -57,6 +57,7 @@ module AL4S3B_FPGA_IP (
                 HREFI,
                 CAM_DAT,
                 QUAD_SIO,
+                QUAD_nCE,
                 //
                 // Misc
 				CLK_4M_CNTL_o,
@@ -139,17 +140,18 @@ output          WBs_ACK          ;  // Transfer Cycle Acknowledge from FPGA
 //
 inout   [7:0]   GPIO_PIN        ;
 inout   [3:0]   QUAD_SIO        ;
+output          QUAD_nCE        ;
 // CAMERA
 //
-input           PCLKI;
-input           VSYNCI;
-input           HREFI;
-input  [7:0]    CAM_DAT;
+input           PCLKI           ;
+input           VSYNCI          ;
+input           HREFI           ;
+input  [7:0]    CAM_DAT         ;
 
-wire           PCLKI;
-wire           VSYNCI;
-wire           HREFI;
-wire  [7:0]    CAM_DAT;
+wire           PCLKI            ;
+wire           VSYNCI           ;
+wire           HREFI            ;
+wire  [7:0]    CAM_DAT          ;
 
 
 // Misc
@@ -184,7 +186,8 @@ wire            WBs_ACK          ;  // Wishbone Client Acknowledge
 // GPIO
 //
 wire    [7:0]   GPIO_PIN         ;
-wire    [3:0]   QUAD_SIO;
+wire    [3:0]   QUAD_SIO         ;
+wire            QUAD_nCE         ;  
 
 
 //------Define Parameters--------------
@@ -413,7 +416,8 @@ AL4S3B_FPGA_RAMs #(
     
     .QUAD_In_i                  (QUAD_In),
     .QUAD_oe_o                  (QUAD_oe),
-    .QUAD_Out_o                 (QUAD_Out)
+    .QUAD_Out_o                 (QUAD_Out),
+    .QUAD_nCE_o                 (QUAD_nCE)
     );
 
 // Reserved Resources Block

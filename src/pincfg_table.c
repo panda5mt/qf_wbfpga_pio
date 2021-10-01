@@ -282,6 +282,16 @@ PadConfig pincfg_table[] =
     .ucMode = PAD_MODE_INPUT_EN,
     .ucPull = PAD_NOPULL,
   },
+  { // Pad 28 -- QSPI SRAM (nCE)
+    .ucPin = PAD_28,
+    .ucFunc = PAD28_FUNC_SEL_FBIO_28,
+    .ucCtrl = PAD_CTRL_SRC_FPGA,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGHT_8MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
 #if 0
    {
     // Pad6 is the user button

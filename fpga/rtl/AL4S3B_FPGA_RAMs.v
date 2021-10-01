@@ -58,6 +58,7 @@ module AL4S3B_FPGA_RAMs (
 				QUAD_In_i,
 				QUAD_oe_o,
 				QUAD_Out_o, 
+				QUAD_nCE_o
 			);
 
 
@@ -126,6 +127,8 @@ input	[3:0]	QUAD_Out_o		;
 wire	[3:0]	QUAD_In_i		;
 wire			QUAD_oe_o		;
 wire	[3:0]	QUAD_Out_o		;
+output			QUAD_nCE_o		;
+wire 			QUAD_nCE_o		;
 // CAMERA 
 //
 input           PCLKI			;
@@ -341,12 +344,13 @@ assign qsram_read_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b01);
 
 always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 	if(WBs_RST_i)begin
-		qsram_status		<= QRSET;
-		qsram_command		<= QPIRD;	// Read Command
-		QUAD_oe_o			<= 1'b1;	// OE = 1 Output, OE=0 input
-		qsram_addr			<= STADR;
-		read_fbram_addr		<= 11'b0;
-		qsram_addr_next		<= 22'b0;
+		qsram_status		<= QRSET	;
+		qsram_command		<= QPIRD	;	// Read Command
+		QUAD_oe_o			<= 1'b1		;	// OE = 1 Output, OE=0 input
+		qsram_addr			<= STADR	;
+		read_fbram_addr		<= 11'b0	;
+		qsram_addr_next		<= 22'b0	;
+		QUAD_nCE_o			<= 1'b1		;	// deactivate nCE
 	end // reset
 	else 
 	begin
@@ -354,14 +358,13 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 		casez(qsram_status)
 		QRSET :begin
 			if (select_ram0 == 1'b0) begin // camera writes ram1 memory not ram0
-				// QPI_nCE <= 1'b0;
-				// do not forget CE = 0
+				QUAD_nCE_o 		<= 1'b0			;	// do not forget CE = 0
 				qsram_command	<= QPIWR		;	// Write Command
 				qsram_status	<= QWR00		;
 				read_fbram_ch	<= 1'b0			;
 			end
 			else begin
-				//QPI_nCE <= 1'b1;
+				QUAD_nCE_o 		<= 1'b1;
 				qsram_status	<= qsram_status	; 	// stop until select_ram0 == 1'b1
 			end
 		end
@@ -419,11 +422,11 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 			read_fbram_sig		<= 1'b0 						;
 			read_fbram_data 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
 			qsram_addr_next 	<= qsram_addr_next + 22'd4 		;					// 4-byte countup
-			qsram_status		<= (qsram_addr_next[8:0]==9'h1ff)? EXEC8 : EXEC0;	// 512byte burst finished?		
+			qsram_status		<= (qsram_addr_next[8:0]==9'h1fC)? EXEC8 : EXEC0;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
 		end
 
 		EXEC8 :begin
-			// QPI_nCE <=1 // deactivate nCE
+			QUAD_nCE_o 			<= 1'b1 						;	// deactivate nCE
 			qsram_addr			<= qsram_addr_next				;
 			qsram_status 		<= EXEC9						;
 			
@@ -435,44 +438,45 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 			begin 
 				if((read_fbram_ch == 1'b0) && (read_fbram_addr[10:9]==2'b01))	// selected RAM0 but next address is RAM1
 				begin 
-					if(select_ram1 == 1'b0)				// CAMERA module writting RAM0 ?
-					begin								// Yes!
-						// QPI_nCE <= 1'b0; 
-						read_fbram_ch 	<= 1'b1;		// change to RAM1
-						qsram_command	<= QPIWR;		// QSPI SRAM Write Command
-						qsram_status 	<= QWR00;		// back to state "QWR00" 
+					if(select_ram1 == 1'b0)					// CAMERA module writting RAM0 ?
+					begin									// Yes!
+						QUAD_nCE_o 		<= 1'b0		;		// activate nCE
+						read_fbram_ch 	<= 1'b1		;		// change to RAM1
+						qsram_command	<= QPIWR	;		// QSPI SRAM Write Command
+						qsram_status 	<= QWR00	;		// back to state "QWR00" 
 					end
 					else
-					begin // RAM1 is busy!
-						qsram_status 	<= qsram_status; // stay this state
+					begin 									// RAM1 is busy!
+						qsram_status 	<= qsram_status; 	// stay this state
 					end
 				end
 				else 
 				if((read_fbram_ch == 1'b1) && (read_fbram_addr[10:9]==2'b00))	// selected RAM1 but next address is RAM0
 				begin
-					if(select_ram0 == 1'b0)				// CAMERA module writting RAM1 ?
-					begin								// Yes!
-						// QPI_nCE <= 1'b0; 
-						read_fbram_ch 	<= 1'b0;		// change to RAM0
-						qsram_command	<= QPIWR;		// QSPI SRAM Write Command
-						qsram_status 	<= QWR00;		// back to state "QWR00" 
+					if(select_ram0 == 1'b0)					// CAMERA module writting RAM1 ?
+					begin									// Yes!
+						QUAD_nCE_o 		<= 1'b0		;		// activate nCE
+						read_fbram_ch 	<= 1'b0		;		// change to RAM0
+						qsram_command	<= QPIWR	;		// QSPI SRAM Write Command
+						qsram_status 	<= QWR00	;		// back to state "QWR00" 
 					end
 					else 
-					begin	// RAM0 is busy!
-						qsram_status 	<= qsram_status; // stay this state					
+					begin									// RAM0 is busy!
+						qsram_status 	<= qsram_status;	// stay this state					
 					end
 				end
 			end
 			else
-			begin 	// now, We are NOT on end of address of RAM0 nor RAM1.
-				// QPI_nCE <= 1'b0; 
-				qsram_command	<= QPIWR;		// QSPI SRAM Write Command
-				qsram_status 	<= QWR00;		// back to state "QWR00" 
+			begin 								// now, We are NOT on end of address of RAM0 nor RAM1.
+				QUAD_nCE_o 		<= 1'b0		;	// activate nCE
+				qsram_command	<= QPIWR	;	// QSPI SRAM Write Command
+				qsram_status 	<= QWR00	;	// back to state "QWR00" 
 			end			
 		end // EXEC9
 
 		default :begin
-			qsram_status		<= QRSET ; // reset
+			QUAD_nCE_o 			<= 1'b1		;	// deactivate nCE
+			qsram_status		<= QRSET	;	// reset
 		end
 		endcase
 		end // qsram_write_mode

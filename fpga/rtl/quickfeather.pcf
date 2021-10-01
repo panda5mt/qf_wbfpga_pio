@@ -25,5 +25,6 @@ set_io CAM_DAT(1)   59
 set_io CAM_DAT(0)   2
 // SPI SRAM
 set_io QUAD_SIO(0)  25
+set_io QUAD_nCE     27
 
 // QFN pin #:27(IO28),33(IO23,clk), 32(IO24,clk), 23(IO31) ,2
