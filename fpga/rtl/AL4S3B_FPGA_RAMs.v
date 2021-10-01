@@ -472,7 +472,7 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 		end // EXEC9
 
 		default :begin
-			qsram_status	<= QRSET ; // reset
+			qsram_status		<= QRSET ; // reset
 		end
 		endcase
 		end // qsram_write_mode
