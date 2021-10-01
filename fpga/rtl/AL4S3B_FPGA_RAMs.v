@@ -318,23 +318,25 @@ localparam QWADR0	= 8'd8;		// Send Address [23:20]
 localparam QWADR1	= 8'd9;		// Send Address [19:16]
 localparam QWADR2	= 8'd10;	// Send Address [15:12]
 localparam QWADR3	= 8'd11;	// Send Address [11:8]
-localparam QWADR4	= 8'd12;	// Send Address [7:4]
+localparam QWADR4	= 8'd12;	// Send Address [7:4] & get data(32bit length) from FB_RAM
 localparam QWADR5	= 8'd13;	// Send Address [3:0]
-localparam EXEC0 	= 8'd14;
-localparam EXEC1 	= 8'd15;
-localparam EXEC2 	= 8'd16;
-localparam EXEC3 	= 8'd17;
-localparam EXEC4 	= 8'd18;
-localparam EXEC5 	= 8'd19;
-localparam EXEC6 	= 8'd20;
-localparam EXEC7 	= 8'd21;
-localparam EXEC8 	= 8'd22;
-localparam EXEC9 	= 8'd23;
+localparam EXEC0 	= 8'd14;	// Send data[31:28]
+localparam EXEC1 	= 8'd15;	// Send data[27:24]
+localparam EXEC2 	= 8'd16;	// Send data[23:20]
+localparam EXEC3 	= 8'd17;	// Send data[19:16]
+localparam EXEC4 	= 8'd18;	// Send data[15:12]
+localparam EXEC5 	= 8'd19;	// Send data[11:8]
+localparam EXEC6 	= 8'd20;	// Send data[7:4] & get data(32bit length) from FB_RAM
+localparam EXEC7 	= 8'd21;	// Send data[3:0] & check QSPI RAM address whether end of 512byte burst length
+localparam EXEC8 	= 8'd22;	// update QSPI RAM Address(if we need one more 512byte-burst)
+localparam EXEC9 	= 8'd23;	// check FB_RAM address whether end of RAM0 or RAM1
 
+// QSPI SRAM's parameter 
 localparam QPIWR =8'b0011_1000;	// Quad Write Command (8'h38)
 localparam QPIRD =8'b1110_1011;	// Quad Read Command  (8'hEB)
 localparam STADR =24'h01;		// Quad Start Address (24bit)
 
+// select state-machine parameter 
 wire qsram_write_mode;	// RAM0,1 -> QSPI SRAM
 wire qsram_sram_mode;	// QSPI SRAM -> RAM2,3
 
@@ -360,78 +362,82 @@ always @( negedge PCLKI or posedge WBs_RST_i) begin // todo: change pclki
 			if (select_ram0 == 1'b0) begin // camera writes ram1 memory not ram0
 				// QPI_nCE <= 1'b0;
 				// do not forget CE = 0
-				qsram_command	<= QPIWR;	// Write Command
-				qsram_status	<= QWR00;
-				read_fbram_ch	<= 1'b0;
-				
+				qsram_command	<= QPIWR		;	// Write Command
+				qsram_status	<= QWR00		;
+				read_fbram_ch	<= 1'b0			;
 			end
 			else begin
 				//QPI_nCE <= 1'b1;
-				qsram_status	<= qsram_status; // stop until select_ram0 == 1'b1
+				qsram_status	<= qsram_status	; 	// stop until select_ram0 == 1'b1
 			end
+		end
 
-				
+		// send qsram_command[7]~[0]
+		8'b0000_0??? :begin		
+			QUAD_Out_o[0]		<= qsram_command[7]				;
+			qsram_command		<= {qsram_command[6:0],1'b0}	;
+			qsram_status		<= qsram_status + 8'b1			;
 		end
-		8'b0000_0??? :begin		// send qsram_command[7]~[0]
-			QUAD_Out_o[0]	<= qsram_command[7];
-			qsram_command	<= {qsram_command[6:0],1'b0};
-			qsram_status	<= qsram_status + 8'b1;
-		end
+
 		// QWADR0-5 : Send 24-bit Address
 		QWADR0,
 		QWADR1,
 		QWADR2,
 		QWADR3 :begin									
-			QUAD_Out_o[3:0]	<= qsram_addr[23:20]	;
-			qsram_addr		<= {qsram_addr[19:0],4'h0}; // 4bit shift
-			qsram_status	<= qsram_status + 8'b1 ; 
+			QUAD_Out_o[3:0]		<= qsram_addr[23:20]			;
+			qsram_addr			<= {qsram_addr[19:0],4'h0}		; // 4bit shift
+			qsram_status		<= qsram_status + 8'b1			; 
 		end
 		
 		QWADR4 :begin									
-			QUAD_Out_o[3:0]	<= qsram_addr[23:20]	;
-			qsram_addr		<= {qsram_addr[19:0],4'h0}; // 4bit shift
-			//read_fbram_addr <= read_fbram_addr  ;		// deside read address of 8kb-hardmacro 
-			read_fbram_sig	<= 1'b1 ;					// hardmacro RAM read signal
-			qsram_status	<= QWADR5	; 
+			QUAD_Out_o[3:0]		<= qsram_addr[23:20]			;
+			qsram_addr			<= {qsram_addr[19:0],4'h0}		; // 4bit shift
+			read_fbram_sig		<= 1'b1							; // hardmacro RAM read signal
+			qsram_status		<= QWADR5						; 
 		end
+
 		// get data from 8kb-hardmacro
 		QWADR5 :begin									
-			QUAD_Out_o[3:0]	<= qsram_addr[23:20];
-			//qsram_addr		<= qsram_addr_next	;			// QSPI SRAM next address
-			read_fbram_sig	<= 1'b0 ;
-			read_fbram_data <= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
-			qsram_status	<= EXEC0; 
+			QUAD_Out_o[3:0]		<= qsram_addr[23:20]			;
+			read_fbram_sig		<= 1'b0 						;
+			read_fbram_data 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			qsram_status		<= EXEC0						; 
 		end
+
 		// EXEC0~7:32bit data -> QSPI SRAM
 		EXEC0,EXEC1,EXEC2,
-		EXEC3,EXEC4,EXEC5 :begin										// 4byte read
-			QUAD_Out_o[3:0]	<= read_fbram_data[31:28];
-			read_fbram_data <= {read_fbram_data[27:0],4'b0};	// 4bit shift
-			qsram_status	<= qsram_status + 8'b1;			
+		EXEC3,EXEC4,EXEC5 :begin										
+			QUAD_Out_o[3:0]		<= read_fbram_data[31:28]		;
+			read_fbram_data		<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
+			qsram_status		<= qsram_status + 8'b1			;			
 		end
 		
 		EXEC6 :begin										
-			QUAD_Out_o[3:0]	<= read_fbram_data[31:28];
-			read_fbram_data <= {read_fbram_data[27:0],4'b0};	// 4bit shift
-			read_fbram_sig	<= 1'b1 ;							// hardmacro RAM read signal
-			qsram_status	<= EXEC7;			
+			QUAD_Out_o[3:0]		<= read_fbram_data[31:28]		;
+			read_fbram_data		<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
+			read_fbram_sig		<= 1'b1							;	// hardmacro RAM read signal
+			qsram_status		<= EXEC7						;			
 		end
+
 		EXEC7 :begin										
-			QUAD_Out_o[3:0]	<= read_fbram_data[31:28];
-			read_fbram_addr <= (read_fbram_addr + 11'h01) % 1024  ;
-			read_fbram_sig	<= 1'b0 ;
-			read_fbram_data <= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
-			qsram_addr_next <= qsram_addr_next + 22'd4 ;	// 4-byte countup
-			qsram_status	<= (qsram_addr_next[8:0]==9'h1ff)? EXEC8 :EXEC0;	// 512byte burst finished?		
+			QUAD_Out_o[3:0]		<= read_fbram_data[31:28]		;
+			read_fbram_addr 	<= (read_fbram_addr + 11'h01) % 11'd1024  ;
+			read_fbram_sig		<= 1'b0 						;
+			read_fbram_data 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			qsram_addr_next 	<= qsram_addr_next + 22'd4 		;					// 4-byte countup
+			qsram_status		<= (qsram_addr_next[8:0]==9'h1ff)? EXEC8 : EXEC0;	// 512byte burst finished?		
 		end
+
 		EXEC8 :begin
 			// QPI_nCE <=1 // deactivate nCE
-			qsram_addr		<= qsram_addr_next	;
-			qsram_status 	<= EXEC9;
+			qsram_addr			<= qsram_addr_next				;
+			qsram_status 		<= EXEC9						;
 			
 		end
+
+		// now, We are on end of address of RAM0 or RAM1 ?
 		EXEC9: begin 
-			if (read_fbram_addr[8:0] == 9'h00)	// now, We are on end of address of RAM0 or RAM1 ?
+			if (read_fbram_addr[8:0] == 9'h00)	
 			begin 
 				if((read_fbram_ch == 1'b0) && (read_fbram_addr[10:9]==2'b01))	// selected RAM0 but next address is RAM1
 				begin 
