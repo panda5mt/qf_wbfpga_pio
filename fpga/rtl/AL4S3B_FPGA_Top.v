@@ -131,6 +131,8 @@ wire            QUAD_nCE    ;
 
 // CAMERA Clocks:begin
 reg [1:0]   pscale_reg      ;
+wire [1:0]  pscale_reg      ;
+
 always @(posedge USERCLK)
 if(RST_fb1)begin
     pscale_reg <= 2'b0;
