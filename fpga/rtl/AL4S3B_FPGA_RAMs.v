@@ -314,7 +314,12 @@ assign read_fbram_clk = HS_Clk_i & read_fbram_sig ;
 
 localparam QRSET 	= 8'hFF;	// RESET
 localparam QWR00 	= 8'd0;		// Write Command bit[7] send 
-// ........
+localparam QWR01 	= 8'd1;		// Write Command bit[6] send
+localparam QWR02 	= 8'd2;		// Write Command bit[5] send
+localparam QWR03 	= 8'd3;		// Write Command bit[4] send
+localparam QWR04 	= 8'd4;		// Write Command bit[3] send
+localparam QWR05 	= 8'd5;		// Write Command bit[2] send
+localparam QWR06 	= 8'd6;		// Write Command bit[1] send
 localparam QWR07	= 8'd7;		// Write Command bit[0] send
 localparam QWADR0	= 8'd8;		// Send Address [23:20]
 localparam QWADR1	= 8'd9;		// Send Address [19:16]
@@ -362,7 +367,7 @@ always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
 	else 
 	begin
 		if (qsram_write_mode) begin
-		casez(qsram_status)
+		case(qsram_status)
 		QRSET :begin
 			if (select_ram0 == 1'b0) begin // camera writes ram1 memory not ram0
 				QUAD_nCE_o 		<= CS_SEL		;	// do not forget CE = 0
@@ -377,7 +382,8 @@ always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
 		end
 
 		// send qsram_command[7]~[0]
-		8'b0000_0??? :begin		
+		QWR00,QWR01,QWR02,QWR03,
+		QWR04,QWR05,QWR06,QWR07:begin		
 			QUAD_Out_o[0]		<= qsram_command[7]				;
 			qsram_command		<= {qsram_command[6:0],1'b0}	;
 			qsram_status		<= qsram_status + 8'b1			;
@@ -402,34 +408,34 @@ always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
 
 		// get data from FB_RAM
 		QWADR5 :begin									
-			QUAD_Out_o[3:0]		<= qsram_addr[23:20]			;
-			read_fbram_sig		<= 1'b0 						;
-			read_fbram_data 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
-			qsram_status		<= EXEC0						; 
+			QUAD_Out_o[3:0]			<= qsram_addr[23:20]			;
+			read_fbram_sig			<= 1'b0 						;
+			read_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			qsram_status			<= EXEC0						; 
 		end
 
 		// EXEC0~7:32bit data -> QSPI SRAM
 		EXEC0,EXEC1,EXEC2,
 		EXEC3,EXEC4,EXEC5 :begin										
-			QUAD_Out_o[3:0]		<= read_fbram_data[31:28]		;
-			read_fbram_data		<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
-			qsram_status		<= qsram_status + 8'b1			;			
+			QUAD_Out_o[3:0]			<= read_fbram_data[31:28]		;
+			read_fbram_data[31:0]	<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
+			qsram_status			<= qsram_status + 8'b1			;			
 		end
 		
 		EXEC6 :begin										
-			QUAD_Out_o[3:0]		<= read_fbram_data[31:28]		;
-			read_fbram_data		<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
-			read_fbram_sig		<= 1'b1							;	// FB_RAM read signal
-			qsram_status		<= EXEC7						;			
+			QUAD_Out_o[3:0]			<= read_fbram_data[31:28]		;
+			read_fbram_data[31:0]	<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
+			read_fbram_sig			<= 1'b1							;	// FB_RAM read signal
+			qsram_status			<= EXEC7						;			
 		end
 
 		EXEC7 :begin										
-			QUAD_Out_o[3:0]		<= read_fbram_data[31:28]		;
-			read_fbram_addr 	<= (read_fbram_addr + 11'h01) % 11'd1024  ;
-			read_fbram_sig		<= 1'b0 						;
-			read_fbram_data 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
-			qsram_addr_next 	<= qsram_addr_next + 22'd4 		;					// 4-byte countup
-			qsram_status		<= (qsram_addr_next[8:0]==9'h1fC)? EXEC8 : EXEC0;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
+			QUAD_Out_o[3:0]			<= read_fbram_data[31:28]		;
+			read_fbram_addr 		<= (read_fbram_addr + 11'h01) % 11'd1024  ;
+			read_fbram_sig			<= 1'b0 						;
+			read_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			qsram_addr_next 		<= qsram_addr_next + 22'd4 		;					// 4-byte countup
+			qsram_status			<= (qsram_addr_next[8:0]==9'h1fC)? EXEC8 : EXEC0;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
 		end
 
 		EXEC8 :begin
@@ -449,9 +455,9 @@ always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
 		EXEC10 :begin 
 			if (read_fbram_addr[8:0] == 9'h00)	
 			begin 
-				if((read_fbram_ch == 1'b0) && (read_fbram_addr[10:9]==2'b01))	// selected RAM0 but next address is RAM1
+				if((read_fbram_ch == 1'b0)/* && (read_fbram_addr[10:9]==2'b01)*/)	// selected RAM0 but next address is RAM1
 				begin 
-					if(select_ram1 == 1'b0)					// CAMERA module writting RAM0 ?
+					if(select_ram0)							// CAMERA module writting RAM0 ?
 					begin									// Yes!
 						QUAD_nCE_o 		<= CS_SEL	;		// activate nCE
 						read_fbram_ch 	<= 1'b1		;		// change to RAM1
@@ -464,9 +470,9 @@ always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
 					end
 				end
 				else 
-				if((read_fbram_ch == 1'b1) && (read_fbram_addr[10:9]==2'b00))	// selected RAM1 but next address is RAM0
+				if((read_fbram_ch == 1'b1)/* && (read_fbram_addr[10:9]==2'b00)*/)	// selected RAM1 but next address is RAM0
 				begin
-					if(select_ram0 == 1'b0)					// CAMERA module writting RAM1 ?
+					if(select_ram1)							// CAMERA module writting RAM1 ?
 					begin									// Yes!
 						QUAD_nCE_o 		<= CS_SEL	;		// activate nCE
 						read_fbram_ch 	<= 1'b0		;		// change to RAM0
