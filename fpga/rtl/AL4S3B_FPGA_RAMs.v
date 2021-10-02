@@ -499,6 +499,23 @@ always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
 		end
 		endcase
 		end // qsram_write_mode
+		else
+		if (qsram_read_mode) begin
+			case(qsram_status)
+			QRSET :begin ///todo:
+				// if (select_ram0 == 1'b0) begin // camera writes ram1 memory not ram0
+				// 	QUAD_nCE_o 		<= CS_SEL		;	// do not forget CE = 0
+				// 	qsram_command	<= QPIWR		;	// Write Command
+				// 	qsram_status	<= QWR00		;
+				// 	read_fbram_ch	<= 1'b0			;
+				// end
+				// else begin
+				// 	QUAD_nCE_o 		<= CS_DES		;
+				// 	qsram_status	<= qsram_status	; 	// stop until select_ram0 == 1'b1
+				// end
+			end
+			endcase
+		end //qsram_read_mode
 	end
 end
 
