@@ -37,7 +37,8 @@ module AL4S3B_FPGA_top (
             HREFI,
             CAM_DAT,
             QUAD_SIO,
-            QUAD_nCE
+            QUAD_nCE,
+            QUAD_CLK
 
             );
 
@@ -100,6 +101,7 @@ parameter       QL_RESERVED_DEF_REG_VALUE   = 32'hDEF_FAB_AC; // Distinguish acc
 inout  [7:0]    GPIO_PIN        ;
 inout  [3:0]    QUAD_SIO        ; 
 output          QUAD_nCE        ;
+output          QUAD_CLK        ;
 
 // CAMERA
 //
@@ -126,12 +128,15 @@ wire  [7:0]     CAM_DAT     ;
 //
 wire   [7:0]    GPIO_PIN    ;
 wire   [3:0]    QUAD_SIO    ;
-wire            QUAD_nCE    ;  
+wire            QUAD_nCE    ;
+wire            QUAD_CLK    ;  
 
 
 // CAMERA Clocks:begin
 
-assign CCLKO = USERCLK; // 24MHz
+assign CCLKO    = USERCLK           ; // 24MHz
+assign QUAD_CLK = USERCLK_40MHZ     ;
+
 // CAMERA Clocks:end
 
 //------Define Parameters--------------

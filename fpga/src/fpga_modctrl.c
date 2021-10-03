@@ -43,13 +43,13 @@ void fpga_modctrl_init(void) {
 	// see the TRM p.340
 	S3x_Clk_Set_Rate(S3X_FB_16_CLK, F_10MHZ);	// C16:Sys_Clk0 -> WISHBONE Clock 
 	S3x_Clk_Set_Rate(S3X_FB_21_CLK, F_24MHZ);	// C21:Sys_Clk1
-	S3x_Clk_Set_Rate(S3X_FB_02_CLK, F_40MHZ); 	// C02:Sys_Pclk
+	S3x_Clk_Set_Rate(S3X_FB_02_CLK, F_10MHZ); 	// C02:Sys_Pclk(up to 40MHz)
 
 	S3x_Clk_Enable(S3X_FB_16_CLK);
 	S3x_Clk_Enable(S3X_FB_21_CLK);
 	S3x_Clk_Enable(S3X_FB_02_CLK);
 	
-	#if 1
+	#if 0
 	S3x_Register_Qos_Node(S3X_FB_16_CLK);
   	S3x_Set_Qos_Req(S3X_FB_16_CLK, MIN_HSOSC_FREQ, HSOSC_72MHZ);
 	#endif

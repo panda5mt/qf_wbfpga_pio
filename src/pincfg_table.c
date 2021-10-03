@@ -154,14 +154,14 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucPull = PAD_NOPULL,
   },
-  { // Pad 31 -- GPIO (PCLKx2)
+  { // Pad 31 -- GPIO (QUAD_CLK)
     .ucPin = PAD_31,
     .ucFunc = PAD31_FUNC_SEL_FBIO_31,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_OUTPUT_EN,
     .ucPull = PAD_NOPULL,
     .ucDrv = PAD_DRV_STRENGHT_4MA,
-    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
     .ucSmtTrg = PAD_SMT_TRIG_DIS,
   },
    { // Pad 13 -- GPIO(HREFI)
@@ -280,6 +280,8 @@ PadConfig pincfg_table[] =
     .ucFunc = PAD30_FUNC_SEL_FBIO_30,
     .ucCtrl = PAD_CTRL_SRC_FPGA,
     .ucMode = PAD_MODE_INPUT_EN,
+    .ucSpeed = PAD_SLEW_RATE_FAST,
+    .ucSmtTrg = PAD_SMT_TRIG_EN,
     .ucPull = PAD_NOPULL,
   },
   { // Pad 28 -- QSPI SRAM (nCE)
