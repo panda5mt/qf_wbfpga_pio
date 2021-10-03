@@ -82,6 +82,7 @@ static void nvic_init(void);
 void vTask1(void *pvParameters);
 void vTask2(void *pvParameters);
 
+
 int main(void)
 {
     uint32_t flg;
@@ -97,8 +98,11 @@ int main(void)
     qf_hardwareSetup();
     nvic_init();
 
+    // see the TRM p.340
     S3x_Clk_Disable(S3X_FB_21_CLK);
     S3x_Clk_Disable(S3X_FB_16_CLK);
+    S3x_Clk_Disable(S3X_FB_02_CLK);
+
     S3x_Clk_Enable(S3X_A1_CLK);
     S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
     
@@ -168,9 +172,15 @@ void vTask2(void *pvParameters) {
     uint32_t nowptr = 0;    
     HAL_StatusTypeDef ret_data;
     
-    vTaskDelay(1000);
-    *(volatile uint32_t *)fb_status = 0x02; // spi ram write
-    while(1);
+    // while(1) {
+    //     vTaskDelay(1000);
+    //     *(volatile uint32_t *)fb_status = 0x02; // spi ram write
+
+    //     vTaskDelay(5000);
+    //     *(volatile uint32_t *)fb_status = 0x05; // spi ram read
+    //     vTaskDelay(4000);
+    // }
+    // while(1);
   
     while(1) {
         if(cntr > 3) {

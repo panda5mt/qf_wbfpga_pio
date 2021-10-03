@@ -130,18 +130,8 @@ wire            QUAD_nCE    ;
 
 
 // CAMERA Clocks:begin
-reg [1:0]   pscale_reg      ;
-wire [1:0]  pscale_reg      ;
 
-always @(posedge USERCLK)
-if(RST_fb1)begin
-    pscale_reg <= 2'b0;
-end 
-else 
-begin
-    pscale_reg <= (pscale_reg + 2'b1) % 3; //Modulo-N
-end   
-assign CCLKO = pscale_reg[1];
+assign CCLKO = USERCLK; // 24MHz
 // CAMERA Clocks:end
 
 //------Define Parameters--------------
@@ -164,6 +154,8 @@ wire            Sys_Clk0_Rst   ; // Selected FPGA Reset
 wire            Sys_Clk1       ; // Selected FPGA Clock
 wire            Sys_Clk1_Rst   ; // Selected FPGA Reset
 
+wire            Sys_Pclk       ; // Selected FPGA Clock
+wire            Sys_Pclk_Rst   ; // Selected FPGA Reset
 
 // Wishbone Bus Signals
 //
@@ -206,6 +198,7 @@ wire    [1:0]   SDMA_Active_Extra;
 //reg		[1:0]   clk_div;
 
 wire			USERCLK;
+wire			USERCLK_40MHZ;
 wire			RST_fb1;
 
 
@@ -221,6 +214,9 @@ gclkbuff u_gclkbuff_clock ( .A(Sys_Clk0             ) , .Z(WB_CLK       ) );
 
 gclkbuff u_gclkbuff_reset1 ( .A(Sys_Clk1_Rst) , .Z(RST_fb1) );
 gclkbuff u_gclkbuff_clock1  ( .A(Sys_Clk1   ) , .Z(USERCLK ) );
+
+//gclkbuff u_gclkbuff_reset3 ( .A(Sys_Pclk_Rst) , .Z( ) );
+gclkbuff u_gclkbuff_clock3  ( .A(Sys_Pclk   ) , .Z(USERCLK_40MHZ ) );
 
 gclkbuff u_gclkbuff_clock2  ( .A(PCLK   ) , .Z(PCLK_gck ) );
 //assign PCLK_gck = PCLK;
@@ -279,7 +275,7 @@ AL4S3B_FPGA_IP              #(
 
 	// AHB-To_FPGA Bridge I/F
 	//
-	.CLK_4M_i				   ( /*USERCLK*/CCLKO						 ),
+	.CLK_4M_i				   ( USERCLK_40MHZ						 ),
 	.RST_fb_i				   ( RST_fb1					 ),
 	
     .WBs_ADR                   ( WBs_ADR                     ), // input  [16:0] | Address Bus                to   FPGA
@@ -395,8 +391,8 @@ qlal4s3b_cell_macro              u_qlal4s3b_cell_macro
     //
     // SPI Master APB Bus
     //
-    .Sys_Pclk                  (                             ), // output
-    .Sys_Pclk_Rst              (                             ), // output      <-- Fixed to add "_Rst"
+    .Sys_Pclk                  ( Sys_Pclk                   ), // output
+    .Sys_Pclk_Rst              ( Sys_Pclk_Rst               ), // output      <-- Fixed to add "_Rst"
     .Sys_PSel                  (  1'b0                       ), // input
     .SPIm_Paddr                ( 16'h0                       ), // input  [15:0]
     .SPIm_PEnable              (  1'b0                       ), // input
