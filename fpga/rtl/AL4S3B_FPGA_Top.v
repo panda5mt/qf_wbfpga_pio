@@ -214,14 +214,14 @@ wire			RST_fb1;
 //
 // Note: Reset the FPGA IP on either the AHB or clock domain reset signals.
 //
-gclkbuff u_gclkbuff_reset ( .A(Sys_Clk0_Rst | WB_RST) , .Z(WB_RST_FPGA) );
-gclkbuff u_gclkbuff_clock ( .A(Sys_Clk0             ) , .Z(WB_CLK       ) );
+gclkbuff u_gclkbuff_reset ( .A(Sys_Clk1_Rst) , .Z(                 ) );
+gclkbuff u_gclkbuff_clock ( .A(Sys_Clk1             ) , .Z( USERCLK_40MHZ   ) );
 
-gclkbuff u_gclkbuff_reset1 ( .A(Sys_Clk1_Rst) , .Z(RST_fb1) );
-gclkbuff u_gclkbuff_clock1  ( .A(Sys_Clk1   ) , .Z(USERCLK ) );
+gclkbuff u_gclkbuff_reset1 ( .A(Sys_Clk0_Rst) , .Z(RST_fb1) );
+gclkbuff u_gclkbuff_clock1 ( .A(Sys_Clk0   ) , .Z(USERCLK ) );
 
-//gclkbuff u_gclkbuff_reset3 ( .A(Sys_Pclk_Rst) , .Z( ) );
-gclkbuff u_gclkbuff_clock3  ( .A(Sys_Pclk   ) , .Z(USERCLK_40MHZ ) );
+gclkbuff u_gclkbuff_reset3 ( .A(Sys_Pclk_Rst | WB_RST   ) , .Z( WB_RST_FPGA ) );
+gclkbuff u_gclkbuff_clock3 ( .A(Sys_Pclk                ) , .Z( WB_CLK      ) );
 
 gclkbuff u_gclkbuff_clock2  ( .A(PCLK   ) , .Z(PCLK_gck ) );
 //assign PCLK_gck = PCLK;
@@ -280,7 +280,7 @@ AL4S3B_FPGA_IP              #(
 
 	// AHB-To_FPGA Bridge I/F
 	//
-	.CLK_4M_i				   ( USERCLK_40MHZ						 ),
+	.CLK_4M_i				   ( USERCLK_40MHZ              ),
 	.RST_fb_i				   ( RST_fb1					 ),
 	
     .WBs_ADR                   ( WBs_ADR                     ), // input  [16:0] | Address Bus                to   FPGA
