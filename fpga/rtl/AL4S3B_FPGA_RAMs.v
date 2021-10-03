@@ -589,7 +589,11 @@ always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
 		end
 		endcase
 	end //qsram_read_mode
-
+	else begin
+		QUAD_oe_o			<=	1'b1	;	// output mode
+		QUAD_nCE_o 			<= nCE_DES	;	// deactivate nCE
+		qsram_status		<= QRSET	;	// reset
+	end
 end
 
 
