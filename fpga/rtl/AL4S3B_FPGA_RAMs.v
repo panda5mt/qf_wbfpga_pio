@@ -306,8 +306,10 @@ wire 			txrx_fbram_ch	;
 reg				txrx_fbram_ch	;
 wire 			read_fbram_sig	; // read signal
 reg				read_fbram_sig	;
-wire 	[31:0]	read_fbram_data	;
-reg		[31:0]	read_fbram_data	;
+wire 			write_fbram_sig	; // write signal
+reg				write_fbram_sig	;
+wire 	[31:0]	txrx_fbram_data	;
+reg		[31:0]	txrx_fbram_data	;
 wire 			read_fbram_clk	;
 
 assign read_fbram_clk = QUAD_CLK_i & read_fbram_sig ;
@@ -393,6 +395,8 @@ assign qspi_tx_fbram	= (WBs_RAM_STATUS_i[2] == 1'b1);
 always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 	if(WBs_RST_i)begin
 		qspi_status			<= QRSET	;
+		write_fbram_sig		<= 1'b0		;
+		read_fbram_sig		<= 1'b0		;
 		qspi_command		<= QPIRD	;	// Read Command
 		QUAD_oe_o			<= 1'b1		;	// OE = 1 Output, OE=0 input
 		qspi_addr			<= STADR	;
@@ -405,6 +409,8 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		case(qspi_status)
 		QRSET :begin
 			if (select_ram0 == 1'b0) begin // camera writes ram1 memory not ram0
+				write_fbram_sig		<= 1'b0		;
+				read_fbram_sig		<= 1'b0		;
 				QUAD_nCE_o 		<= nCE_SEL		;	// select nCE
 				qspi_command	<= QPIWR		;	// Write Command
 				qspi_status		<= QWR00		;
@@ -443,30 +449,30 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		QWADR5 :begin									
 			QUAD_Out_o[3:0]			<= qspi_addr[23:20]			;
 			read_fbram_sig			<= 1'b0 						;
-			read_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			txrx_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
 			qspi_status				<= EXEC0						; 
 		end
 
 		// EXEC0~7:32bit data -> QSPI SRAM
 		EXEC0,EXEC1,EXEC2,
 		EXEC3,EXEC4,EXEC5 :begin										
-			QUAD_Out_o[3:0]			<= read_fbram_data[31:28]		;
-			read_fbram_data[31:0]	<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
+			QUAD_Out_o[3:0]			<= txrx_fbram_data[31:28]		;
+			txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
 			qspi_status				<= qspi_status + 8'b1			;			
 		end
 		
 		EXEC6 :begin										
-			QUAD_Out_o[3:0]			<= read_fbram_data[31:28]		;
-			read_fbram_data[31:0]	<= {read_fbram_data[27:0],4'b0}	;	// 4bit shift
+			QUAD_Out_o[3:0]			<= txrx_fbram_data[31:28]		;
+			txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
 			read_fbram_sig			<= 1'b1							;	// FB_RAM read signal
 			qspi_status				<= EXEC7						;			
 		end
 
 		EXEC7 :begin										
-			QUAD_Out_o[3:0]			<= read_fbram_data[31:28]		;
+			QUAD_Out_o[3:0]			<= txrx_fbram_data[31:28]		;
 			read_fbram_addr 		<= (read_fbram_addr + 11'h01) % 11'd1024  ;
 			read_fbram_sig			<= 1'b0 						;
-			read_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			txrx_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
 			qspi_addr_next 			<= qspi_addr_next + 22'd4 		;					// 4-byte countup
 			qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC8 : EXEC0;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
 		end
@@ -539,6 +545,8 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		QRSET :begin 
 
 			if (qspi_tx_fbram == 1'b1) begin // GO-FLAG says GO.
+				write_fbram_sig	<= 1'b0			;
+				read_fbram_sig	<= 1'b0			;
 				QUAD_nCE_o 		<= nCE_SEL		;	// select nCE
 				qspi_command	<= QPIRD		;	// read Command
 				qspi_status		<= QRD00		;
@@ -571,15 +579,35 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 			QUAD_oe_o			<=	1'b0						; // QSPI input mode
 			qspi_status			<= qspi_status + 8'b1			; 
 		end
-		// read 
-		EXEC20 :begin
-			qspi_status			<= qspi_status;		// TODO: fixme STAY
+
+		// read from QSPI SRAM (total 32bit)
+		EXEC20,EXEC21,EXEC22,
+		EXEC23,EXEC24,EXEC25 :begin
+			write_fbram_sig			<= 1'b0 						;
+			txrx_fbram_data[3:0] 	<= QUAD_Out_o[3:0]				;
+			txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
+			qspi_status				<= qspi_status					;	// TODO: fixme STAY
+		end
+
+		EXEC26 :begin										
+			txrx_fbram_data[3:0] 	<= QUAD_Out_o[3:0]				;
+			txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
+			qspi_status				<= EXEC27						;			
+		end
+
+		EXEC27 :begin										
+			txrx_fbram_data			<= {txrx_fbram_data[31:4],QUAD_Out_o[3:0]}	;
+			read_fbram_addr 		<= (read_fbram_addr + 11'h01) % 11'd1024  ;
+			write_fbram_sig			<= 1'b1 						;
+			//txrx_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			qspi_addr_next 			<= qspi_addr_next + 22'd4 		;					// 4-byte countup
+			qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC28 : EXEC20;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
 		end
 
 		default :begin
-			QUAD_oe_o			<=	1'b1	;	// output mode
-			QUAD_nCE_o 			<= nCE_DES	;	// deactivate nCE
-			qspi_status			<= QRSET	;	// reset
+			QUAD_oe_o			<=	1'b1			;	// output mode
+			QUAD_nCE_o 			<= nCE_DES			;	// deactivate nCE
+			qspi_status			<= QRSET			;	// reset
 		end
 		endcase
 	end //qspi_read_mode
