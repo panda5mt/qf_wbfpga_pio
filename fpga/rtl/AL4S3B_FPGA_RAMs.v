@@ -377,8 +377,8 @@ localparam EXEC30 	= 8'd62;	// check FB_RAM address whether end of RAM0 or RAM1
 localparam QPIWR 	= 8'b0011_1000;	// Quad Write Command (8'h38)
 localparam QPIRD	= 8'b1110_1011;	// Quad Read Command  (8'hEB)
 localparam STADR	= 24'h00;		// Quad Start Address (24bit)
-localparam nCE_SEL	=1'b0;			// SELECT
-localparam nCE_DES	=1'b1;			// DESELECT
+localparam nCE_SEL	= 1'b0;			// SELECT
+localparam nCE_DES	= 1'b1;			// DESELECT
 
 
 // select state-machine parameter 
@@ -396,7 +396,7 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		qspi_command		<= QPIRD	;	// Read Command
 		QUAD_oe_o			<= 1'b1		;	// OE = 1 Output, OE=0 input
 		qspi_addr			<= STADR	;
-		read_fbram_addr		<= 11'b0	;	// for page boundary reason, STADR / 4
+		read_fbram_addr		<= 11'b0	;	// for reason of QSPI's page boundary (512byte), STADR / 4
 		qspi_addr_next		<= 22'b0	;
 		QUAD_nCE_o			<= nCE_DES	;	// deactivate nCE
 	end // reset
