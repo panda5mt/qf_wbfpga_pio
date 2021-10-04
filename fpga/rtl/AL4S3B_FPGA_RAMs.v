@@ -59,7 +59,7 @@ module AL4S3B_FPGA_RAMs (
 				QUAD_oe_o,
 				QUAD_Out_o, 
 				QUAD_nCE_o,
-				HS_Clk_i
+				QUAD_CLK_i
 			);
 
 
@@ -74,8 +74,8 @@ parameter                AL4S3B_DEF_REG_VALUE        = 32'hFAB_DEF_AC;
 
 //------Port Signals-------------------
 //
-// HighSpeed CLK(72~80MHz)
-input					HS_Clk_i;
+// HighSpeed CLK(36~72MHz)
+input					QUAD_CLK_i		;
 // AHB-To_FPGA Bridge I/F
 //
 input   [10:0]           WBs_ADR_i     ;  // Address Bus                to   FPGA
@@ -104,7 +104,7 @@ output                   WBs_ACK_o     ;  // Transfer Cycle Acknowledge from FPG
 //
 wire                    WBs_CLK_i   ;	// Wishbone FPGA Clock
 wire                    WBs_RST_i   ;	// Wishbone FPGA Reset
-wire 					HS_Clk_i	;
+wire 					QUAD_CLK_i	;
 
 // Wishbone Bus Signals
 //
@@ -310,7 +310,7 @@ wire 	[31:0]	read_fbram_data	;
 reg		[31:0]	read_fbram_data	;
 wire 			read_fbram_clk	;
 
-assign read_fbram_clk = HS_Clk_i & read_fbram_sig ;
+assign read_fbram_clk = QUAD_CLK_i & read_fbram_sig ;
 
 localparam QRSET 	= 8'hFF;	// RESET
 localparam QWR00 	= 8'd0;		// Write Command bit[7] send 
@@ -390,7 +390,7 @@ assign qspi_write_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b10);
 assign qspi_read_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b01);
 assign qspi_tx_fbram	= (WBs_RAM_STATUS_i[2] == 1'b1);
 
-always @( negedge /*PCLKI*/ HS_Clk_i or posedge WBs_RST_i) begin
+always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 	if(WBs_RST_i)begin
 		qspi_status			<= QRSET	;
 		qspi_command		<= QPIRD	;	// Read Command

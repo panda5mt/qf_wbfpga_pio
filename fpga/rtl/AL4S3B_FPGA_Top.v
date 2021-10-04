@@ -135,7 +135,7 @@ wire            QUAD_CLK    ;
 // CAMERA Clocks:begin
 
 assign CCLKO    = USERCLK           ; // 24MHz
-assign QUAD_CLK = USERCLK_40MHZ     ;
+assign QUAD_CLK = QUAD_CLK_i     ;
 
 // CAMERA Clocks:end
 
@@ -203,7 +203,7 @@ wire    [1:0]   SDMA_Active_Extra;
 //reg		[1:0]   clk_div;
 
 wire			USERCLK;
-wire			USERCLK_40MHZ;
+wire			QUAD_CLK_i;
 wire			RST_fb1;
 
 
@@ -215,7 +215,7 @@ wire			RST_fb1;
 // Note: Reset the FPGA IP on either the AHB or clock domain reset signals.
 //
 gclkbuff u_gclkbuff_reset ( .A(Sys_Clk1_Rst) , .Z(                 ) );
-gclkbuff u_gclkbuff_clock ( .A(Sys_Clk1             ) , .Z( USERCLK_40MHZ   ) );
+gclkbuff u_gclkbuff_clock ( .A(Sys_Clk1             ) , .Z( QUAD_CLK_i   ) );
 
 gclkbuff u_gclkbuff_reset1 ( .A(Sys_Clk0_Rst) , .Z(RST_fb1) );
 gclkbuff u_gclkbuff_clock1 ( .A(Sys_Clk0   ) , .Z(USERCLK ) );
@@ -280,8 +280,8 @@ AL4S3B_FPGA_IP              #(
 
 	// AHB-To_FPGA Bridge I/F
 	//
-	.CLK_4M_i				   ( USERCLK_40MHZ              ),
-	.RST_fb_i				   ( RST_fb1					 ),
+	.CLK_4M_i				   ( USERCLK                    ),
+	.RST_fb_i				   ( RST_fb1                    ),
 	
     .WBs_ADR                   ( WBs_ADR                     ), // input  [16:0] | Address Bus                to   FPGA
     .WBs_CYC                   ( WBs_CYC                     ), // input         | Cycle Chip Select          to   FPGA
@@ -309,6 +309,7 @@ AL4S3B_FPGA_IP              #(
     .CAM_DAT                    ( CAM_DAT   ),
     .QUAD_SIO                   ( QUAD_SIO  ),
     .QUAD_nCE                   ( QUAD_nCE  ),
+    .QUAD_CLK_i                 ( QUAD_CLK_i),
     //
     // Misc
     //

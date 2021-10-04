@@ -58,6 +58,7 @@ module AL4S3B_FPGA_IP (
                 CAM_DAT,
                 QUAD_SIO,
                 QUAD_nCE,
+                QUAD_CLK_i,
                 //
                 // Misc
 				CLK_4M_CNTL_o,
@@ -141,6 +142,7 @@ output          WBs_ACK          ;  // Transfer Cycle Acknowledge from FPGA
 inout   [7:0]   GPIO_PIN        ;
 inout   [3:0]   QUAD_SIO        ;
 output          QUAD_nCE        ;
+input           QUAD_CLK_i      ;
 // CAMERA
 //
 input           PCLKI           ;
@@ -187,7 +189,8 @@ wire            WBs_ACK          ;  // Wishbone Client Acknowledge
 //
 wire    [7:0]   GPIO_PIN         ;
 wire    [3:0]   QUAD_SIO         ;
-wire            QUAD_nCE         ;  
+wire            QUAD_nCE         ; 
+wire            QUAD_CLK_i       ; 
 
 
 //------Define Parameters--------------
@@ -418,7 +421,7 @@ AL4S3B_FPGA_RAMs #(
     .QUAD_oe_o                  (QUAD_oe),
     .QUAD_Out_o                 (QUAD_Out),
     .QUAD_nCE_o                 (QUAD_nCE),
-    .HS_Clk_i                   (CLK_4M_i)
+    .QUAD_CLK_i                 (QUAD_CLK_i)
     );
 
 // Reserved Resources Block
