@@ -277,14 +277,12 @@ begin
 end
 assign select_ram0		= (cam_ram_cnt[10:9] == 2'b00); // 0 =< cam_ram_cnt < 512
 assign select_ram1		= (cam_ram_cnt[10:9] == 2'b01); // 512 =< cam_ram_cnt < 1024 
-assign select_ram2		= (cam_ram_cnt[10:9] == 2'b10); // 1024 =< cam_ram_cnt < 1536 
-assign select_ram3		= (cam_ram_cnt[10:9] == 2'b11); // 1536 =< cam_ram_cnt < 2048
+
 assign cam_push_clk		= cam_reg_rdy & ~(PCLKI) ;
 
 assign cam_push_sig0	= cam_reg_rdy & select_ram0;
 assign cam_push_sig1	= cam_reg_rdy & select_ram1;
-assign cam_push_sig2	= cam_reg_rdy & select_ram2;
-assign cam_push_sig3	= cam_reg_rdy & select_ram3;
+
 /* CAMERA - RAM interface: end */
 
 
@@ -299,8 +297,8 @@ wire	[23:0]	qspi_addr		;
 reg		[23:0]	qspi_addr_next	;
 wire	[23:0]	qspi_addr_next	;
 
-wire 	[10:0]	read_fbram_addr	;
-reg		[10:0]	read_fbram_addr	;
+wire 	[10:0]	txrx_fbram_addr	;
+reg		[10:0]	txrx_fbram_addr	;
 
 wire 			txrx_fbram_ch	;
 reg				txrx_fbram_ch	;
@@ -311,8 +309,11 @@ reg				write_fbram_sig	;
 wire 	[31:0]	txrx_fbram_data	;
 reg		[31:0]	txrx_fbram_data	;
 wire 			read_fbram_clk	;
+wire 			write_fbram_clk	;
 
-assign read_fbram_clk = QUAD_CLK_i & read_fbram_sig ;
+
+assign read_fbram_clk 	= QUAD_CLK_i & read_fbram_sig 	;
+assign write_fbram_clk	= QUAD_CLK_i & write_fbram_sig	;
 
 localparam QRSET 	= 8'hFF;	// RESET
 localparam QWR00 	= 8'd0;		// Write Command bit[7] send 
@@ -386,11 +387,11 @@ localparam nCE_DES	= 1'b1;			// DESELECT
 // select state-machine parameter 
 wire qspi_write_mode;		// RAM0,1 -> QSPI SRAM
 wire qspi_read_mode;		// QSPI SRAM -> RAM2,3
-wire qspi_tx_fbram;			// Send 4kB GO-FLAG.
+wire qspi_tx_go_flag;		// Send 4kB GO-FLAG.
 
 assign qspi_write_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b10);
 assign qspi_read_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b01);
-assign qspi_tx_fbram	= (WBs_RAM_STATUS_i[2] == 1'b1);
+assign qspi_tx_go_flag	= (WBs_RAM_STATUS_i[2] == 1'b1);
 
 always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 	if(WBs_RST_i)begin
@@ -400,7 +401,7 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		qspi_command		<= QPIRD	;	// Read Command
 		QUAD_oe_o			<= 1'b1		;	// OE = 1 Output, OE=0 input
 		qspi_addr			<= STADR	;
-		read_fbram_addr		<= 11'b0	;	// for reason of QSPI's page boundary (512byte), STADR / 4
+		txrx_fbram_addr		<= 11'b0	;	// for reason of QSPI's page boundary (512byte), STADR / 4
 		qspi_addr_next		<= 22'b0	;
 		QUAD_nCE_o			<= nCE_DES	;	// deactivate nCE
 	end // reset
@@ -411,7 +412,7 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 			if (select_ram0 == 1'b0) begin // camera writes ram1 memory not ram0
 				write_fbram_sig	<= 1'b0			;
 				read_fbram_sig	<= 1'b0			;
-				QUAD_nCE_o 		<= nCE_SEL		;	// select nCE
+				//QUAD_nCE_o 		<= nCE_SEL		;	// select nCE
 				qspi_command	<= QPIWR		;	// Write Command
 				qspi_status		<= QWR00		;
 				txrx_fbram_ch	<= 1'b0			;
@@ -427,6 +428,7 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		// send qspi_command[7]~[0]
 		QWR00,QWR01,QWR02,QWR03,
 		QWR04,QWR05,QWR06,QWR07:begin		
+			QUAD_nCE_o 			<= nCE_SEL						;	// select nCE
 			QUAD_Out_o[0]		<= qspi_command[7]				;
 			qspi_command		<= {qspi_command[6:0],1'b0}		;
 			qspi_status			<= qspi_status + 8'b1			;
@@ -451,7 +453,7 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		QWADR5 :begin									
 			QUAD_Out_o[3:0]			<= qspi_addr[23:20]			;
 			read_fbram_sig			<= 1'b0 						;
-			txrx_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			txrx_fbram_data[31:0] 	<= (txrx_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
 			qspi_status				<= EXEC0						; 
 		end
 
@@ -472,9 +474,9 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 
 		EXEC7 :begin										
 			QUAD_Out_o[3:0]			<= txrx_fbram_data[31:28]		;
-			read_fbram_addr 		<= (read_fbram_addr + 11'h01) % 11'd1024  ;
+			txrx_fbram_addr 		<= (txrx_fbram_addr + 11'h01) % 11'd1024  ;
 			read_fbram_sig			<= 1'b0 						;
-			txrx_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			txrx_fbram_data[31:0] 	<= (txrx_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
 			qspi_addr_next 			<= qspi_addr_next + 22'd4 		;					// 4-byte countup
 			qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC8 : EXEC0;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
 		end
@@ -494,13 +496,13 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		
 		// now, We are on end of address of RAM0 or RAM1 ?
 		EXEC10 :begin 
-			if (read_fbram_addr[8:0] == 9'h00)	
+			if (txrx_fbram_addr[8:0] == 9'h00)	
 			begin 
-				if((txrx_fbram_ch == 1'b0)/* && (read_fbram_addr[10:9]==2'b01)*/)	// selected RAM0 but next address is RAM1
+				if((txrx_fbram_ch == 1'b0)/* && (txrx_fbram_addr[10:9]==2'b01)*/)	// selected RAM0 but next address is RAM1
 				begin 
 					if(select_ram0)							// CAMERA module writting RAM0 ?
 					begin									// Yes!
-						QUAD_nCE_o 		<= nCE_SEL	;		// activate nCE
+						//QUAD_nCE_o 		<= nCE_SEL	;		// activate nCE
 						txrx_fbram_ch 	<= 1'b1		;		// change to RAM1
 						qspi_command	<= QPIWR	;		// QSPI SRAM Write Command
 						qspi_status 	<= QWR00	;		// back to state "QWR00" 
@@ -511,11 +513,11 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 					end
 				end
 				else 
-				if((txrx_fbram_ch == 1'b1)/* && (read_fbram_addr[10:9]==2'b00)*/)	// selected RAM1 but next address is RAM0
+				if((txrx_fbram_ch == 1'b1)/* && (txrx_fbram_addr[10:9]==2'b00)*/)	// selected RAM1 but next address is RAM0
 				begin
 					if(select_ram1)							// CAMERA module writting RAM1 ?
 					begin									// Yes!
-						QUAD_nCE_o 		<= nCE_SEL	;		// activate nCE
+						//QUAD_nCE_o 		<= nCE_SEL	;		// activate nCE
 						txrx_fbram_ch 	<= 1'b0		;		// change to RAM0
 						qspi_command	<= QPIWR	;		// QSPI SRAM Write Command
 						qspi_status 	<= QWR00	;		// back to state "QWR00" 
@@ -528,7 +530,7 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 			end
 			else
 			begin 								// now, We are NOT on end of address of RAM0 nor RAM1.
-				QUAD_nCE_o 		<= nCE_SEL	;	// activate nCE
+				//QUAD_nCE_o 		<= nCE_SEL	;	// activate nCE
 				qspi_command	<= QPIWR	;	// QSPI SRAM Write Command
 				qspi_status 	<= QWR00	;	// back to state "QWR00" 
 			end			
@@ -546,28 +548,36 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		case(qspi_status)
 		QRSET :begin 
 
-			if (qspi_tx_fbram == 1'b1) begin // GO-FLAG says GO.
+			//if (qspi_tx_go_flag == 1'b1) begin // GO-FLAG says GO.
 				write_fbram_sig	<= 1'b0			;
 				read_fbram_sig	<= 1'b0			;
-				QUAD_nCE_o 		<= nCE_SEL		;	// select nCE
+				QUAD_oe_o		<= 1'b1			;	// QSPI output mode
+				QUAD_nCE_o 		<= nCE_DES		;	// deselect nCE
 				qspi_command	<= QPIRD		;	// read Command
 				txrx_fbram_ch	<= 1'b0			;	// 0:RAM2, 1: RAM3
 				qspi_status		<= QRD00		;	// next status
-			end
+			// end
 
-			else begin							// GO-FLAG says STAY.
-				write_fbram_sig	<= 1'b0			;
-				read_fbram_sig	<= 1'b0			;
-				QUAD_nCE_o 		<= nCE_DES		;
-				qspi_status		<= qspi_status	; 	// stop until qspi_tx_fbram == 1'b1
-			end
+			// else begin							// GO-FLAG says STAY.
+			// 	write_fbram_sig	<= 1'b0			;
+			// 	read_fbram_sig	<= 1'b0			;
+			// 	QUAD_nCE_o 		<= nCE_DES		;
+			// 	qspi_status		<= qspi_status	; 	// stop until qspi_tx_go_flag == 1'b1
+			// end
 		end
 		// send qspi_command[7]~[0]
 		QRD00,QRD01,QRD02,QRD03,
-		QRD04,QRD05,QRD06,QRD07:begin		
-			QUAD_Out_o[0]		<= qspi_command[7]				;
-			qspi_command		<= {qspi_command[6:0],1'b0}		;
-			qspi_status			<= qspi_status + 8'b1			;
+		QRD04,QRD05,QRD06,QRD07:begin	
+			if (qspi_tx_go_flag == 1'b1) begin // GO-FLAG says GO.	
+				QUAD_Out_o[0]		<= qspi_command[7]				;
+				QUAD_nCE_o 			<= nCE_SEL						;
+				qspi_command		<= {qspi_command[6:0],1'b0}		;
+				qspi_status			<= qspi_status + 8'b1			;
+			end
+			else 
+			begin
+				qspi_status			<= qspi_status;
+			end
 		end
 
 		// QRADR0-5 : Send 24-bit Address
@@ -595,12 +605,52 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 
 		EXEC27 :begin										
 			txrx_fbram_data			<= {txrx_fbram_data[31:4],QUAD_Out_o[3:0]}	;
-			read_fbram_addr 		<= (read_fbram_addr + 11'h01) % 11'd1024  ;
+			txrx_fbram_addr 		<= (txrx_fbram_addr + 11'h01) % 11'd1024  ;
 			write_fbram_sig			<= 1'b1 						;
-			//txrx_fbram_data[31:0] 	<= (read_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
+			//txrx_fbram_data[31:0] 	<= (txrx_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
 			qspi_addr_next 			<= qspi_addr_next + 22'd4 		;					// 4-byte countup
 			qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC28 : EXEC20;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
 		end
+
+		EXEC28: begin
+			QUAD_Out_o[3:0]			<= 4'h00			;
+			write_fbram_sig			<= 1'b0 			;
+			QUAD_nCE_o 				<= nCE_DES			;	// deactivate nCE
+			qspi_addr				<= qspi_addr_next	;
+			qspi_status				<= EXEC29			; 
+		end
+
+		// flag = 0
+		EXEC29 :begin
+				qspi_status 		<= EXEC30				;
+				QUAD_oe_o			<= 1'b1				;	// QSPI output mode
+					
+		end
+
+		// now, We are on end of address of RAM2 or RAM3 ?
+		EXEC30 :begin 
+			if (txrx_fbram_addr[8:0] == 9'h00)	
+			begin 
+				if(qspi_tx_go_flag == 1'b0)					// GO-flag = 0 ?
+				begin										// Yes!
+					//QUAD_nCE_o 		<= nCE_SEL			;	// activate nCE
+					txrx_fbram_ch 	<= ~txrx_fbram_ch	;	// change to RAM3
+					qspi_command	<= QPIRD			;	// QSPI SRAM Read Command
+					qspi_status 	<= QRD00			;	// back to state "QRD00" 
+				end
+				else
+				begin 									// wait until GO-Flag = 0
+					qspi_status 	<= qspi_status; 	// stay this state
+				end
+			end
+			else
+			begin 								// now, We are NOT on end of address of RAM0 nor RAM1.
+				//QUAD_nCE_o 		<= nCE_SEL	;	// activate nCE
+				qspi_command	<= QPIRD	;	// QSPI SRAM Read Command
+				qspi_status 	<= QRD00	;	// back to state "QRD00" 
+			end			
+		end // EXEC30
+
 
 		default :begin
 			QUAD_oe_o			<=	1'b1			;	// output mode
@@ -616,6 +666,10 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 	end
 end
 
+assign select_ram2		= (txrx_fbram_addr[10:9] == 2'b00); // 
+assign select_ram3		= (txrx_fbram_addr[10:9] == 2'b01); // 
+assign cam_push_sig2	= write_fbram_sig & select_ram2;
+assign cam_push_sig3	= write_fbram_sig & select_ram3;
 
 
 /* QSPI SRAM - RAM interface: end */
@@ -640,7 +694,7 @@ assign WBs_RAM0_DAT_o = 32'h0;//RAM0_Dat_out;
 
 r512x32_512x32 RAM0_INST (	
 			.WA(cam_ram_cnt[8:0]), 		//.WA(WBs_ADR_i[8:0]),
-			.RA(read_fbram_addr[8:0]),	//.RA(WBs_ADR_i[8:0]),
+			.RA(txrx_fbram_addr[8:0]),	//.RA(WBs_ADR_i[8:0]),
 			.WD(cam_reg_out),			//.WD(WBs_DAT_i[31:0]),
 			.WClk(cam_push_clk),		//.WClk(WBs_CLK_i),
 			.RClk(read_fbram_clk),		//.RClk(WBs_CLK_i),
@@ -655,7 +709,7 @@ assign WBs_RAM1_DAT_o = 32'h0;//{RAM1_Dat_out};
 
 r512x32_512x32 RAM1_INST (	
 			.WA(cam_ram_cnt[8:0]), 		//.WA(WBs_ADR_i[8:0]),
-			.RA(read_fbram_addr[8:0]),	//.RA(WBs_ADR_i[8:0]),
+			.RA(txrx_fbram_addr[8:0]),	//.RA(WBs_ADR_i[8:0]),
 			.WD(cam_reg_out),			//.WD(WBs_DAT_i[31:0]),
 			.WClk(cam_push_clk),		//.WClk(WBs_CLK_i),
 			.RClk(read_fbram_clk),		//.RClk(WBs_CLK_i),
@@ -672,8 +726,8 @@ assign WBs_RAM2_DAT_o = {RAM2_Dat_out};
 r512x32_512x32 RAM2_INST (	
 			.WA(cam_ram_cnt[8:0]), 	//.WA(WBs_ADR_i[8:0]),
 			.RA(WBs_ADR_i[8:0]),
-			.WD(cam_reg_out),			//.WD(WBs_DAT_i[31:0]),
-			.WClk(cam_push_clk),		//.WClk(WBs_CLK_i),
+			.WD(txrx_fbram_data),			//.WD(WBs_DAT_i[31:0]),
+			.WClk(write_fbram_clk),		//.WClk(WBs_CLK_i),
 			.RClk(WBs_CLK_i),
 			.WClk_En(1'b1),
 			.RClk_En(1'b1),
@@ -687,8 +741,8 @@ assign WBs_RAM3_DAT_o = RAM3_Dat_out;
 r512x32_512x32 RAM3_INST (	
 			.WA(cam_ram_cnt[8:0]), 	//.WA(WBs_ADR_i[8:0]),
 			.RA(WBs_ADR_i[8:0]),
-			.WD(cam_reg_out),			//.WD(WBs_DAT_i[31:0]),
-			.WClk(cam_push_clk),		//.WClk(WBs_CLK_i),
+			.WD(txrx_fbram_data),			//.WD(WBs_DAT_i[31:0]),
+			.WClk(write_fbram_clk),		//.WClk(WBs_CLK_i),
 			.RClk(WBs_CLK_i),
 			.WClk_En(1'b1),
 			.RClk_En(1'b1),
