@@ -181,7 +181,7 @@ void vTask2(void *pvParameters) {
             *(volatile uint32_t *)fb_status = 0x05; // spi ram read
             vTaskDelay(5);
             *(volatile uint32_t *)fb_status = 0x03; // spi ram read
-            vTaskDelay(5);
+            vTaskDelay(15);
         }
         vTaskDelay(4000);
         *(volatile uint32_t *)fb_status = 0x00; // spi ram read
