@@ -409,14 +409,16 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		case(qspi_status)
 		QRSET :begin
 			if (select_ram0 == 1'b0) begin // camera writes ram1 memory not ram0
-				write_fbram_sig		<= 1'b0		;
-				read_fbram_sig		<= 1'b0		;
+				write_fbram_sig	<= 1'b0			;
+				read_fbram_sig	<= 1'b0			;
 				QUAD_nCE_o 		<= nCE_SEL		;	// select nCE
 				qspi_command	<= QPIWR		;	// Write Command
 				qspi_status		<= QWR00		;
 				txrx_fbram_ch	<= 1'b0			;
 			end
 			else begin
+				write_fbram_sig	<= 1'b0			;
+				read_fbram_sig	<= 1'b0			;
 				QUAD_nCE_o 		<= nCE_DES		;
 				qspi_status		<= qspi_status	; 	// stop until select_ram0 == 1'b1
 			end
@@ -549,11 +551,13 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 				read_fbram_sig	<= 1'b0			;
 				QUAD_nCE_o 		<= nCE_SEL		;	// select nCE
 				qspi_command	<= QPIRD		;	// read Command
-				qspi_status		<= QRD00		;
 				txrx_fbram_ch	<= 1'b0			;	// 0:RAM2, 1: RAM3
+				qspi_status		<= QRD00		;	// next status
 			end
 
 			else begin							// GO-FLAG says STAY.
+				write_fbram_sig	<= 1'b0			;
+				read_fbram_sig	<= 1'b0			;
 				QUAD_nCE_o 		<= nCE_DES		;
 				qspi_status		<= qspi_status	; 	// stop until qspi_tx_fbram == 1'b1
 			end
@@ -582,17 +586,11 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 
 		// read from QSPI SRAM (total 32bit)
 		EXEC20,EXEC21,EXEC22,
-		EXEC23,EXEC24,EXEC25 :begin
+		EXEC23,EXEC24,EXEC25,EXEC26 :begin
 			write_fbram_sig			<= 1'b0 						;
 			txrx_fbram_data[3:0] 	<= QUAD_Out_o[3:0]				;
 			txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
-			qspi_status				<= qspi_status					;	// TODO: fixme STAY
-		end
-
-		EXEC26 :begin										
-			txrx_fbram_data[3:0] 	<= QUAD_Out_o[3:0]				;
-			txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
-			qspi_status				<= EXEC27						;			
+			qspi_status				<= qspi_status + 8'b1			;	
 		end
 
 		EXEC27 :begin										
