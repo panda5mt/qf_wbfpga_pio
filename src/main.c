@@ -179,9 +179,15 @@ void vTask2(void *pvParameters) {
         vTaskDelay(1000);
         while(1){
             *(volatile uint32_t *)fb_status = 0x05; // spi ram read
-            vTaskDelay(5);
-            *(volatile uint32_t *)fb_status = 0x03; // spi ram read
-            vTaskDelay(15);
+            //vTaskDelay(5);
+            if((*(volatile uint32_t *)fb_status & 0x08) == 0x08 ){
+                vTaskDelay(10);
+            
+                *(volatile uint32_t *)fb_status = 0x03; // spi ram read
+                *(volatile uint32_t *)fb_status = 0x05; // spi ram read
+            }
+            
+            
         }
         vTaskDelay(4000);
         *(volatile uint32_t *)fb_status = 0x00; // spi ram read

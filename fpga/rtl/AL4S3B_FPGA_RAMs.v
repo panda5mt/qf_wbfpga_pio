@@ -389,9 +389,13 @@ wire qspi_write_mode;		// RAM0,1 -> QSPI SRAM
 wire qspi_read_mode;		// QSPI SRAM -> RAM2,3
 wire qspi_tx_go_flag;		// Send 4kB GO-FLAG.
 
+// Status(Cortex-M4F -> FPGA)
 assign qspi_write_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b10);
 assign qspi_read_mode	= (WBs_RAM_STATUS_i[1:0] == 2'b01);
 assign qspi_tx_go_flag	= (WBs_RAM_STATUS_i[2] == 1'b1);
+// Status(FPGA -> Cortex-M4F) We come to end of address of RAM3 or RAM4
+wire 	qspi_tx_fin		;
+assign qspi_tx_fin = (txrx_fbram_addr[8:0] == 9'h00);
 
 always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 	if(WBs_RST_i)begin
@@ -640,7 +644,8 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 				end
 				else
 				begin 									// wait until GO-Flag = 0
-					qspi_status 	<= qspi_status; 	// stay this state
+					
+					qspi_status 	<= qspi_status ; 	// stay this state
 				end
 			end
 			else
@@ -766,6 +771,6 @@ always @( posedge WBs_CLK_i or posedge WBs_RST_i)begin
 
 end
 
-assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 6'h0, cam_ram_cnt[10:9]}; // status written by FPGA
+assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 4'h0,qspi_tx_fin,1'b0, cam_ram_cnt[10:9]}; // status written by FPGA
 			
 endmodule
