@@ -177,13 +177,11 @@ void vTask2(void *pvParameters) {
         // *(volatile uint32_t *)fb_status = 0x02; // spi ram write
         *(volatile uint32_t *)fb_status = 0x03; // spi ram read
         *(volatile uint32_t *)fb_status = 0x05; // spi ram read
-        //vTaskDelay(1000);
+        
         while(1){
            // *(volatile uint32_t *)fb_status = 0x05; // spi ram read
             
-            if((*(volatile uint32_t *)fb_status & 0x08) == 0x08 ){
-                
-            
+            if((*(volatile uint32_t *)fb_status & 0x08) == 0x08 ){ //buffer full
                 *(volatile uint32_t *)fb_status = 0x03; // unlock next 2kb
                 *(volatile uint32_t *)fb_status = 0x05; // restart tx FB_RAM 
                 // vTaskDelay(1);
