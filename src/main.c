@@ -57,7 +57,7 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-uint32_t a[512*8];
+uint32_t a[512*2];
 volatile int32_t cntr=0;
 #if DBG_FLAGS_ENABLE
 uint32_t DBG_flags = DBG_flags_default;
@@ -131,35 +131,14 @@ void vTask1(void *pvParameters){
     // init ov5642
     sccb_init();
 
-    while(1){
-        while(0x10 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[0], fb_ram0, (512 * sizeof(uint32_t)));   // ram0 -> a
-        while(0x11 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[512], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
+    // while(1){
         
-        cntr+=2;
+    //     while(0x12 == *(volatile uint32_t *)fb_status);
+    //     memcpy(&a[512*1], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
+    //     while(0x13 == *(volatile uint32_t *)fb_status);
+    //     memcpy(&a[512*2], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
         
-        while(0x12 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[512*2], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
-        while(0x13 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[512*3], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
-        
-        cntr+=2;
-
-        while(0x10 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[512*4], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
-        while(0x11 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[512*5], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
-        
-        cntr+=2;
-        
-        while(0x12 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[512*6], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
-        while(0x13 == *(volatile uint32_t *)fb_status);
-        memcpy(&a[512*7], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
-        
-        cntr+=2;
-    }
+    // }
 
     while(1);
     
@@ -173,8 +152,10 @@ void vTask2(void *pvParameters) {
     HAL_StatusTypeDef ret_data;
     
     while(1) {
-        vTaskDelay(1000);
-        // *(volatile uint32_t *)fb_status = 0x02; // spi ram write
+        vTaskDelay(5000);
+        *(volatile uint32_t *)fb_status = 0x02; // spi ram write
+        vTaskDelay(5000);
+        //while(1);
         *(volatile uint32_t *)fb_status = 0x03; // spi ram read
         *(volatile uint32_t *)fb_status = 0x05; // spi ram read
         
@@ -182,13 +163,21 @@ void vTask2(void *pvParameters) {
            // *(volatile uint32_t *)fb_status = 0x05; // spi ram read
             
             if((*(volatile uint32_t *)fb_status & 0x08) == 0x08 ){ //buffer full
-                *(volatile uint32_t *)fb_status = 0x03; // unlock next 2kb
-                *(volatile uint32_t *)fb_status = 0x05; // restart tx FB_RAM 
-                // vTaskDelay(1);
+                //*(volatile uint32_t *)fb_status = 0x03; // unlock next 2kb
+                //*(volatile uint32_t *)fb_status = 0x05; // restart tx FB_RAM 
+                
+                memcpy(&a[0], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
+
+                for(uint32_t i = 0 ; i < 512 ; i++) {
+                    dbg_hex32(a[i]);
+                    dbg_str("\n");
+                }
             }
             dbg_hex32(*(volatile uint32_t *)fb_status & 0x08);
             dbg_str("\r\n");
-           
+            *(volatile uint32_t *)fb_status = 0x03; // spi ram read
+            *(volatile uint32_t *)fb_status = 0x05; // spi ram read
+            vTaskDelay(10);
         }
         vTaskDelay(4000);
         *(volatile uint32_t *)fb_status = 0x00; // spi ram read
