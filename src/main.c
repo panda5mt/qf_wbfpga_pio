@@ -176,18 +176,21 @@ void vTask2(void *pvParameters) {
         vTaskDelay(1000);
         // *(volatile uint32_t *)fb_status = 0x02; // spi ram write
         *(volatile uint32_t *)fb_status = 0x03; // spi ram read
-        vTaskDelay(1000);
+        *(volatile uint32_t *)fb_status = 0x05; // spi ram read
+        //vTaskDelay(1000);
         while(1){
-            *(volatile uint32_t *)fb_status = 0x05; // spi ram read
-            //vTaskDelay(5);
+           // *(volatile uint32_t *)fb_status = 0x05; // spi ram read
+            
             if((*(volatile uint32_t *)fb_status & 0x08) == 0x08 ){
-                vTaskDelay(10);
+                
             
-                *(volatile uint32_t *)fb_status = 0x03; // spi ram read
-                *(volatile uint32_t *)fb_status = 0x05; // spi ram read
+                *(volatile uint32_t *)fb_status = 0x03; // unlock next 2kb
+                *(volatile uint32_t *)fb_status = 0x05; // restart tx FB_RAM 
+                // vTaskDelay(1);
             }
-            
-            
+            dbg_hex32(*(volatile uint32_t *)fb_status & 0x08);
+            dbg_str("\r\n");
+           
         }
         vTaskDelay(4000);
         *(volatile uint32_t *)fb_status = 0x00; // spi ram read

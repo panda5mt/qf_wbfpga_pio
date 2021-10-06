@@ -601,17 +601,15 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 		// read from QSPI SRAM (total 32bit)
 		EXEC20,EXEC21,EXEC22,
 		EXEC23,EXEC24,EXEC25,EXEC26 :begin
-			write_fbram_sig			<= 1'b0 						;
-			txrx_fbram_data[3:0] 	<= QUAD_Out_o[3:0]				;
-			txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
-			qspi_status				<= qspi_status + 8'b1			;	
+			write_fbram_sig			<= 1'b0 				;
+			txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0], QUAD_Out_o[3:0]}	;	// 4bit shift
+			qspi_status				<= qspi_status + 8'b1	;	
 		end
 
 		EXEC27 :begin										
-			txrx_fbram_data			<= {txrx_fbram_data[31:4],QUAD_Out_o[3:0]}	;
+			txrx_fbram_data			<= {txrx_fbram_data[27:0],QUAD_Out_o[3:0]}	;
 			txrx_fbram_addr 		<= (txrx_fbram_addr + 11'h01) % 11'd1024  ;
 			write_fbram_sig			<= 1'b1 						;
-			//txrx_fbram_data[31:0] 	<= (txrx_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
 			qspi_addr_next 			<= qspi_addr_next + 22'd4 		;					// 4-byte countup
 			qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC28 : EXEC20;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
 		end
@@ -626,7 +624,7 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 
 		// flag = 0
 		EXEC29 :begin
-				qspi_status 		<= EXEC30				;
+				qspi_status 		<= EXEC30			;
 				QUAD_oe_o			<= 1'b1				;	// QSPI output mode
 					
 		end

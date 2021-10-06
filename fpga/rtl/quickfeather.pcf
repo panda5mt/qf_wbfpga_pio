@@ -1,19 +1,10 @@
 // Note: Quickfeather uses the QFN package so the format is: set <signal name> <QFN pin #>
-//set_io GPIO_PIN(7) 34
-//set_io GPIO_PIN(6) 39
-//set_io GPIO_PIN(5) 26
-//set_io GPIO_PIN(4) 2
-set_io GPIO_PIN(3) 28
-set_io GPIO_PIN(1) 37
-set_io GPIO_PIN(2) 42
-//set_io GPIO_PIN(0) 40
-
 // camera clock
 set_io CCLKO        33
 set_io PCLK         32
-
 set_io VSYNCI       31
 set_io HREFI        55
+
 // camera data
 set_io CAM_DAT(7)   57
 set_io CAM_DAT(6)   56
@@ -23,8 +14,13 @@ set_io CAM_DAT(3)   63
 set_io CAM_DAT(2)   61
 set_io CAM_DAT(1)   59
 set_io CAM_DAT(0)   2
+
 // SPI SRAM
 set_io QUAD_CLK     23
 set_io QUAD_SIO(0)  25
+set_io QUAD_SIO(1)  28
+set_io QUAD_SIO(2)  37
+set_io QUAD_SIO(3)  42
 set_io QUAD_nCE     27
+
 
