@@ -151,12 +151,21 @@ void vTask2(void *pvParameters) {
     uint32_t nowptr = 0;    
     HAL_StatusTypeDef ret_data;
     
+    *(volatile uint32_t *)fb_status = 0x00; // spi ram reset
+     vTaskDelay(500);
+    *(volatile uint32_t *)fb_status = 0x03; // spi ram reset
+    vTaskDelay(500);
+    *(volatile uint32_t *)fb_status = 0x00; // spi ram reset
+    vTaskDelay(5000);
+    
+ 
     while(1) {
-        vTaskDelay(5000);
+
         *(volatile uint32_t *)fb_status = 0x02; // spi ram write
-        vTaskDelay(5000);
-        //while(1);
-        *(volatile uint32_t *)fb_status = 0x03; // spi ram read
+        vTaskDelay(1000);
+        
+        *(volatile uint32_t *)fb_status = 0x00; // reset status
+        *(volatile uint32_t *)fb_status = 0x01; // spi ram read
         *(volatile uint32_t *)fb_status = 0x05; // spi ram read
         
         while(1){
@@ -175,7 +184,7 @@ void vTask2(void *pvParameters) {
             }
             dbg_hex32(*(volatile uint32_t *)fb_status & 0x08);
             dbg_str("\r\n");
-            *(volatile uint32_t *)fb_status = 0x03; // spi ram read
+            *(volatile uint32_t *)fb_status = 0x01; // spi ram read
             *(volatile uint32_t *)fb_status = 0x05; // spi ram read
             vTaskDelay(10);
         }

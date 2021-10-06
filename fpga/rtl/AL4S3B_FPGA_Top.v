@@ -135,7 +135,7 @@ wire            QUAD_CLK    ;
 // CAMERA Clocks:begin
 
 assign CCLKO    = USERCLK           ; // 24MHz
-assign QUAD_CLK = QUAD_CLK_i     ;
+assign QUAD_CLK = QUAD_CLK_i  & (~QUAD_nCE)   ;
 
 // CAMERA Clocks:end
 
