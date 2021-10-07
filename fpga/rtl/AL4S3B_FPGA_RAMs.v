@@ -492,7 +492,8 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 			read_fbram_sig			<= 1'b0 						;
 			txrx_fbram_data[31:0] 	<= (txrx_fbram_addr[10:9]==2'b00)? 32'hAABBCCDD : 32'hAABBCCDD;//RAM0_Dat_out : RAM1_Dat_out;
 			qspi_addr_next 			<= qspi_addr_next + 22'd4 		;					// 4-byte countup
-			qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC8 : EXEC0;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
+			//qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC8 : EXEC0;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
+			qspi_status				<= (qspi_addr_next[9:0]==10'h3fC)? EXEC28 : EXEC20;	
 		end
 
 		EXEC8 :begin
@@ -623,7 +624,8 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 			txrx_fbram_addr 		<= (txrx_fbram_addr + 11'h01) % 11'd1024  ;
 			write_fbram_sig			<= 1'b1 						;
 			qspi_addr_next 			<= qspi_addr_next + 22'd4 		;					// 4-byte countup
-			qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC28 : EXEC20;	// 512byte burst finished? (h'1FC = d'512 - d'4)		
+			//qspi_status				<= (qspi_addr_next[8:0]==9'h1fC)? EXEC28 : EXEC20;	// 512byte burst finished? (h'1FC = d'512 - d'4)
+			qspi_status				<= (qspi_addr_next[9:0]==10'h3fC)? EXEC28 : EXEC20;		
 		end
 
 		EXEC28: begin
