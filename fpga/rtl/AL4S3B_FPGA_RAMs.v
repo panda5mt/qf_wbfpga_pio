@@ -475,20 +475,20 @@ always @( negedge /*PCLKI*/ QUAD_CLK_i or posedge WBs_RST_i) begin
 			// EXEC0~7:32bit data -> QSPI SRAM
 			EXEC0,EXEC1,EXEC2,
 			EXEC3,EXEC4,EXEC5 :begin										
-				QUAD_Out_o[3:0]			<= 4'hA;//txrx_fbram_data[31:28]		;
+				QUAD_Out_o[3:0]			<= txrx_fbram_data[31:28]		;
 				txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
 				qspi_status				<= qspi_status + 8'b1			;			
 			end
 			
 			EXEC6 :begin										
-				QUAD_Out_o[3:0]			<= 4'hA;//txrx_fbram_data[31:28]		;
+				QUAD_Out_o[3:0]			<= txrx_fbram_data[31:28]		;
 				txrx_fbram_data[31:0]	<= {txrx_fbram_data[27:0],4'b0}	;	// 4bit shift
 				read_fbram_sig			<= 1'b1							;	// FB_RAM read signal
 				qspi_status				<= EXEC7						;			
 			end
 
 			EXEC7 :begin										
-				QUAD_Out_o[3:0]			<= 4'hA;//txrx_fbram_data[31:28]		;
+				QUAD_Out_o[3:0]			<= txrx_fbram_data[31:28]		;
 				txrx_fbram_addr 		<= (txrx_fbram_addr + 11'h01) % 11'd1024  ;
 				read_fbram_sig			<= 1'b0 						;
 				txrx_fbram_data[31:0] 	<= (txrx_fbram_addr[10:9]==2'b00)? RAM0_Dat_out : RAM1_Dat_out;
@@ -741,10 +741,16 @@ reg		[3:0]	read_qspi;
 wire	[3:0]	read_qspi;
 
 // read quad data
-always @(posedge QUAD_CLK_i)begin
-	if(qspi_read_mode)begin 
-		read_qspi[3:0] <= QUAD_In_i[3:0];
+always @(posedge QUAD_CLK_i or posedge WBs_RST_i)begin
+	if(WBs_RST_i) begin
+		read_qspi[3:0] <= 4'b0;
 	end 
+	else 
+	begin	
+		if(qspi_read_mode)begin 
+			read_qspi[3:0] <= QUAD_In_i[3:0];
+		end 
+	end
 end
 
 assign select_ram2		= (txrx_fbram_ch==1'b0);//(txrx_fbram_addr[10:9] == 2'b00); 
