@@ -211,8 +211,8 @@ wire    [7:0]  GPIO_In              ;
 wire    [7:0]  GPIO_Out             ;
 wire    [7:0]  GPIO_oe              ;
 
-wire    [7:0]   QUAD_In             ;
-wire    [7:0]   QUAD_Out            ;
+wire    [3:0]   QUAD_In             ;
+wire    [3:0]   QUAD_Out            ;
 wire            QUAD_oe             ;
 
 

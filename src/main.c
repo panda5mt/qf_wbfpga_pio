@@ -156,13 +156,13 @@ void vTask2(void *pvParameters) {
     *(volatile uint32_t *)fb_status = 0x03; // spi ram reset
     vTaskDelay(500);
     *(volatile uint32_t *)fb_status = 0x00; // spi ram reset
-    vTaskDelay(5000);
+    vTaskDelay(500);
     
  
     while(1) {
 
         *(volatile uint32_t *)fb_status = 0x02; // spi ram write
-        vTaskDelay(1000);
+        vTaskDelay(5000);
         
         *(volatile uint32_t *)fb_status = 0x00; // reset status
         *(volatile uint32_t *)fb_status = 0x01; // spi ram read
@@ -174,28 +174,29 @@ void vTask2(void *pvParameters) {
             if((*(volatile uint32_t *)fb_status & 0x08) == 0x08 ){ //buffer full
                 //*(volatile uint32_t *)fb_status = 0x03; // unlock next 2kb
                 //*(volatile uint32_t *)fb_status = 0x05; // restart tx FB_RAM 
-                
+
                 memcpy(&a[0], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
 
                 for(uint32_t i = 0 ; i < 512 ; i++) {
                     dbg_hex32(a[i]);
                     dbg_str("\n");
                 }
+                vTaskDelay(10);
+                dbg_str("\r\n");
+                *(volatile uint32_t *)fb_status = 0x01; // spi ram read
+                *(volatile uint32_t *)fb_status = 0x05; // spi ram read
+                vTaskDelay(10);
             }
-            dbg_hex32(*(volatile uint32_t *)fb_status & 0x08);
-            dbg_str("\r\n");
-            *(volatile uint32_t *)fb_status = 0x01; // spi ram read
-            *(volatile uint32_t *)fb_status = 0x05; // spi ram read
-            vTaskDelay(10);
+            //dbg_hex32(*(volatile uint32_t *)fb_status & 0x08);
+
         }
-        vTaskDelay(4000);
-        *(volatile uint32_t *)fb_status = 0x00; // spi ram read
+
     }
     while(1);
   
     while(1) {
         if(cntr > 3) {
-            for(uint32_t i = 0 ; i < 512 * 8 ; i+=32) {
+            for(uint32_t i = 0 ; i < 512 ; i++) {
                 // dbg_ch_raw((a[i])& 0xff);
                 // dbg_ch_raw((a[i] >> 8)& 0xff);
                 // dbg_ch_raw((a[i] >> 16)& 0xff);
