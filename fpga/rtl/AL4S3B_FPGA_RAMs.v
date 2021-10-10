@@ -269,7 +269,7 @@ begin
 				cam_status	<= CB24F;
 			end
 			CB24F: begin
-				cam_reg_out	<= {cam_reg1[23:0],CAM_DAT[7:0]}; //cam_freerun[31:0];
+				cam_reg_out	<= cam_freerun[31:0];//{cam_reg1[23:0],CAM_DAT[7:0]}; //cam_freerun[31:0];
 				cam_reg1	<= 32'h0;
 				cam_reg_rdy	<= 1'b1;
 				

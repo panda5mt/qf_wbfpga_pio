@@ -215,7 +215,7 @@ void sccb_init(void) {
   sccb_dat[0]=0x51; sccb_dat[1]=0x1e ; sccb_dat[2]=0x2a ;   
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
 
-  sccb_dat[0]=0x50; sccb_dat[1]=0x02 ; sccb_dat[2]=0x78 ;
+  sccb_dat[0]=0x50; sccb_dat[1]=0x02 ; sccb_dat[2]=0xf8 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
 
   sccb_dat[0]=0x50; sccb_dat[1]=0x1f ; sccb_dat[2]=0x01 ;
@@ -713,9 +713,9 @@ void sccb_init(void) {
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x91 ; sccb_dat[2]=0xf8 ; 
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x93 ; sccb_dat[2]=0x70 ; //R
+  sccb_dat[0]=0x51; sccb_dat[1]=0x93 ; sccb_dat[2]=0xf0 ; //R
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
-  sccb_dat[0]=0x51; sccb_dat[1]=0x94 ; sccb_dat[2]=0xf0 ; //G
+  sccb_dat[0]=0x51; sccb_dat[1]=0x94 ; sccb_dat[2]=0x40 ; //G
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   sccb_dat[0]=0x51; sccb_dat[1]=0x95 ; sccb_dat[2]=0xf0 ; //B
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
