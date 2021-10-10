@@ -151,24 +151,22 @@ void vTask2(void *pvParameters) {
     uint32_t nowptr = 0;    
     HAL_StatusTypeDef ret_data;
     
-    while(1){
-    *(volatile uint32_t *)fb_status = 0x00000; // reset
-    *(volatile uint32_t *)fb_status = 0x10008; // go and read 16k
+    for(uint32_t ii = 0 ; ii < 75; ii++) {
+        uint32_t fboundary = ii * 8;
+        *(volatile uint32_t *)fb_status = 0x00000; // reset
+        *(volatile uint32_t *)fb_status = (0x10000 | fboundary); // go and read 16k
+        
+        vTaskDelay(100);
     
-    vTaskDelay(100);
- 
-    memcpy(&a[512*0], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
-    memcpy(&a[512*1], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
-    memcpy(&a[512*2], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
-    memcpy(&a[512*3], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
+        memcpy(&a[512*0], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
+        memcpy(&a[512*1], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
+        memcpy(&a[512*2], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
+        memcpy(&a[512*3], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
 
-
-
-
-    for(uint32_t i = 0 ; i < 512*4 ; i++) {
-        dbg_hex32(a[i]);
-        dbg_str("\n");
-    }
+        for(uint32_t i = 0 ; i < 512*4 ; i++) {
+            dbg_hex32(a[i]);
+            dbg_str("\n");
+        }
     }
 
     while(1);
