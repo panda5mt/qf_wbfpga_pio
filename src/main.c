@@ -57,7 +57,7 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-uint32_t a[512*2];
+uint32_t a[512*4];
 volatile int32_t cntr=0;
 #if DBG_FLAGS_ENABLE
 uint32_t DBG_flags = DBG_flags_default;
@@ -151,63 +151,25 @@ void vTask2(void *pvParameters) {
     uint32_t nowptr = 0;    
     HAL_StatusTypeDef ret_data;
     
-    *(volatile uint32_t *)fb_status = 0x00; // spi ram reset
-     vTaskDelay(500);
-    *(volatile uint32_t *)fb_status = 0x03; // spi ram reset
-    vTaskDelay(500);
-    *(volatile uint32_t *)fb_status = 0x00; // spi ram reset
-    vTaskDelay(500);
+    while(1){
+    *(volatile uint32_t *)fb_status = 0x00000; // reset
+    *(volatile uint32_t *)fb_status = 0x10008; // go and read 16k
     
+    vTaskDelay(100);
  
-    while(1) {
+    memcpy(&a[512*0], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
+    memcpy(&a[512*1], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
+    memcpy(&a[512*2], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
+    memcpy(&a[512*3], fb_ram3, (512 * sizeof(uint32_t))); // ram3 -> a
 
-        *(volatile uint32_t *)fb_status = 0x02; // spi ram write
-        vTaskDelay(5000);
-        
-        *(volatile uint32_t *)fb_status = 0x00; // reset status
-        *(volatile uint32_t *)fb_status = 0x01; // spi ram read
-        *(volatile uint32_t *)fb_status = 0x05; // spi ram read
-        
-        while(1){
-           // *(volatile uint32_t *)fb_status = 0x05; // spi ram read
-            
-            if((*(volatile uint32_t *)fb_status & 0x08) == 0x08 ){ //buffer full
-                //*(volatile uint32_t *)fb_status = 0x03; // unlock next 2kb
-                //*(volatile uint32_t *)fb_status = 0x05; // restart tx FB_RAM 
 
-                memcpy(&a[0], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
 
-                for(uint32_t i = 0 ; i < 512 ; i++) {
-                    dbg_hex32(a[i]);
-                    dbg_str("\n");
-                }
-                vTaskDelay(10);
-                dbg_str("\r\n");
-                *(volatile uint32_t *)fb_status = 0x01; // spi ram read
-                *(volatile uint32_t *)fb_status = 0x05; // spi ram read
-                vTaskDelay(10);
-            }
-            //dbg_hex32(*(volatile uint32_t *)fb_status & 0x08);
 
-        }
-
+    for(uint32_t i = 0 ; i < 512*4 ; i++) {
+        dbg_hex32(a[i]);
+        dbg_str("\n");
     }
-    while(1);
-  
-    while(1) {
-        if(cntr > 3) {
-            for(uint32_t i = 0 ; i < 512 ; i++) {
-                // dbg_ch_raw((a[i])& 0xff);
-                // dbg_ch_raw((a[i] >> 8)& 0xff);
-                // dbg_ch_raw((a[i] >> 16)& 0xff);
-                // dbg_ch_raw((a[i] >> 24) & 0xff);
-                dbg_hex32(a[i]);
-                dbg_str("\n");
-            }
-            cntr -= 8;
-        }
     }
-
 
     while(1);
 }
