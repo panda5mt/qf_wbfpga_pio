@@ -16,11 +16,11 @@ set_io CAM_DAT(1)   59
 set_io CAM_DAT(0)   2
 
 // SPI SRAM
-set_io QUAD_CLK     23
-set_io QUAD_SIO(0)  25
-set_io QUAD_SIO(1)  28
-set_io QUAD_SIO(2)  37
-set_io QUAD_SIO(3)  42
-set_io QUAD_nCE     27
+//set_io QUAD_CLK     23
+//set_io QUAD_SIO(0)  25
+//set_io QUAD_SIO(1)  28
+//set_io QUAD_SIO(2)  37
+//set_io QUAD_SIO(3)  42
+//set_io QUAD_nCE     27
 
 

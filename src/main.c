@@ -148,16 +148,18 @@ void vTask1(void *pvParameters){
 void vTask2(void *pvParameters) {
 
     int32_t j = 0;
+    uint32_t fboundary;
     uint32_t nowptr = 0;    
     HAL_StatusTypeDef ret_data;
     dbg_str("!st\n");
     for(uint32_t ii = 1 ; ii < 76; ii++) {
-        uint32_t fboundary = ii * 8;
+        fboundary = ii;// fboundary = ii ; means ii * 8kbyte
         *(volatile uint32_t *)fb_status = (0x00000 | fboundary); // reset
         *(volatile uint32_t *)fb_status = (0x10000 | fboundary); // go and read each 8k
         
-        vTaskDelay(666);
-    
+        while( 0x08 != (*(volatile uint32_t *)fb_status & 0x08) ); //wait trans.
+        *(volatile uint32_t *)fb_status = (0x00000 | fboundary); // reset
+
         memcpy(&a[512*0], fb_ram0, (512 * sizeof(uint32_t))); // ram0 -> a
         memcpy(&a[512*1], fb_ram1, (512 * sizeof(uint32_t))); // ram1 -> a
         memcpy(&a[512*2], fb_ram2, (512 * sizeof(uint32_t))); // ram2 -> a
@@ -167,9 +169,7 @@ void vTask2(void *pvParameters) {
             dbg_hex32(a[i]);
             dbg_str("\n");
         }
-        
     }
-
     while(1);
 }
 

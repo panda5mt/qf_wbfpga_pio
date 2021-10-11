@@ -54,12 +54,12 @@ module AL4S3B_FPGA_RAMs (
 				PCLKI,
 				VSYNCI,
 				HREFI,
-				CAM_DAT,
-				QUAD_In_i,
-				QUAD_oe_o,
-				QUAD_Out_o, 
-				QUAD_nCE_o,
-				QUAD_CLK_i
+				CAM_DAT
+				// QUAD_In_i,
+				// QUAD_oe_o,
+				// QUAD_Out_o, 
+				// QUAD_nCE_o,
+				// QUAD_CLK_i
 			);
 
 
@@ -75,7 +75,7 @@ parameter                AL4S3B_DEF_REG_VALUE        = 32'hFAB_DEF_AC;
 //------Port Signals-------------------
 //
 // HighSpeed CLK(36~72MHz)
-input					QUAD_CLK_i		;
+//input					QUAD_CLK_i		;
 // AHB-To_FPGA Bridge I/F
 //
 input   [10:0]           WBs_ADR_i     ;  // Address Bus                to   FPGA
@@ -104,7 +104,7 @@ output                   WBs_ACK_o     ;  // Transfer Cycle Acknowledge from FPG
 //
 wire                    WBs_CLK_i   ;	// Wishbone FPGA Clock
 wire                    WBs_RST_i   ;	// Wishbone FPGA Reset
-wire 					QUAD_CLK_i	;
+// wire 					QUAD_CLK_i	;
 
 // Wishbone Bus Signals
 //
@@ -124,15 +124,15 @@ reg						WBs_ACK_o     ;  // Wishbone Client Acknowledge
 // SPI SRAMS
 //
 
-input	[3:0]	QUAD_In_i		;
-output			QUAD_oe_o		;
-input	[3:0]	QUAD_Out_o		;
+// input	[3:0]	QUAD_In_i		;
+// output			QUAD_oe_o		;
+// input	[3:0]	QUAD_Out_o		;
 
-wire	[3:0]	QUAD_In_i		;
-wire			QUAD_oe_o		;
-wire	[3:0]	QUAD_Out_o		;
-output			QUAD_nCE_o		;
-wire 			QUAD_nCE_o		;
+// wire	[3:0]	QUAD_In_i		;
+// wire			QUAD_oe_o		;
+// wire	[3:0]	QUAD_Out_o		;
+// output			QUAD_nCE_o		;
+// wire 			QUAD_nCE_o		;
 // CAMERA 
 //
 input           PCLKI			;
@@ -205,6 +205,8 @@ reg  [31:0]     cam_reg1;
 reg  [31:0]		cam_reg_out;
 reg  [31:0]		cam_freerun;
 
+
+wire [10:0]		cam_ram_cnt;
 wire [31:0]     cam_reg1;
 wire [31:0] 	cam_reg_out;
 wire [31:0]		cam_freerun;
@@ -223,6 +225,9 @@ always @(negedge VSYNCI)begin
 	cam_go_flag		<= WBs_RAM_STATUS_i[16];
 end
 
+// status to Cortex-M4F
+wire cam_state_stop;
+assign cam_state_stop = (cam_freerun[18:0] == ({cam_ram_bound[7:0],11'b0} - 19'b1));
 /* FSM */
 localparam  	RAM_COUNT_FULL = 12'd2048;
 reg	 [1:0]		cam_status;
@@ -233,43 +238,42 @@ localparam		CB08F = 2'd1;  // Camera buffer 8bit Full
 localparam		CB16F = 2'd2;  // Camera buffer 16bit full
 localparam		CB24F = 2'd3;  // Camera buffer 24bit full
 localparam  	RST32 = 32'hFFFF_FFFF;
-localparam  	RST11 = 11'h7FF;
+localparam  	RST11 = 11'h7ff;
 //localparam CB32F =3'd4;
 assign cam_data_valid	= HREFI & VSYNCI ;
 always @( posedge PCLKI or posedge WBs_RST_i)
 begin
     if(WBs_RST_i)
     begin
-        cam_reg1		<= RST32;	//32'h0;
+        cam_reg1		<= RST32;	
         cam_reg_out		<= 32'h00;
         cam_status		<= CRSET;
         cam_reg_rdy		<= 1'b0;
-        cam_ram_cnt		<= RST11; 	//11'h7ff; // full
-        cam_freerun		<= RST32;	//32'h00;
-
+        cam_ram_cnt		<= RST11; 	
+        cam_freerun		<= RST32;
     end
     else begin // PCLK
-		if(cam_data_valid && cam_go_flag)begin
+		if(cam_data_valid & cam_go_flag)begin
 			case(cam_status)
 			CRSET: begin
 				cam_reg1	<= {24'h00, CAM_DAT[7:0]};
 				cam_reg_rdy <= 1'b0;
-				cam_ram_cnt	<= (cam_ram_cnt + 11'h01);// % RAM_COUNT_FULL; // modulo-N counter
-				cam_status	<= (cam_freerun[23:0]+ 24'b1 == {cam_ram_bound[15:0],8'h0})? cam_status : CB08F;
+				cam_status	<= (cam_state_stop)? cam_status : CB08F;
 			end
 			CB08F: begin	
 				cam_reg1	<= {16'h00,cam_reg1[7:0],CAM_DAT[7:0]};
+				cam_freerun	<= cam_freerun + 32'h01;
+				cam_ram_cnt	<= (cam_ram_cnt + 11'h01);// % RAM_COUNT_FULL; // modulo-N counter
 				cam_reg_rdy <= 1'b0;
 				cam_status	<= CB16F;
 			end
 			CB16F: begin	
 				cam_reg1	<= {8'h00,cam_reg1[15:0],CAM_DAT[7:0]};
 				cam_reg_rdy <= 1'b0;
-				cam_freerun	<= cam_freerun + 32'h01;
 				cam_status	<= CB24F;
 			end
 			CB24F: begin
-				cam_reg_out	<= cam_freerun[31:0];//{cam_reg1[23:0],CAM_DAT[7:0]}; //cam_freerun[31:0];
+				cam_reg_out	<= {cam_reg1[23:0],CAM_DAT[7:0]}; //cam_freerun[31:0];
 				cam_reg1	<= 32'h0;
 				cam_reg_rdy	<= 1'b1;
 				
@@ -278,9 +282,9 @@ begin
 			endcase
 		end
 		else if(~cam_go_flag)begin
-			cam_reg1		<= 32'h00;
-			cam_reg_out		<= 32'h00;
-			cam_status		<= cam_status;
+			cam_reg1		<= RST32;
+			cam_reg_out		<= cam_reg_out;
+			cam_status		<= CRSET;
 			cam_reg_rdy		<= 1'b0;
 			cam_ram_cnt		<= RST11;//11'h00;
 			cam_freerun		<= RST32;//32'h00;
@@ -395,6 +399,6 @@ always @( posedge WBs_CLK_i or posedge WBs_RST_i)begin
 
 end
 
-assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 4'h0,qspi_tx_fin,1'b0, cam_ram_cnt[10:9]}; // status written by FPGA
+assign WBs_RAM_STATUS_o = {24'h0, 7'h0, VSYNCI, 4'h0,cam_state_stop,1'b0, cam_ram_cnt[10:9]}; // status written by FPGA
 			
 endmodule

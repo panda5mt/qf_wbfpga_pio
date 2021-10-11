@@ -35,10 +35,10 @@ module AL4S3B_FPGA_top (
             PCLK,
             VSYNCI,
             HREFI,
-            CAM_DAT,
-            QUAD_SIO,
-            QUAD_nCE,
-            QUAD_CLK
+            CAM_DAT
+            // QUAD_SIO,
+            // QUAD_nCE,
+            // QUAD_CLK
 
             );
 
@@ -99,9 +99,9 @@ parameter       QL_RESERVED_DEF_REG_VALUE   = 32'hDEF_FAB_AC; // Distinguish acc
 // GPIO
 //
 inout  [7:0]    GPIO_PIN        ;
-inout  [3:0]    QUAD_SIO        ; 
-output          QUAD_nCE        ;
-output          QUAD_CLK        ;
+// inout  [3:0]    QUAD_SIO        ; 
+// output          QUAD_nCE        ;
+// output          QUAD_CLK        ;
 
 // CAMERA
 //
@@ -127,15 +127,15 @@ wire  [7:0]     CAM_DAT     ;
 //GPIO
 //
 wire   [7:0]    GPIO_PIN    ;
-wire   [3:0]    QUAD_SIO    ;
-wire            QUAD_nCE    ;
-wire            QUAD_CLK    ;  
+// wire   [3:0]    QUAD_SIO    ;
+// wire            QUAD_nCE    ;
+// wire            QUAD_CLK    ;  
 
 
 // CAMERA Clocks:begin
 
 assign CCLKO    = USERCLK           ; // 24MHz
-assign QUAD_CLK = QUAD_CLK_i  & (~QUAD_nCE)   ;
+//assign QUAD_CLK = QUAD_CLK_i  & (~QUAD_nCE)   ;
 
 // CAMERA Clocks:end
 
@@ -203,7 +203,7 @@ wire    [1:0]   SDMA_Active_Extra;
 //reg		[1:0]   clk_div;
 
 wire			USERCLK;
-wire			QUAD_CLK_i;
+// wire			QUAD_CLK_i;
 wire			RST_fb1;
 
 
@@ -214,8 +214,8 @@ wire			RST_fb1;
 //
 // Note: Reset the FPGA IP on either the AHB or clock domain reset signals.
 //
-gclkbuff u_gclkbuff_reset ( .A(Sys_Clk1_Rst) , .Z(                 ) );
-gclkbuff u_gclkbuff_clock ( .A(Sys_Clk1             ) , .Z( QUAD_CLK_i   ) );
+// gclkbuff u_gclkbuff_reset ( .A(Sys_Clk1_Rst) , .Z(                 ) );
+// gclkbuff u_gclkbuff_clock ( .A(Sys_Clk1             ) , .Z( QUAD_CLK_i   ) );
 
 gclkbuff u_gclkbuff_reset1 ( .A(Sys_Clk0_Rst) , .Z(RST_fb1) );
 gclkbuff u_gclkbuff_clock1 ( .A(Sys_Clk0   ) , .Z(USERCLK ) );
@@ -307,9 +307,9 @@ AL4S3B_FPGA_IP              #(
     .VSYNCI                     ( VSYNCI    ),
     .HREFI                      ( HREFI     ),
     .CAM_DAT                    ( CAM_DAT   ),
-    .QUAD_SIO                   ( QUAD_SIO  ),
-    .QUAD_nCE                   ( QUAD_nCE  ),
-    .QUAD_CLK_i                 ( QUAD_CLK_i),
+    // .QUAD_SIO                   ( QUAD_SIO  ),
+    // .QUAD_nCE                   ( QUAD_nCE  ),
+    // .QUAD_CLK_i                 ( QUAD_CLK_i),
     //
     // Misc
     //

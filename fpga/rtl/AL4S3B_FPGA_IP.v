@@ -56,9 +56,9 @@ module AL4S3B_FPGA_IP (
                 VSYNCI,
                 HREFI,
                 CAM_DAT,
-                QUAD_SIO,
-                QUAD_nCE,
-                QUAD_CLK_i,
+                // QUAD_SIO,
+                // QUAD_nCE,
+                // QUAD_CLK_i,
                 //
                 // Misc
 				CLK_4M_CNTL_o,
@@ -140,9 +140,9 @@ output          WBs_ACK          ;  // Transfer Cycle Acknowledge from FPGA
 // GPIO
 //
 inout   [7:0]   GPIO_PIN        ;
-inout   [3:0]   QUAD_SIO        ;
-output          QUAD_nCE        ;
-input           QUAD_CLK_i      ;
+// inout   [3:0]   QUAD_SIO        ;
+// output          QUAD_nCE        ;
+// input           QUAD_CLK_i      ;
 // CAMERA
 //
 input           PCLKI           ;
@@ -188,9 +188,9 @@ wire            WBs_ACK          ;  // Wishbone Client Acknowledge
 // GPIO
 //
 wire    [7:0]   GPIO_PIN         ;
-wire    [3:0]   QUAD_SIO         ;
-wire            QUAD_nCE         ; 
-wire            QUAD_CLK_i       ; 
+// wire    [3:0]   QUAD_SIO         ;
+// wire            QUAD_nCE         ; 
+// wire            QUAD_CLK_i       ; 
 
 
 //------Define Parameters--------------
@@ -211,9 +211,9 @@ wire    [7:0]  GPIO_In              ;
 wire    [7:0]  GPIO_Out             ;
 wire    [7:0]  GPIO_oe              ;
 
-wire    [3:0]   QUAD_In             ;
-wire    [3:0]   QUAD_Out            ;
-wire            QUAD_oe             ;
+// wire    [3:0]   QUAD_In             ;
+// wire    [3:0]   QUAD_Out            ;
+// wire            QUAD_oe             ;
 
 
 // Wishbone Bus Signals
@@ -324,10 +324,10 @@ bipad u_bipad_I7    ( .A( GPIO_Out[7]   ), .EN( GPIO_oe[7]       ), .Q( GPIO_In[
 
 // SIO
 //
-bipad u_bipad_S0    ( .A( QUAD_Out[0]   ), .EN( QUAD_oe       ), .Q( QUAD_In[0]    ), .P( QUAD_SIO[0]  ) );
-bipad u_bipad_S1    ( .A( QUAD_Out[1]   ), .EN( QUAD_oe       ), .Q( QUAD_In[1]    ), .P( QUAD_SIO[1]  ) );
-bipad u_bipad_S2    ( .A( QUAD_Out[2]   ), .EN( QUAD_oe       ), .Q( QUAD_In[2]    ), .P( QUAD_SIO[2]  ) );
-bipad u_bipad_S3    ( .A( QUAD_Out[3]   ), .EN( QUAD_oe       ), .Q( QUAD_In[3]    ), .P( QUAD_SIO[3]  ) );
+// bipad u_bipad_S0    ( .A( QUAD_Out[0]   ), .EN( QUAD_oe       ), .Q( QUAD_In[0]    ), .P( QUAD_SIO[0]  ) );
+// bipad u_bipad_S1    ( .A( QUAD_Out[1]   ), .EN( QUAD_oe       ), .Q( QUAD_In[1]    ), .P( QUAD_SIO[1]  ) );
+// bipad u_bipad_S2    ( .A( QUAD_Out[2]   ), .EN( QUAD_oe       ), .Q( QUAD_In[2]    ), .P( QUAD_SIO[2]  ) );
+// bipad u_bipad_S3    ( .A( QUAD_Out[3]   ), .EN( QUAD_oe       ), .Q( QUAD_In[3]    ), .P( QUAD_SIO[3]  ) );
 // General FPGA Resources 
 //
 AL4S3B_FPGA_Registers #(
@@ -415,13 +415,13 @@ AL4S3B_FPGA_RAMs #(
     .PCLKI                      (PCLKI),
     .VSYNCI                     (VSYNCI),
     .HREFI                      (HREFI),
-    .CAM_DAT                    (CAM_DAT),
+    .CAM_DAT                    (CAM_DAT)
     
-    .QUAD_In_i                  (QUAD_In),
-    .QUAD_oe_o                  (QUAD_oe),
-    .QUAD_Out_o                 (QUAD_Out),
-    .QUAD_nCE_o                 (QUAD_nCE),
-    .QUAD_CLK_i                 (QUAD_CLK_i)
+    // .QUAD_In_i                  (QUAD_In),
+    // .QUAD_oe_o                  (QUAD_oe),
+    // .QUAD_Out_o                 (QUAD_Out),
+    // .QUAD_nCE_o                 (QUAD_nCE),
+    // .QUAD_CLK_i                 (QUAD_CLK_i)
     );
 
 // Reserved Resources Block
