@@ -802,7 +802,7 @@ void sccb_init(void) {
   sccb_dat[0]=0x36; sccb_dat[1]=0x20 ; sccb_dat[2]=0x52 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1); 
   
-  #if 1 // pclk=6MHz
+  #if 0 // pclk=6MHz
   sccb_dat[0]=0x30; sccb_dat[1]=0x11 ; sccb_dat[2]=0x08 ;
   HAL_I2C_WriteRawData(0x78>>1, sccb_dat, 3, 1);
 
