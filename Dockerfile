@@ -15,7 +15,7 @@ RUN echo -e '#!/bin/bash\n\ncd /qorc-sdk\nsource envsetup.sh\ncd -\nmake all -C 
 #RUN echo -e '#!/bin/bash\nqfprog="python3 /qorc-sdk/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"\n$qfprog --port /dev/ttyUSB0  --m4app GCC_Project/output/bin/*.bin --mode fpga-m4' > qlogic_write.sh
 RUN sed -i 's/\r//' *.sh
 RUN chmod +x qlogic_build.sh
-RUN chmod +x add_git.sh
+#RUN chmod +x add_git.sh
 WORKDIR /qorc-sdk/qf_apps
 #avoid cache
 ARG CACHEBUST=1
